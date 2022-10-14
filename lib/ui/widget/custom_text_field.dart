@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:form_app/common/validator.dart';
+import 'package:form_app/common/shared_code.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -23,7 +23,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     dynamic validator = widget.validator;
-    validator ??= Validator().emptyValidator;
+    validator ??= SharedCode().emptyValidator;
 
     return TextFormField(
       style: Theme.of(context).textTheme.bodyText1,

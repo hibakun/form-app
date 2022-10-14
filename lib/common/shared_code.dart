@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Validator {
+class SharedCode {
   String? emptyValidator(value) {
     return value.toString().trim().isEmpty ? 'O campo não pode estar vazio' : null;
   }

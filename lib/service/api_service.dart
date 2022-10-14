@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:form_app/model/loginModel.dart';
-import 'package:form_app/model/municipalityLikeModel.dart';
-import 'package:form_app/model/municipalityModel.dart';
-import 'package:form_app/model/subdisctrictByMuniModel.dart';
-import 'package:form_app/model/subdisctrictLikeModel.dart';
-import 'package:form_app/model/subdisctrictModel.dart';
-import 'package:form_app/model/subvillageModel.dart';
-import 'package:form_app/model/villageBySubModel.dart';
-import 'package:form_app/model/villageLikeModel.dart';
-import 'package:form_app/model/villageModel.dart';
+import 'package:form_app/model/login_model.dart';
+import 'package:form_app/model/municipality_like_model.dart';
+import 'package:form_app/model/municipality_model.dart';
+import 'package:form_app/model/subdisctrict_by_muni_model.dart';
+import 'package:form_app/model/subdisctrict_like_model.dart';
+import 'package:form_app/model/subdisctrict_model.dart';
+import 'package:form_app/model/subvillage_find_like.dart';
+import 'package:form_app/model/subvillage_model.dart';
+import 'package:form_app/model/village_by_sub_model.dart';
+import 'package:form_app/model/village_like_model.dart';
+import 'package:form_app/model/village_model.dart';
 import 'package:form_app/service/server_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -246,6 +247,30 @@ class ApiService {
     print("RES SUBVILLAGE: " + res.body.toString());
     if (res.statusCode == 200) {
       return SubvillageModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<SubVillageLikeModel> subVillageLikeAPI() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + prefs.getString('token').toString(),
+    };
+    final body = {"keyword": ""};
+    print("RAW SUB VILLAGE LIKE: " + body.toString());
+    print(
+        "URL SUB VILLAGE LIKE: " + ServerConfig.baseUrl + ServerConfig.subvillageLike);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseUrl + ServerConfig.subvillageLike),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(SUB VILLAGE LIKE): " + res.statusCode.toString());
+    print("RES SUB VILLAGE LIKE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return SubVillageLikeModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

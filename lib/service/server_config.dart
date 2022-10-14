@@ -10,4 +10,5 @@ class ServerConfig {
   static String villageLike = "v1/village/findsLike";
   static String villageBySub = "v1/village/findsBySubDistrict";
   static String subvillage = "v1/subvillage/finds";
+  static String subvillageLike = "v1/subvillage/findsLike";
 }

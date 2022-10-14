@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/common/theme_data.dart';
 import 'package:form_app/ui/login/login.dart';
-import 'package:form_app/ui/test.dart';
 
 void main() {
   runApp(const MyApp());

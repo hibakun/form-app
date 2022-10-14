@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:form_app/common/validator.dart';
-import 'package:form_app/model/loginModel.dart';
-import 'package:form_app/model/municipalityLikeModel.dart';
-import 'package:form_app/model/municipalityModel.dart';
-import 'package:form_app/model/subdisctrictByMuniModel.dart';
-import 'package:form_app/model/subdisctrictLikeModel.dart';
-import 'package:form_app/model/subdisctrictModel.dart';
-import 'package:form_app/model/subvillageModel.dart';
-import 'package:form_app/model/villageBySubModel.dart';
-import 'package:form_app/model/villageLikeModel.dart';
-import 'package:form_app/model/villageModel.dart';
+import 'package:form_app/common/shared_code.dart';
+import 'package:form_app/model/login_model.dart';
+import 'package:form_app/model/municipality_like_model.dart';
+import 'package:form_app/model/municipality_model.dart';
+import 'package:form_app/model/subdisctrict_by_muni_model.dart';
+import 'package:form_app/model/subdisctrict_like_model.dart';
+import 'package:form_app/model/subdisctrict_model.dart';
+import 'package:form_app/model/subvillage_find_like.dart';
+import 'package:form_app/model/subvillage_model.dart';
+import 'package:form_app/model/village_by_sub_model.dart';
+import 'package:form_app/model/village_like_model.dart';
+import 'package:form_app/model/village_model.dart';
 import 'package:form_app/service/api_service.dart';
+import 'package:form_app/ui/dashboard/dashboard.dart';
 import 'package:form_app/ui/test.dart';
 import 'package:form_app/ui/widget/custom_text_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('token', result.accessToken);
         prefs.setString('user', result.username);
-        Validator.navigatorReplacement(context, TestTheme());
+        SharedCode.navigatorReplacement(context, TestTheme());
         _municipality();
       }
     }
@@ -92,6 +94,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _subvillage() async {
     SubvillageModel result = await ApiService().subvillageAPI();
+    _subVillageLike();
+  }
+
+  Future<void> _subVillageLike() async {
+    SubVillageLikeModel result = await ApiService().subVillageLikeAPI();
   }
 
   @override
@@ -145,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
           CustomTextField(
             controller: _usernameController,
             inputType: TextInputType.emailAddress,
-            validator: (value) => Validator().emailValidator(value),
+            validator: (value) => SharedCode().emailValidator(value),
           ),
           SizedBox(
             height: 25.h,
@@ -160,14 +167,14 @@ class _LoginPageState extends State<LoginPage> {
           CustomTextField(
             controller: _passwordController,
             isPassword: true,
-            validator: (value) => Validator().passwordValidator(value),
+            validator: (value) => SharedCode().passwordValidator(value),
           ),
           SizedBox(
             height: 35.h,
           ),
           ElevatedButton(
             onPressed: () {
-              _login();
+              SharedCode.navigatorPushAndRemove(context, Dashboard());
             },
             child: const Text('Conecte-se'),
           ),

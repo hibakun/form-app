@@ -38,7 +38,7 @@ class AppThemeData {
           primary: ColorValues.primaryRed,
           minimumSize: Size(double.infinity, 45.h),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8),
           ),
           textStyle: GoogleFonts.roboto(
             fontSize: 16.sp,
@@ -54,7 +54,7 @@ class AppThemeData {
         ),
         subtitle1: GoogleFonts.roboto(
           color: Colors.black,
-          fontSize: 14.sp,
+          fontSize: 16.sp,
           fontWeight: FontWeight.w500,
         ),
         bodyText1: GoogleFonts.roboto(

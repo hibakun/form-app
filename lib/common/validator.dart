@@ -19,15 +19,15 @@ class Validator {
     return !phoneValid ? 'O número de telefone não é válido' : null;
   }
 
-  static void navigatorPush(BuildContext context, Widget widget) {
+  static navigatorPush(BuildContext context, Widget widget) {
     Navigator.push(context, MaterialPageRoute(builder: (c) => widget));
   }
 
-  static void navigatorReplacement(BuildContext context, Widget widget) {
+  static navigatorReplacement(BuildContext context, Widget widget) {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => widget));
   }
 
-  static void navigatorPushAndRemove(BuildContext context, Widget widget) {
+  static navigatorPushAndRemove(BuildContext context, Widget widget) {
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (c) => widget), (route) => false);
   }
 }

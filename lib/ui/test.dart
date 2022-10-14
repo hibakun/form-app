@@ -10,6 +10,6 @@ class TestTheme extends StatefulWidget {
 class _TestThemeState extends State<TestTheme> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Container();
   }
 }

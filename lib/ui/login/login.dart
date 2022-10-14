@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/common/validator.dart';
 import 'package:form_app/model/loginModel.dart';
+import 'package:form_app/model/municipalityLikeModel.dart';
+import 'package:form_app/model/municipalityModel.dart';
+import 'package:form_app/model/subdisctrictByMuniModel.dart';
+import 'package:form_app/model/subdisctrictLikeModel.dart';
+import 'package:form_app/model/subdisctrictModel.dart';
+import 'package:form_app/model/subvillageModel.dart';
+import 'package:form_app/model/villageBySubModel.dart';
+import 'package:form_app/model/villageLikeModel.dart';
+import 'package:form_app/model/villageModel.dart';
 import 'package:form_app/service/api_service.dart';
 import 'package:form_app/ui/test.dart';
 import 'package:form_app/ui/widget/custom_text_field.dart';
@@ -36,8 +45,53 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('token', result.accessToken);
         prefs.setString('user', result.username);
         Validator.navigatorReplacement(context, TestTheme());
+        _municipality();
       }
     }
+  }
+
+  Future<void> _municipality() async {
+    MunicipalityModel result = await ApiService().municipalityAPI();
+    _municipalityLike();
+  }
+
+  Future<void> _municipalityLike() async {
+    MunicipalityLikeModel result = await ApiService().municipalityLikeAPI();
+    _subdisctrict();
+  }
+
+  Future<void> _subdisctrict() async {
+    SubdisctrictModel result = await ApiService().subdisctrictAPI();
+    _subdisctrictLike();
+  }
+
+  Future<void> _subdisctrictLike() async {
+    SubdisctrictLikeModel result = await ApiService().subdisctrictLikeAPI();
+    _subdisctrictByMuni();
+  }
+
+  Future<void> _subdisctrictByMuni() async {
+    SubdisctrictByMuniModel result = await ApiService().subdisctrictByMuniAPI();
+    _village();
+  }
+
+  Future<void> _village() async {
+    VillageModel result = await ApiService().villageAPI();
+    _villageLike();
+  }
+
+  Future<void> _villageLike() async {
+    VillageLikeModel result = await ApiService().villageLikeAPI();
+    _villageBySub();
+  }
+
+  Future<void> _villageBySub() async {
+    VillageBySubModel result = await ApiService().villageBySubAPI();
+    _subvillage();
+  }
+
+  Future<void> _subvillage() async {
+    SubvillageModel result = await ApiService().subvillageAPI();
   }
 
   @override

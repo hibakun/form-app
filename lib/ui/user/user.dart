@@ -33,6 +33,11 @@ class _UserPageState extends State<UserPage> {
                   height: 50.h,
                 ),
                 CircleAvatar(
+                  child: Icon(
+                    Icons.person,
+                    size: 75.h,
+                    color: Colors.yellow[500],
+                  ),
                   radius: 70.h,
                 ),
                 SizedBox(

@@ -44,9 +44,9 @@ class _LoginPageState extends State<LoginPage> {
           _isLoading = false;
         });
         final prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', result.accessToken);
+        prefs.setString('pass', _passwordController.text);
         prefs.setString('user', result.username);
-        SharedCode.navigatorReplacement(context, TestTheme());
+        SharedCode.navigatorReplacement(context, Dashboard());
         _municipality();
       }
     }
@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              SharedCode.navigatorPushAndRemove(context, Dashboard());
+              _login();
             },
             child: const Text('Conecte-se'),
           ),

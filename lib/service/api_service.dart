@@ -41,9 +41,13 @@ class ApiService {
 
   Future<MunicipalityModel> municipalityAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
+    print("HEADER MUNICIPALITY: " + headers.toString());
     print("URL MUNICIPALITY: " +
         ServerConfig.baseUrl +
         ServerConfig.municipality);
@@ -62,11 +66,15 @@ class ApiService {
 
   Future<MunicipalityLikeModel> municipalityLikeAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
     final body = {"keyword": "Man"};
+    print("HEADER MUNICIPALITY LIKE: " + headers.toString());
     print("RAW MUNICIPALITY LIKE: " + body.toString());
     print("URL MUNICIPALITY LIKE: " +
         ServerConfig.baseUrl +
@@ -87,9 +95,13 @@ class ApiService {
 
   Future<SubdisctrictModel> subdisctrictAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
+    print("HEADER SUBDISCTRICT: " + headers.toString());
     print("URL SUBDISCTRICT: " +
         ServerConfig.baseUrl +
         ServerConfig.subdisctrict);
@@ -108,11 +120,15 @@ class ApiService {
 
   Future<SubdisctrictLikeModel> subdisctrictLikeAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
     final body = {"keyword": ""};
+    print("HEADER SUBDISCTRICT LIKE: " + headers.toString());
     print("RAW SUBDISCTRICT LIKE: " + body.toString());
     print("URL SUBDISCTRICT LIKE: " +
         ServerConfig.baseUrl +
@@ -133,9 +149,12 @@ class ApiService {
 
   Future<SubdisctrictByMuniModel> subdisctrictByMuniAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
     final body = {
       "id": "2",
@@ -143,6 +162,7 @@ class ApiService {
       "name": "Ainaro",
       "description": "Município Ainaro"
     };
+    print("HEADER SUBDISCTRICT BYMUNI: " + headers.toString());
     print("RAW SUBDISCTRICT BYMUNI: " + body.toString());
     print("URL SUBDISCTRICT BYMUNI: " +
         ServerConfig.baseUrl +
@@ -163,9 +183,13 @@ class ApiService {
 
   Future<VillageModel> villageAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
+    print("HEADER VILLAGE: " + headers.toString());
     print("URL VILLAGE: " + ServerConfig.baseUrl + ServerConfig.village);
     final res = await http.get(
         Uri.parse(ServerConfig.baseUrl + ServerConfig.village),
@@ -182,11 +206,15 @@ class ApiService {
 
   Future<VillageLikeModel> villageLikeAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
     final body = {"keyword": ""};
+    print("HEADER VILLAGE LIKE: " + headers.toString());
     print("RAW VILLAGE LIKE: " + body.toString());
     print(
         "URL VILLAGE LIKE: " + ServerConfig.baseUrl + ServerConfig.villageLike);
@@ -206,9 +234,12 @@ class ApiService {
 
   Future<VillageBySubModel> villageBySubAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
     final body = {
       "id": 1,
@@ -216,6 +247,7 @@ class ApiService {
       "name": "Aileu",
       "description": "Posto Aileu Vila "
     };
+    print("HEADER VILLAGE BYSUB: " + headers.toString());
     print("RAW VILLAGE BYSUB: " + body.toString());
     print("URL VILLAGE BYSUB: " +
         ServerConfig.baseUrl +
@@ -236,9 +268,13 @@ class ApiService {
 
   Future<SubvillageModel> subvillageAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
+    print("HEADER SUBVILLAGE: " + headers.toString());
     print("URL SUBVILLAGE: " + ServerConfig.baseUrl + ServerConfig.subvillage);
     final res = await http.get(
         Uri.parse(ServerConfig.baseUrl + ServerConfig.subvillage),
@@ -255,14 +291,19 @@ class ApiService {
 
   Future<SubVillageLikeModel> subVillageLikeAPI() async {
     final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': "Bearer " + prefs.getString('token').toString(),
+      'Authorization': "Bearer " + result.accessToken,
     };
     final body = {"keyword": ""};
+    print("HEADER SUB VILLAGE LIKE: " + headers.toString());
     print("RAW SUB VILLAGE LIKE: " + body.toString());
-    print(
-        "URL SUB VILLAGE LIKE: " + ServerConfig.baseUrl + ServerConfig.subvillageLike);
+    print("URL SUB VILLAGE LIKE: " +
+        ServerConfig.baseUrl +
+        ServerConfig.subvillageLike);
     final res = await http.post(
         Uri.parse(ServerConfig.baseUrl + ServerConfig.subvillageLike),
         headers: headers,

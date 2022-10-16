@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/common/theme_data.dart';
 import 'package:form_app/ui/login/login.dart';
+import 'package:form_app/ui/splashscreen/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: LoginPage(),
+      child: Splash(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -32,13 +33,9 @@ class _UserPageState extends State<UserPage> {
                 SizedBox(
                   height: 50.h,
                 ),
-                CircleAvatar(
-                  child: Icon(
-                    Icons.person,
-                    size: 75.h,
-                    color: Colors.yellow[500],
-                  ),
-                  radius: 70.h,
+                SvgPicture.asset(
+                  'assets/profile.svg',
+                  width: 125.w,
                 ),
                 SizedBox(
                   height: 20.h,

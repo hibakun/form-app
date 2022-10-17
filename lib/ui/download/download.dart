@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/formtabelModel.dart';
+import 'package:form_app/model/surveyFormDownloadModel.dart';
 import 'package:form_app/service/api_service.dart';
 
 class DownloadPage extends StatefulWidget {
@@ -50,6 +51,7 @@ class _DownloadPageState extends State<DownloadPage> {
           _dataTable!.formType);
       await FormTableDatabase.instance.create(form);
     }
+
     read();
   }
 
@@ -58,6 +60,16 @@ class _DownloadPageState extends State<DownloadPage> {
     setState(() {
       _isLoad = false;
     });
+  }
+
+  Future DownloadForm(int index) async {
+    try {
+      SurveyFormDownloadModel result = await ApiService()
+          .surveyformdownload(code: _datalistform[index].code);
+      print("STATUS API: " + result.status);
+    } catch (error) {
+      print('no internet');
+    }
   }
 
   @override
@@ -99,7 +111,7 @@ class _DownloadPageState extends State<DownloadPage> {
               }
             },
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
           ),
         ),
       ),
@@ -116,12 +128,17 @@ class _DownloadPageState extends State<DownloadPage> {
                 child: ListView.builder(
                     itemCount: _datalistform.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        color: Colors.purple[300],
-                        child: Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Text(_datalistform[index].code,
-                              style: TextStyle(color: Colors.white)),
+                      return InkWell(
+                        onTap: () {
+                          DownloadForm(index);
+                        },
+                        child: Card(
+                          elevation: 3,
+                          shadowColor: Colors.black,
+                          child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Text(_datalistform[index].code),
+                          ),
                         ),
                       );
                     }),

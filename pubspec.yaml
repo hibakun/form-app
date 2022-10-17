@@ -39,6 +39,7 @@ dependencies:
   http:
   shared_preferences:
   sqflite:
+  flutter_svg:
 
 dev_dependencies:
   flutter_test:

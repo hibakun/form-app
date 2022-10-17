@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/database/FormDb.dart';
+import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/formtabelModel.dart';
 import 'package:form_app/model/surveyFormDownloadModel.dart';
 import 'package:form_app/service/api_service.dart';
@@ -37,19 +38,8 @@ class _DownloadPageState extends State<DownloadPage> {
           title: _dataTable!.title,
           description: _dataTable!.description,
           formType: _dataTable!.formType);
-      print('Hasil dari api ke: ' +
-          i.toString() +
-          ' Id: ' +
-          _dataTable!.id.toString() +
-          ' Code: ' +
-          _dataTable!.code +
-          ' Title: ' +
-          _dataTable!.title +
-          ' Desc: ' +
-          _dataTable!.description +
-          ' Type: ' +
-          _dataTable!.formType);
-      await FormTableDatabase.instance.create(form);
+      await downloadForm(_dataTable!.formType);
+      await FormTableDatabase.instance.createForm(form);
     }
 
     read();
@@ -62,11 +52,66 @@ class _DownloadPageState extends State<DownloadPage> {
     });
   }
 
-  Future DownloadForm(int index) async {
+  Future downloadForm(String type) async {
+    List result = [];
+
     try {
-      SurveyFormDownloadModel result = await ApiService()
-          .surveyformdownload(code: _datalistform[index].code);
-      print("STATUS API: " + result.status);
+      SurveyFormDownloadModel model =
+          await ApiService().surveyformdownload(type: type);
+
+      result.add(model.data.surveyTable.formType);
+      result.add('title');
+      result.add(model.data.surveyTable.title);
+      result.add('name');
+      result.add(model.data.surveyTable.name);
+      result.add('birthDate');
+      result.add(model.data.surveyTable.birthDate);
+      result.add('subDistrict');
+      result.add(model.data.surveyTable.subDistrict);
+      result.add('subVillage');
+      result.add(model.data.surveyTable.subVillage);
+
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[1],
+            value: result[2],
+          ));
+
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[3],
+            value: result[4],
+          ));
+
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[5],
+            value: result[6],
+          ));
+
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[7],
+            value: result[8],
+          ));
+
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[9],
+            value: result[10],
+          ));
+
+      print("STATUS API: " + model.status);
     } catch (error) {
       print('no internet');
     }
@@ -130,7 +175,7 @@ class _DownloadPageState extends State<DownloadPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return InkWell(
                         onTap: () {
-                          DownloadForm(index);
+                          //
                         },
                         child: Card(
                           elevation: 3,

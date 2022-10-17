@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/formtabelModel.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,16 +38,28 @@ class FormTableDatabase {
     ${FormFields.title} $textType,
     ${FormFields.description} $textType,
     ${FormFields.formType} $textType
-    
-    
+    )''');
+
+    await db.execute('''CREATE TABLE ${HeaderFields.header} (
+    ${HeaderFields.id} $idType,
+    ${HeaderFields.formType} $textType,
+    ${HeaderFields.key} $textType,
+    ${HeaderFields.value} $textType
     )''');
   }
 
-  Future<FormModel> create(FormModel form) async {
+  Future<FormModel> createForm(FormModel form) async {
     final db = await instance.database;
 
     final id = await db.insert(tableFormTable, form.toJson());
     return form.copy(id: id);
+  }
+
+  Future<int> create(String table, HeaderDatabaseModel model) async {
+    final db = await instance.database;
+    final query = await db.insert(table, model.toJson());
+
+    return query;
   }
 
   Future<FormModel> read(int? id) async {
@@ -66,45 +79,25 @@ class FormTableDatabase {
     }
   }
 
+  Future<HeaderDatabaseModel> readHeader(String? type) async {
+    final db = await instance.database;
+
+    final maps = await db.query(HeaderFields.header,
+        where: '${HeaderFields.formType} = ?', whereArgs: [type]);
+
+    if (maps.isNotEmpty) {
+      return HeaderDatabaseModel.fromJson(maps.first);
+    } else {
+      throw Exception('ID $type not found');
+    }
+  }
+
   Future<List<FormModel>> readAll() async {
     final db = await instance.database;
 
     final result = await db.query(tableFormTable);
 
     return result.map((json) => FormModel.fromJson(json)).toList();
-  }
-
-  delete(int? id) async {
-    final db = await instance.database;
-    try {
-      await db.delete(
-        tableFormTable,
-        where: '${FormFields.idDb} = ?',
-        whereArgs: [id],
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  update(FormModel formModel) async {
-    final db = await instance.database;
-    try {
-      db.rawUpdate('''
-    UPDATE ${tableFormTable} 
-    SET ${FormFields.id} = ?, ${FormFields.code} = ?, ${FormFields.title} = ?, ${FormFields.description} = ?, ${FormFields.formType} = ?
-    WHERE ${FormFields.idDb} = ?
-    ''', [
-        formModel.id,
-        formModel.code,
-        formModel.title,
-        formModel.description,
-        formModel.formType,
-        formModel.idDb
-      ]);
-    } catch (e) {
-      print('error: ' + e.toString());
-    }
   }
 
   Future close() async {

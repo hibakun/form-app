@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('pass', _passwordController.text);
         prefs.setString('user', result.username);
         SharedCode.navigatorReplacement(context, Dashboard());
-        _municipality();
+        // _municipality();
       }
     }
   }

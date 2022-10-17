@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:form_app/ui/download/download.dart';
-import 'package:form_app/ui/fill_form/fill_form.dart';
-import 'package:form_app/ui/upload_data/upload_data.dart';
-import 'package:form_app/ui/user/user.dart';
+import 'package:form_app/ui/dashboard/item/download.dart';
+import 'package:form_app/ui/dashboard/item/fill_form.dart';
+import 'package:form_app/ui/dashboard/item/upload_data.dart';
+import 'package:form_app/ui/dashboard/item/user.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);

@@ -344,7 +344,7 @@ class ApiService {
   }
 
   Future<SurveyFormDownloadModel> surveyformdownload(
-      {required String code}) async {
+      {required String type}) async {
     final prefs = await SharedPreferences.getInstance();
     LoginModel result = await loginAPI(
         username: prefs.getString('user').toString(),
@@ -353,7 +353,7 @@ class ApiService {
       'Content-Type': 'application/json',
       'Authorization': "Bearer " + result.accessToken,
     };
-    final body = {"keyword": code};
+    final body = {"keyword": type};
     print("HEADER SURVEY FORM DOWNLOAD: " + headers.toString());
     print("RAW SURVEY FORM DOWNLOAD: " + body.toString());
     print("URL SURVEY FORM DOWNLOAD: " +

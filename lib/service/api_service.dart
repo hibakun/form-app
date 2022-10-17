@@ -10,6 +10,7 @@ import 'package:form_app/model/subdisctrict_like_model.dart';
 import 'package:form_app/model/subdisctrict_model.dart';
 import 'package:form_app/model/subvillage_find_like.dart';
 import 'package:form_app/model/subvillage_model.dart';
+import 'package:form_app/model/surveyFormDownloadModel.dart';
 import 'package:form_app/model/village_by_sub_model.dart';
 import 'package:form_app/model/village_like_model.dart';
 import 'package:form_app/model/village_model.dart';
@@ -336,6 +337,36 @@ class ApiService {
     print("RES FORMTABLE: " + res.body.toString());
     if (res.statusCode == 200) {
       return FormtableModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<SurveyFormDownloadModel> surveyformdownload(
+      {required String code}) async {
+    final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + result.accessToken,
+    };
+    final body = {"keyword": code};
+    print("HEADER SURVEY FORM DOWNLOAD: " + headers.toString());
+    print("RAW SURVEY FORM DOWNLOAD: " + body.toString());
+    print("URL SURVEY FORM DOWNLOAD: " +
+        ServerConfig.baseUrl +
+        ServerConfig.surveyformdownload);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseUrl + ServerConfig.surveyformdownload),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(SURVEY FORM DOWNLOAD): " + res.statusCode.toString());
+    print("RES SURVEY FORM DOWNLOAD: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return SurveyFormDownloadModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

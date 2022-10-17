@@ -22,8 +22,12 @@ class _DownloadPageState extends State<DownloadPage> {
     setState(() {
       _isLoad = true;
     });
-    FormtableModel result = await ApiService().formtableAPI();
-    _data = result.data;
+    try {
+      FormtableModel result = await ApiService().formtableAPI();
+      _data = result.data;
+    } catch (error) {
+      print('no internet');
+    }
     for (int i = 0; i < _data.length; i++) {
       _dataTable = _data[i];
       form = FormModel(
@@ -70,7 +74,7 @@ class _DownloadPageState extends State<DownloadPage> {
         body: Column(
           children: [
             _buildDownloadButton(),
-            _buildListForm(),
+            Padding(padding: EdgeInsets.only(top: 12), child: _buildListForm()),
           ],
         ),
       ),
@@ -108,13 +112,17 @@ class _DownloadPageState extends State<DownloadPage> {
         : _datalistform.length == 0
             ? Center(child: Text("no data available"))
             : Container(
-                height: 500.h,
+                height: 625.h,
                 child: ListView.builder(
                     itemCount: _datalistform.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                         color: Colors.purple[300],
-                        child: Text(_datalistform[index].code),
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Text(_datalistform[index].code,
+                              style: TextStyle(color: Colors.white)),
+                        ),
                       );
                     }),
               );

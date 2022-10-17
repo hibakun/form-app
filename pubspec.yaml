@@ -38,6 +38,7 @@ dependencies:
   flutter_screenutil:
   http:
   shared_preferences:
+  sqflite:
 
 dev_dependencies:
   flutter_test:

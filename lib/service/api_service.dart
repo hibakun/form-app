@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:form_app/model/formtabelModel.dart';
 import 'package:form_app/model/login_model.dart';
 import 'package:form_app/model/municipality_like_model.dart';
 import 'package:form_app/model/municipality_model.dart';
@@ -312,6 +313,29 @@ class ApiService {
     print("RES SUB VILLAGE LIKE: " + res.body.toString());
     if (res.statusCode == 200) {
       return SubVillageLikeModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<FormtableModel> formtableAPI() async {
+    final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
+    Map<String, String> headers = {
+      'Authorization': "Bearer " + result.accessToken,
+    };
+    print("HEADER FORMTABLE: " + headers.toString());
+    print("URL FORMTABLE: " + ServerConfig.baseUrl + ServerConfig.formtable);
+    final res = await http.get(
+        Uri.parse(ServerConfig.baseUrl + ServerConfig.formtable),
+        headers: headers);
+    print("STATUS CODE(FORMTABLE): " + res.statusCode.toString());
+    print("RES FORMTABLE: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return FormtableModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

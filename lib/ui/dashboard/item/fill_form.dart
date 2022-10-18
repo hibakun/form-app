@@ -51,10 +51,10 @@ class _FillFormPageState extends State<FillFormPage> {
         body: _isload
             ? Center(child: CircularProgressIndicator())
             : Column(
-              children: [
-                Container(
-                  height: 300.h,
-                  child: ListView.builder(
+                children: [
+                  Container(
+                    height: 300.h,
+                    child: ListView.builder(
                       itemCount: headers.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
@@ -72,29 +72,29 @@ class _FillFormPageState extends State<FillFormPage> {
                         );
                       },
                     ),
-                ),
-                Container(
-                  height: 300.h,
-                  child: ListView.builder(
-                    itemCount: questions.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        elevation: 3,
-                        shadowColor: Colors.black,
-                        child: Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Column(
-                            children: [
-                              Text(questions[index].input_type.toString()),
-                              Text(questions[index].question.toString()),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
                   ),
-                ),
-              ],
-            ));
+                  Container(
+                    height: 300.h,
+                    child: ListView.builder(
+                      itemCount: questions.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          elevation: 3,
+                          shadowColor: Colors.black,
+                          child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                Text(questions[index].input_type.toString()),
+                                Text(questions[index].question.toString()),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ));
   }
 }

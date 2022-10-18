@@ -78,6 +78,7 @@ class FormTableDatabase {
 
     return query;
   }
+
   Future<FormModel> read(int? id) async {
     final db = await instance.database;
 

@@ -79,14 +79,14 @@ class FormTableDatabase {
     }
   }
 
-  Future<HeaderDatabaseModel> readHeader(String? type) async {
+  Future<List<HeaderDatabaseModel>> readHeader(String? type) async {
     final db = await instance.database;
 
     final maps = await db.query(HeaderFields.header,
         where: '${HeaderFields.formType} = ?', whereArgs: [type]);
 
     if (maps.isNotEmpty) {
-      return HeaderDatabaseModel.fromJson(maps.first);
+      return maps.map((json) => HeaderDatabaseModel.fromJson(json)).toList();
     } else {
       throw Exception('ID $type not found');
     }

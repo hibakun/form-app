@@ -52,11 +52,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _municipality() async {
-    MunicipalityModel result = await ApiService().municipalityAPI();
-    _municipalityLike();
-  }
-
   Future<void> _municipalityLike() async {
     MunicipalityLikeModel result = await ApiService().municipalityLikeAPI();
     _subdisctrict();

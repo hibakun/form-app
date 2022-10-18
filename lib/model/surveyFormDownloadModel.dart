@@ -114,6 +114,7 @@ class SurveyTable {
   SurveyTable({
     required this.transId,
     required this.title,
+    required this.description,
     required this.transDate,
     required this.name,
     required this.birthDate,
@@ -125,10 +126,12 @@ class SurveyTable {
     required this.interviewerName,
     required this.transTime,
     required this.deviceId,
+    required this.headVillageName,
   });
 
   String transId;
   String title;
+  String description;
   String transDate;
   String name;
   String birthDate;
@@ -140,10 +143,12 @@ class SurveyTable {
   String interviewerName;
   String transTime;
   String deviceId;
+  String headVillageName;
 
   factory SurveyTable.fromJson(Map<String, dynamic> json) => SurveyTable(
         transId: json["transId"],
         title: json["title"],
+        description: json["description"],
         transDate: json["transDate"],
         name: json["name"],
         birthDate: json["birthDate"],
@@ -155,11 +160,13 @@ class SurveyTable {
         interviewerName: json["interviewerName"],
         transTime: json["transTime"],
         deviceId: json["deviceId"],
+        headVillageName: json["headVillageName"],
       );
 
   Map<String, dynamic> toJson() => {
         "transId": transId,
         "title": title,
+        "description": description,
         "transDate": transDate,
         "name": name,
         "birthDate": birthDate,
@@ -171,5 +178,6 @@ class SurveyTable {
         "interviewerName": interviewerName,
         "transTime": transTime,
         "deviceId": deviceId,
+        "headVillageName": headVillageName,
       };
 }

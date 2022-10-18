@@ -65,6 +65,8 @@ class _DownloadPageState extends State<DownloadPage> {
       result.add(model.data.surveyTable.formType);
       result.add('title');
       result.add(model.data.surveyTable.title);
+      result.add('description');
+      result.add(model.data.surveyTable.description);
       result.add('name');
       result.add(model.data.surveyTable.name);
       result.add('birthDate');
@@ -101,7 +103,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[2],
           ));
 
-      //name
+      //description
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -110,7 +112,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[4],
           ));
 
-      //birth date
+      //name
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -119,7 +121,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[6],
           ));
 
-      //municipality
+      //birthDate
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -128,7 +130,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[8].toString(),
           ));
 
-      //subDistrict
+      //municipality
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -137,7 +139,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[10].toString(),
           ));
 
-      //village
+      //subDistrict
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -146,13 +148,22 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[12].toString(),
           ));
 
-      //subVillage
+      //village
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
             formType: result[0],
             key: result[13],
             value: result[14].toString(),
+          ));
+
+      //subVillage
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[15],
+            value: result[16].toString(),
           ));
 
       print("STATUS API: " + model.status);

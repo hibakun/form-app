@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/database/header.dart';
+import 'package:form_app/model/database/question.dart';
 import 'package:form_app/model/formtabelModel.dart';
 import 'package:form_app/model/surveyFormDownloadModel.dart';
 import 'package:form_app/service/api_service.dart';
@@ -55,10 +56,14 @@ class _DownloadPageState extends State<DownloadPage> {
 
   Future downloadForm(String type) async {
     List result = [];
+    List<SurveyLine> question = [];
 
     try {
       SurveyFormDownloadModel model =
           await ApiService().surveyformdownload(type: type);
+
+
+
 
       result.add(model.data.surveyTable.formType);
       result.add('title');
@@ -77,6 +82,18 @@ class _DownloadPageState extends State<DownloadPage> {
       result.add(model.data.surveyTable.subVillage);
 
       //title
+      question = model.data.surveyLines;
+      print("Question LENGTH" + question.length.toString());
+      for(int i = 0; i < question.length; i++){
+        await FormTableDatabase.instance.createQuestion(QuestionFields.questionTable, QuestionDbModel(
+          formType: result[0],
+          kode_soal: question[i].dtoFormLine.id,
+          question: question[i].dtoFormLine.question,
+          dropdown: question[i].dtoFormLine.dropDown,
+          input_type: question[i].dtoFormLine.inputType,
+        ));
+      }
+
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:form_app/model/database/header.dart';
+import 'package:form_app/model/database/question.dart';
 import 'package:form_app/model/formtabelModel.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -46,6 +47,15 @@ class FormTableDatabase {
     ${HeaderFields.key} $textType,
     ${HeaderFields.value} $textType
     )''');
+
+    await db.execute('''CREATE TABLE ${QuestionFields.questionTable} (
+    ${QuestionFields.id} $idType,
+    ${QuestionFields.formType} $textType,
+    ${QuestionFields.kode_soal} $intType,
+    ${QuestionFields.input_type} $textType,
+    ${QuestionFields.question} $textType,
+    ${QuestionFields.dropdown} $textType
+    )''');
   }
 
   Future<FormModel> createForm(FormModel form) async {
@@ -62,6 +72,12 @@ class FormTableDatabase {
     return query;
   }
 
+  Future<int> createQuestion(String table, QuestionDbModel model) async {
+    final db = await instance.database;
+    final query = await db.insert(table, model.toJson());
+
+    return query;
+  }
   Future<FormModel> read(int? id) async {
     final db = await instance.database;
 
@@ -87,6 +103,19 @@ class FormTableDatabase {
 
     if (maps.isNotEmpty) {
       return maps.map((json) => HeaderDatabaseModel.fromJson(json)).toList();
+    } else {
+      throw Exception('ID $type not found');
+    }
+  }
+
+  Future<List<QuestionDbModel>> readQuestion(String? type) async {
+    final db = await instance.database;
+
+    final maps = await db.query(QuestionFields.questionTable,
+        where: '${QuestionFields.formType} = ?', whereArgs: [type]);
+
+    if (maps.isNotEmpty) {
+      return maps.map((json) => QuestionDbModel.fromJson(json)).toList();
     } else {
       throw Exception('ID $type not found');
     }

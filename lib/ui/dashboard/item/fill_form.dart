@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/database/header.dart';
+import 'package:form_app/model/database/question.dart';
 
 class FillFormPage extends StatefulWidget {
   final String formType;
@@ -13,18 +15,24 @@ class FillFormPage extends StatefulWidget {
 
 class _FillFormPageState extends State<FillFormPage> {
   bool _isload = false;
-  List<HeaderDatabaseModel> data = [];
+  List<HeaderDatabaseModel> headers = [];
+  List<QuestionDbModel> questions = [];
 
   read() async {
     setState(() {
       _isload = true;
     });
-    data = await FormTableDatabase.instance.readHeader(widget.formType);
-    for (int i = 0; i < data.length; i++) {
-      print("form type : " + data[i].formType.toString());
-      print("form key : " + data[i].key.toString());
-      print("form value : " + data[i].value.toString());
+    headers = await FormTableDatabase.instance.readHeader(widget.formType);
+    for (int i = 0; i < headers.length; i++) {
+      print("form type : " + headers[i].formType.toString());
+      print("form key : " + headers[i].key.toString());
+      print("form value : " + headers[i].value.toString());
     }
+    questions = await FormTableDatabase.instance.readQuestion(widget.formType);
+    for (int i = 0; i < questions.length; i++) {
+      print("form quesion : " + questions[i].question.toString());
+    }
+
     setState(() {
       _isload = false;
     });
@@ -42,23 +50,51 @@ class _FillFormPageState extends State<FillFormPage> {
     return Scaffold(
         body: _isload
             ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    elevation: 3,
-                    shadowColor: Colors.black,
-                    child: Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Column(
-                        children: [
-                          Text(data[index].key.toString()),
-                          Text(data[index].value.toString()),
-                        ],
-                      ),
+            : Column(
+              children: [
+                Container(
+                  height: 300.h,
+                  child: ListView.builder(
+                      itemCount: headers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          elevation: 3,
+                          shadowColor: Colors.black,
+                          child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                Text(headers[index].key.toString()),
+                                Text(headers[index].value.toString()),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ));
+                ),
+                Container(
+                  height: 300.h,
+                  child: ListView.builder(
+                    itemCount: questions.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        elevation: 3,
+                        shadowColor: Colors.black,
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Column(
+                            children: [
+                              Text(questions[index].input_type.toString()),
+                              Text(questions[index].question.toString()),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ));
   }
 }

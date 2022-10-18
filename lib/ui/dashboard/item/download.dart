@@ -62,9 +62,6 @@ class _DownloadPageState extends State<DownloadPage> {
       SurveyFormDownloadModel model =
           await ApiService().surveyformdownload(type: type);
 
-
-
-
       result.add(model.data.surveyTable.formType);
       result.add('title');
       result.add(model.data.surveyTable.title);
@@ -81,19 +78,21 @@ class _DownloadPageState extends State<DownloadPage> {
       result.add('subVillage');
       result.add(model.data.surveyTable.subVillage);
 
-      //title
       question = model.data.surveyLines;
       print("Question LENGTH" + question.length.toString());
-      for(int i = 0; i < question.length; i++){
-        await FormTableDatabase.instance.createQuestion(QuestionFields.questionTable, QuestionDbModel(
-          formType: result[0],
-          kode_soal: question[i].dtoFormLine.id,
-          question: question[i].dtoFormLine.question,
-          dropdown: question[i].dtoFormLine.dropDown,
-          input_type: question[i].dtoFormLine.inputType,
-        ));
+      for (int i = 0; i < question.length; i++) {
+        await FormTableDatabase.instance.createQuestion(
+            QuestionFields.questionTable,
+            QuestionDbModel(
+              formType: result[0],
+              kode_soal: question[i].dtoFormLine.id,
+              question: question[i].dtoFormLine.question,
+              dropdown: question[i].dtoFormLine.dropDown,
+              input_type: question[i].dtoFormLine.inputType,
+            ));
       }
 
+      //title
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(

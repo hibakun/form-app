@@ -67,11 +67,16 @@ class _DownloadPageState extends State<DownloadPage> {
       result.add(model.data.surveyTable.name);
       result.add('birthDate');
       result.add(model.data.surveyTable.birthDate);
+      result.add('municipality');
+      result.add(model.data.surveyTable.municipality);
       result.add('subDistrict');
       result.add(model.data.surveyTable.subDistrict);
+      result.add('village');
+      result.add(model.data.surveyTable.village);
       result.add('subVillage');
       result.add(model.data.surveyTable.subVillage);
 
+      //title
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -80,6 +85,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[2],
           ));
 
+      //name
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -88,6 +94,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[4],
           ));
 
+      //birth date
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -96,20 +103,40 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[6],
           ));
 
+      //municipality
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
             formType: result[0],
             key: result[7],
-            value: result[8],
+            value: result[8].toString(),
           ));
 
+      //subDistrict
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
             formType: result[0],
             key: result[9],
-            value: result[10],
+            value: result[10].toString(),
+          ));
+
+      //village
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[11],
+            value: result[12].toString(),
+          ));
+
+      //subVillage
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[13],
+            value: result[14].toString(),
           ));
 
       print("STATUS API: " + model.status);
@@ -177,7 +204,12 @@ class _DownloadPageState extends State<DownloadPage> {
                       return InkWell(
                         onTap: () {
                           //
-                          Navigator.push(context, MaterialPageRoute(builder: ((context) => FillFormPage(formType: _datalistform[index].formType,))));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => FillFormPage(
+                                        formType: _datalistform[index].formType,
+                                      ))));
                         },
                         child: Card(
                           elevation: 3,

@@ -79,6 +79,10 @@ class _DownloadPageState extends State<DownloadPage> {
       result.add(model.data.surveyTable.village);
       result.add('subVillage');
       result.add(model.data.surveyTable.subVillage);
+      result.add('interviewerName');
+      result.add(model.data.surveyTable.interviewerName);
+      result.add('headVillageName');
+      result.add(model.data.surveyTable.headVillageName);
 
       question = model.data.surveyLines;
       print("Question LENGTH" + question.length.toString());
@@ -164,6 +168,24 @@ class _DownloadPageState extends State<DownloadPage> {
             formType: result[0],
             key: result[15],
             value: result[16].toString(),
+          ));
+
+      //interviewerName
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[17],
+            value: result[18].toString(),
+          ));
+
+      //headVillageName
+      await FormTableDatabase.instance.create(
+          HeaderFields.header,
+          HeaderDatabaseModel(
+            formType: result[0],
+            key: result[19],
+            value: result[20].toString(),
           ));
 
       print("STATUS API: " + model.status);

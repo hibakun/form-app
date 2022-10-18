@@ -47,53 +47,8 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString('pass', _passwordController.text);
         prefs.setString('user', result.username);
         SharedCode.navigatorReplacement(context, Dashboard());
-        // _municipality();
       }
     }
-  }
-
-  Future<void> _municipalityLike() async {
-    MunicipalityLikeModel result = await ApiService().municipalityLikeAPI();
-    _subdisctrict();
-  }
-
-  Future<void> _subdisctrict() async {
-    SubdisctrictModel result = await ApiService().subdisctrictAPI();
-    _subdisctrictLike();
-  }
-
-  Future<void> _subdisctrictLike() async {
-    SubdisctrictLikeModel result = await ApiService().subdisctrictLikeAPI();
-    _subdisctrictByMuni();
-  }
-
-  Future<void> _subdisctrictByMuni() async {
-    SubdisctrictByMuniModel result = await ApiService().subdisctrictByMuniAPI();
-    _village();
-  }
-
-  Future<void> _village() async {
-    VillageModel result = await ApiService().villageAPI();
-    _villageLike();
-  }
-
-  Future<void> _villageLike() async {
-    VillageLikeModel result = await ApiService().villageLikeAPI();
-    _villageBySub();
-  }
-
-  Future<void> _villageBySub() async {
-    VillageBySubModel result = await ApiService().villageBySubAPI();
-    _subvillage();
-  }
-
-  Future<void> _subvillage() async {
-    SubvillageModel result = await ApiService().subvillageAPI();
-    _subVillageLike();
-  }
-
-  Future<void> _subVillageLike() async {
-    SubVillageLikeModel result = await ApiService().subVillageLikeAPI();
   }
 
   @override

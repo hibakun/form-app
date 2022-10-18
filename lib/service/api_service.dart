@@ -149,7 +149,11 @@ class ApiService {
     }
   }
 
-  Future<SubdisctrictByMuniModel> subdisctrictByMuniAPI() async {
+  Future<SubdisctrictByMuniModel> subdisctrictByMuniAPI(
+      {required String id,
+      required String code,
+      required String name,
+      required String desc}) async {
     final prefs = await SharedPreferences.getInstance();
     LoginModel result = await loginAPI(
         username: prefs.getString('user').toString(),
@@ -158,12 +162,7 @@ class ApiService {
       'Content-Type': 'application/json',
       'Authorization': "Bearer " + result.accessToken,
     };
-    final body = {
-      "id": "2",
-      "code": "MN002",
-      "name": "Ainaro",
-      "description": "Município Ainaro"
-    };
+    final body = {"id": id, "code": code, "name": name, "description": desc};
     print("HEADER SUBDISCTRICT BYMUNI: " + headers.toString());
     print("RAW SUBDISCTRICT BYMUNI: " + body.toString());
     print("URL SUBDISCTRICT BYMUNI: " +
@@ -234,7 +233,11 @@ class ApiService {
     }
   }
 
-  Future<VillageBySubModel> villageBySubAPI() async {
+  Future<VillageBySubModel> villageBySubAPI(
+      {required int id,
+      required String code,
+      required String name,
+      required String desc}) async {
     final prefs = await SharedPreferences.getInstance();
     LoginModel result = await loginAPI(
         username: prefs.getString('user').toString(),
@@ -243,12 +246,7 @@ class ApiService {
       'Content-Type': 'application/json',
       'Authorization': "Bearer " + result.accessToken,
     };
-    final body = {
-      "id": 1,
-      "code": "PA001",
-      "name": "Aileu",
-      "description": "Posto Aileu Vila "
-    };
+    final body = {"id": id, "code": code, "name": name, "description": desc};
     print("HEADER VILLAGE BYSUB: " + headers.toString());
     print("RAW VILLAGE BYSUB: " + body.toString());
     print("URL VILLAGE BYSUB: " +

@@ -5,6 +5,7 @@ import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/formtabelModel.dart';
 import 'package:form_app/model/surveyFormDownloadModel.dart';
 import 'package:form_app/service/api_service.dart';
+import 'package:form_app/ui/dashboard/item/fill_form.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({Key? key}) : super(key: key);
@@ -176,6 +177,7 @@ class _DownloadPageState extends State<DownloadPage> {
                       return InkWell(
                         onTap: () {
                           //
+                          Navigator.push(context, MaterialPageRoute(builder: ((context) => FillFormPage(formType: _datalistform[index].formType,))));
                         },
                         child: Card(
                           elevation: 3,

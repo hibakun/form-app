@@ -17,7 +17,7 @@ class _DashboardState extends State<Dashboard> {
 
   final _tabs = [
     DownloadPage(),
-    FillFormPage(),
+    FillFormPage(formType: "d",),
     UploadDataPage(),
     UserPage(),
   ];

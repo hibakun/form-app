@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:form_app/ui/dashboard/item/add_form.dart';
 import 'package:form_app/ui/dashboard/item/download.dart';
 import 'package:form_app/ui/dashboard/item/fill_form.dart';
 import 'package:form_app/ui/dashboard/item/read_form.dart';
@@ -18,7 +19,7 @@ class _DashboardState extends State<Dashboard> {
 
   final _tabs = [
     DownloadPage(),
-    FillFormPage(formType: "d",),
+    AddFormPage(),
     UploadDataPage(),
     UserPage(),
   ];

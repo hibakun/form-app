@@ -8,6 +8,7 @@ import 'package:form_app/model/database/question.dart';
 import 'package:form_app/model/municipality_model.dart';
 import 'package:form_app/model/subdisctrict_by_muni_model.dart';
 import 'package:form_app/model/subdisctrict_model.dart';
+import 'package:form_app/model/subvillage_by_vill_model.dart';
 import 'package:form_app/model/subvillage_model.dart';
 import 'package:form_app/model/village_by_sub_model.dart';
 import 'package:form_app/service/api_service.dart';
@@ -27,11 +28,11 @@ class _FillFormPageState extends State<FillFormPage> {
   MunicipalityData? dropdownMunicipality = null;
   SubdisctrictByMuniData? dropdownsubDistrict = null;
   VillageBySubData? dropdownVillage = null;
-  SubvillageData? dropdownsubVillage = null;
+  SubvillageByVillageData? dropdownsubVillage = null;
   List<MunicipalityData> municipalityList = [];
   List<SubdisctrictByMuniData> subDistrictList = [];
   List<VillageBySubData> villageList = [];
-  List<SubvillageData> subVillageList = [];
+  List<SubvillageByVillageData> subVillageList = [];
 
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
   DateTime _selectedDate = DateTime.now();
@@ -112,6 +113,8 @@ class _FillFormPageState extends State<FillFormPage> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             child: CustomTextField(
+                              isEnable: true,
+                              isreadOnly: false,
                               controller: _nameController,
                               inputType: TextInputType.text,
                               validator: (value) =>
@@ -140,6 +143,8 @@ class _FillFormPageState extends State<FillFormPage> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             child: CustomTextField(
+                              isEnable: true,
+                              isreadOnly: false,
                               controller: _interviewerController,
                               inputType: TextInputType.text,
                               validator: (value) =>
@@ -155,6 +160,8 @@ class _FillFormPageState extends State<FillFormPage> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             child: CustomTextField(
+                              isEnable: true,
+                              isreadOnly: false,
                               controller: _headVillageController,
                               inputType: TextInputType.text,
                               validator: (value) =>
@@ -411,11 +418,15 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         _isload = true;
                       });
-                      SubvillageModel _resSubvillage =
-                          await ApiService().subvillageAPI();
+                      SubvillageByVillModel _resSubvillage = await ApiService()
+                          .subVillageByVillAPI(
+                              id: newValue!.id,
+                              code: newValue.code,
+                              name: newValue.name,
+                              desc: newValue.description);
                       setState(() {
                         dropdownsubVillage = null;
-                        dropdownVillage = newValue!;
+                        dropdownVillage = newValue;
                         subVillageList = _resSubvillage.data;
                         _showsubDistrict = true;
                         _showvillage = true;
@@ -426,10 +437,14 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         _isload = true;
                       });
-                      SubvillageModel _resSubvillage =
-                          await ApiService().subvillageAPI();
+                      SubvillageByVillModel _resSubvillage = await ApiService()
+                          .subVillageByVillAPI(
+                              id: newValue!.id,
+                              code: newValue.code,
+                              name: newValue.name,
+                              desc: newValue.description);
                       setState(() {
-                        dropdownVillage = newValue!;
+                        dropdownVillage = newValue;
                         subVillageList = _resSubvillage.data;
                         _showsubVillage = true;
                         _isload = false;
@@ -474,19 +489,19 @@ class _FillFormPageState extends State<FillFormPage> {
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(5)),
-                child: DropdownButton<SubvillageData>(
+                child: DropdownButton<SubvillageByVillageData>(
                   isExpanded: true,
                   value: dropdownsubVillage,
                   icon: Icon(Icons.arrow_drop_down),
-                  onChanged: (SubvillageData? newValue) {
+                  onChanged: (SubvillageByVillageData? newValue) {
                     setState(() {
                       dropdownsubVillage = newValue!;
                     });
                   },
                   isDense: true,
                   underline: SizedBox.shrink(),
-                  items: subVillageList.map((SubvillageData item) {
-                    return DropdownMenuItem<SubvillageData>(
+                  items: subVillageList.map((SubvillageByVillageData item) {
+                    return DropdownMenuItem<SubvillageByVillageData>(
                       child: Text(
                         item.name.toString(),
                       ),

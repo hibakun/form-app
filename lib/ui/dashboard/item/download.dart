@@ -21,12 +21,8 @@ class _DownloadPageState extends State<DownloadPage> {
   FormTableData? _dataTable;
   var _data = [];
   var form;
-  bool _isLoad = false;
 
   Future addDb() async {
-    setState(() {
-      _isLoad = true;
-    });
     showWarningDialog("process",
         customMessage: "Loading the data.\nIt may take a few seconds");
     try {
@@ -52,9 +48,7 @@ class _DownloadPageState extends State<DownloadPage> {
 
   Future read() async {
     _datalistform = await FormTableDatabase.instance.readAll();
-    setState(() {
-      _isLoad = false;
-    });
+    setState(() {});
   }
 
   Future downloadForm(String type) async {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:form_app/common/shared_code.dart';
 
 class CustomTextField extends StatefulWidget {
+  final bool isEnable;
+  final bool isreadOnly;
   final TextEditingController controller;
   final TextInputType inputType;
   final String? Function(String?)? validator;
@@ -12,7 +14,9 @@ class CustomTextField extends StatefulWidget {
       required this.controller,
       this.inputType = TextInputType.text,
       this.validator,
-      this.isPassword = false})
+      this.isPassword = false,
+      required this.isEnable,
+      required this.isreadOnly})
       : super(key: key);
 
   @override
@@ -26,6 +30,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     validator ??= SharedCode().emptyValidator;
 
     return TextFormField(
+      enabled: widget.isEnable,
+      readOnly: widget.isreadOnly,
       style: Theme.of(context).textTheme.bodyText1,
       controller: widget.controller,
       keyboardType: widget.inputType,

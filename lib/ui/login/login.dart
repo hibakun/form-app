@@ -100,6 +100,8 @@ class _LoginPageState extends State<LoginPage> {
             height: 7.h,
           ),
           CustomTextField(
+            isEnable: true,
+            isreadOnly: false,
             controller: _usernameController,
             inputType: TextInputType.emailAddress,
             validator: (value) => SharedCode().emailValidator(value),
@@ -115,6 +117,8 @@ class _LoginPageState extends State<LoginPage> {
             height: 7.h,
           ),
           CustomTextField(
+            isEnable: true,
+            isreadOnly: false,
             controller: _passwordController,
             isPassword: true,
             validator: (value) => SharedCode().passwordValidator(value),

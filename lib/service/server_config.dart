@@ -11,6 +11,7 @@ class ServerConfig {
   static String villageBySub = "v1/village/findsBySubDistrict";
   static String subvillage = "v1/subvillage/finds";
   static String subvillageLike = "v1/subvillage/findsLike";
+  static String subvillageByVill = "v1/subvillage/findsByVillage";
   static String formtable = "v1/formtable/finds";
   static String surveyformdownload = "v1/surveyform/download";
 }

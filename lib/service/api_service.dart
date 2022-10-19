@@ -8,6 +8,7 @@ import 'package:form_app/model/municipality_model.dart';
 import 'package:form_app/model/subdisctrict_by_muni_model.dart';
 import 'package:form_app/model/subdisctrict_like_model.dart';
 import 'package:form_app/model/subdisctrict_model.dart';
+import 'package:form_app/model/subvillage_by_vill_model.dart';
 import 'package:form_app/model/subvillage_find_like.dart';
 import 'package:form_app/model/subvillage_model.dart';
 import 'package:form_app/model/surveyFormDownloadModel.dart';
@@ -312,6 +313,39 @@ class ApiService {
     print("RES SUB VILLAGE LIKE: " + res.body.toString());
     if (res.statusCode == 200) {
       return SubVillageLikeModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<SubvillageByVillModel> subVillageByVillAPI(
+      {required int id,
+      required String code,
+      required String name,
+      required String desc}) async {
+    final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + result.accessToken,
+    };
+    final body = {"id": id, "code": code, "name": name, "description": desc};
+    print("HEADER SUBVILLAGE BYVILL: " + headers.toString());
+    print("RAW SUBVILLAGE BYVILL: " + body.toString());
+    print("URL SUBVILLAGE BYVILL: " +
+        ServerConfig.baseUrl +
+        ServerConfig.subvillageByVill);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseUrl + ServerConfig.subvillageByVill),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(SUBVILLAGE BYVILL): " + res.statusCode.toString());
+    print("RES SUBVILLAGE BYVILL: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return SubvillageByVillModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

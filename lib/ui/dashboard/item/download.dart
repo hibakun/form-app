@@ -6,10 +6,11 @@ import 'package:form_app/model/database/question.dart';
 import 'package:form_app/model/formtabelModel.dart';
 import 'package:form_app/model/surveyFormDownloadModel.dart';
 import 'package:form_app/service/api_service.dart';
-import 'package:form_app/ui/dashboard/item/fill_form.dart';
+import 'package:form_app/ui/dashboard/item/read_form.dart';
+import 'package:form_app/ui/widget/waringdialog.dart';
 
 class DownloadPage extends StatefulWidget {
-  const DownloadPage({Key? key}) : super(key: key);
+  DownloadPage({Key? key}) : super(key: key);
 
   @override
   State<DownloadPage> createState() => _DownloadPageState();
@@ -26,6 +27,8 @@ class _DownloadPageState extends State<DownloadPage> {
     setState(() {
       _isLoad = true;
     });
+    showWarningDialog("process",
+        customMessage: "Loading the data.\nIt may take a few seconds");
     try {
       FormtableModel result = await ApiService().formtableAPI();
       _data = result.data;
@@ -43,7 +46,7 @@ class _DownloadPageState extends State<DownloadPage> {
       await downloadForm(_dataTable!.formType);
       await FormTableDatabase.instance.createForm(form);
     }
-
+    Navigator.pop(context);
     read();
   }
 
@@ -241,35 +244,81 @@ class _DownloadPageState extends State<DownloadPage> {
   }
 
   _buildListForm() {
-    return _isLoad
-        ? Center(child: CircularProgressIndicator())
-        : _datalistform.length == 0
-            ? Center(child: Text("no data available"))
-            : Container(
-                height: 625.h,
-                child: ListView.builder(
-                    itemCount: _datalistform.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          //
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => FillFormPage(
-                                        formType: _datalistform[index].formType,
-                                      ))));
-                        },
-                        child: Card(
-                          elevation: 3,
-                          shadowColor: Colors.black,
-                          child: Padding(
-                            padding: EdgeInsets.all(12),
-                            child: Text(_datalistform[index].code),
-                          ),
-                        ),
-                      );
-                    }),
-              );
+    return _datalistform.length == 0
+        ? Center(child: Text("no data available"))
+        : Container(
+            height: 625.h,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+              ),
+              itemCount: _datalistform.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => ReadFormPage(
+                                  formType: _datalistform[index].formType,
+                                ))));
+                  },
+                  child: Card(
+                    color: Colors.white70,
+                    elevation: 4,
+                    shadowColor: Colors.black,
+                    child: Center(child: Text(_datalistform[index].code)),
+                  ),
+                );
+              },
+            ),
+          );
+  }
+
+  void showWarningDialog(String type, {required String customMessage}) {
+    String dialogType = "";
+    String title = "";
+    String message = "";
+    IconData icon = Icons.warning;
+
+    switch (type) {
+      case "warning":
+        dialogType = "warning";
+        title = "Review";
+        message = customMessage;
+        icon = Icons.warning;
+        break;
+      case "process":
+        dialogType = "process";
+        title = "Process";
+        message = customMessage;
+        icon = Icons.hourglass_bottom;
+        break;
+      case "succeed":
+        dialogType = "succeed";
+        title = "Succeed";
+        message = "Successfully";
+        icon = Icons.check_circle_outline;
+        break;
+      case "error":
+        dialogType = "error";
+        message = customMessage;
+        title = "Error";
+        icon = Icons.error;
+        break;
+      default:
+    }
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new Dialog(
+                child: WarningDialog(
+              type: dialogType,
+              title: title,
+              message: message,
+              icon: icon,
+            )));
   }
 }

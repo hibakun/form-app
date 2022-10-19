@@ -42,6 +42,7 @@ dependencies:
   sqflite:
   flutter_svg:
   intl:
+  hexcolor:
 
 dev_dependencies:
   flutter_test:

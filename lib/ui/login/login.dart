@@ -16,6 +16,7 @@ import 'package:form_app/service/api_service.dart';
 import 'package:form_app/ui/dashboard/dashboard.dart';
 import 'package:form_app/ui/test.dart';
 import 'package:form_app/ui/widget/custom_text_field.dart';
+import 'package:form_app/ui/widget/waringdialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,21 +29,17 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
 
   Future<void> _login() async {
-    setState(() {
-      _isLoading = true;
-    });
+    showWarningDialog("process",
+        customMessage: "Loading the data.\nIt may take a few seconds");
     if (_usernameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
       LoginModel result = await ApiService().loginAPI(
           username: _usernameController.text,
           password: _passwordController.text);
       if (result.accessToken.isNotEmpty) {
-        setState(() {
-          _isLoading = false;
-        });
+        Navigator.pop(context);
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('pass', _passwordController.text);
         prefs.setString('user', result.username);
@@ -54,19 +51,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          SingleChildScrollView(child: _buildLogin(context)),
-          _isLoading
-              ? Container(
-                  color: Colors.white.withOpacity(0.5),
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : SizedBox.shrink()
-        ],
-      ),
+      body: SingleChildScrollView(child: _buildLogin(context)),
     );
   }
 
@@ -135,5 +120,50 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  void showWarningDialog(String type, {required String customMessage}) {
+    String dialogType = "";
+    String title = "";
+    String message = "";
+    IconData icon = Icons.warning;
+
+    switch (type) {
+      case "warning":
+        dialogType = "warning";
+        title = "Review";
+        message = customMessage;
+        icon = Icons.warning;
+        break;
+      case "process":
+        dialogType = "process";
+        title = "Process";
+        message = customMessage;
+        icon = Icons.hourglass_bottom;
+        break;
+      case "succeed":
+        dialogType = "succeed";
+        title = "Succeed";
+        message = "Successfully";
+        icon = Icons.check_circle_outline;
+        break;
+      case "error":
+        dialogType = "error";
+        message = customMessage;
+        title = "Error";
+        icon = Icons.error;
+        break;
+      default:
+    }
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new Dialog(
+                child: WarningDialog(
+              type: dialogType,
+              title: title,
+              message: message,
+              icon: icon,
+            )));
   }
 }

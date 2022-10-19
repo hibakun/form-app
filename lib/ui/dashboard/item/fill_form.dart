@@ -47,6 +47,13 @@ class _FillFormPageState extends State<FillFormPage> {
   bool _showsubVillage = false;
   List<HeaderDatabaseModel> headers = [];
   List<QuestionDbModel> questions = [];
+  List<String> dropdown = [];
+  List<String> dropdown1 = [];
+  List<String> dropdown2 = [];
+  List<String> dropdown3 = [];
+  List<String> dropdown4 = [];
+  List<String> dropdown5 = [];
+  List<String> dropdown6 = [];
 
   read() async {
     setState(() {
@@ -61,7 +68,36 @@ class _FillFormPageState extends State<FillFormPage> {
     questions = await FormTableDatabase.instance.readQuestion(widget.formType);
     for (int i = 0; i < questions.length; i++) {
       print("form question : " + questions[i].question.toString());
+      if (questions[i].dropdown.toString() == "") continue;
+      dropdown.add(questions[i].dropdown.toString());
     }
+    for (int i = 0; i < dropdown.length; i++) {
+      print("DROPDOWNS: " + dropdown[i]);
+    }
+    dropdown1 = dropdown[0].split("Îµ");
+    dropdown1.forEach((element) {
+      print("DROPDOWN 1: " + element);
+    });
+    dropdown2 = dropdown[1].split("Îµ");
+    dropdown2.forEach((element) {
+      print("DROPDOWN 2: " + element);
+    });
+    dropdown3 = dropdown[2].split("Îµ");
+    dropdown3.forEach((element) {
+      print("DROPDOWN 3: " + element);
+    });
+    dropdown4 = dropdown[3].split("Îµ");
+    dropdown4.forEach((element) {
+      print("DROPDOWN 4: " + element);
+    });
+    dropdown5 = dropdown[4].split("Îµ");
+    dropdown5.forEach((element) {
+      print("DROPDOWN 5: " + element);
+    });
+    dropdown6 = dropdown[5].split("Îµ");
+    dropdown6.forEach((element) {
+      print("DROPDOWN 6: " + element);
+    });
     MunicipalityModel _resMunicipality = await ApiService().municipalityAPI();
     setState(() {
       municipalityList = _resMunicipality.data;

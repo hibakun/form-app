@@ -26,6 +26,7 @@ class ReadFormPage extends StatefulWidget {
 
 class _ReadFormPageState extends State<ReadFormPage> {
   final _nameController = TextEditingController();
+  final _naranController = TextEditingController();
   final _interviewerController = TextEditingController();
   final _headVillageController = TextEditingController();
   bool _isloading = false;
@@ -69,87 +70,8 @@ class _ReadFormPageState extends State<ReadFormPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 12),
-                        child: Center(
-                            child: Text(headers[0].value.toString(),
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold))),
-                      ),
-                      SizedBox(height: 30.h),
-                      Center(
-                          child: Text(headers[1].value.toString(),
-                              style: TextStyle(fontSize: 15),
-                              textAlign: TextAlign.center)),
-                      SizedBox(height: 30.h),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12),
-                        child: Text(headers[2].key.toString() + " :",
-                            style: TextStyle(fontSize: 15)),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: CustomTextField(
-                          isEnable: false,
-                          isreadOnly: true,
-                          controller: _nameController,
-                          inputType: TextInputType.text,
-                          validator: (value) =>
-                              SharedCode().emptyValidator(value),
-                        ),
-                      ),
-                      SizedBox(height: 20.h),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12),
-                        child: Text(headers[3].key.toString() + " :",
-                            style: TextStyle(fontSize: 15)),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: _buildDatePickerField(),
-                      ),
-                      SizedBox(height: 20.h),
-                      _buildDropdownMunicipality(),
-                      _buildDropdownsubDistrict(),
-                      _buildDropdownVillage(),
-                      _buildDropdownsubVillage(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12, top: 10),
-                        child: Text(headers[8].key.toString() + " :",
-                            style: TextStyle(fontSize: 15)),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: CustomTextField(
-                          isEnable: false,
-                          isreadOnly: true,
-                          controller: _interviewerController,
-                          inputType: TextInputType.text,
-                          validator: (value) =>
-                              SharedCode().emptyValidator(value),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12, top: 10),
-                        child: Text(headers[9].key.toString() + " :",
-                            style: TextStyle(fontSize: 15)),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: CustomTextField(
-                          isEnable: false,
-                          isreadOnly: true,
-                          controller: _headVillageController,
-                          inputType: TextInputType.text,
-                          validator: (value) =>
-                              SharedCode().emptyValidator(value),
-                        ),
-                      ),
+                      _headerForm(),
+                      _bodyForm(),
                     ],
                   ),
                 )),
@@ -317,5 +239,134 @@ class _ReadFormPageState extends State<ReadFormPage> {
     );
   }
 
+  _headerForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 12),
+          child: Center(
+              child: Text(headers[0].value.toString(),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
+        ),
+        SizedBox(height: 30.h),
+        Center(
+            child: Text(headers[1].value.toString(),
+                style: TextStyle(fontSize: 15), textAlign: TextAlign.center)),
+        SizedBox(height: 30.h),
+        Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: Text(headers[2].key.toString() + " :",
+              style: TextStyle(fontSize: 15)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: CustomTextField(
+            isEnable: false,
+            isreadOnly: true,
+            controller: _nameController,
+            inputType: TextInputType.text,
+            validator: (value) => SharedCode().emptyValidator(value),
+          ),
+        ),
+        SizedBox(height: 20.h),
+        Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: Text(headers[3].key.toString() + " :",
+              style: TextStyle(fontSize: 15)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: _buildDatePickerField(),
+        ),
+        SizedBox(height: 20.h),
+        _buildDropdownMunicipality(),
+        _buildDropdownsubDistrict(),
+        _buildDropdownVillage(),
+        _buildDropdownsubVillage(),
+        Padding(
+          padding: EdgeInsets.only(left: 12, top: 10),
+          child: Text(headers[8].key.toString() + " :",
+              style: TextStyle(fontSize: 15)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: CustomTextField(
+            isEnable: false,
+            isreadOnly: true,
+            controller: _interviewerController,
+            inputType: TextInputType.text,
+            validator: (value) => SharedCode().emptyValidator(value),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 12, top: 10),
+          child: Text(headers[9].key.toString() + " :",
+              style: TextStyle(fontSize: 15)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: CustomTextField(
+            isEnable: false,
+            isreadOnly: true,
+            controller: _headVillageController,
+            inputType: TextInputType.text,
+            validator: (value) => SharedCode().emptyValidator(value),
+          ),
+        ),
+      ],
+    );
+  }
 
+  _bodyForm() {
+    return Column(
+      children: List.generate(questions.length, (index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 12, top: 10),
+              child: Text(questions[index].question.toString() + " :",
+                  style: TextStyle(fontSize: 15)),
+            ),
+            questions[index].input_type == "FreeText"
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: CustomTextField(
+                      isEnable: false,
+                      isreadOnly: true,
+                      controller: _naranController,
+                      inputType: TextInputType.text,
+                      validator: (value) => SharedCode().emptyValidator(value),
+                    ),
+                  )
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Center(
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          height: 50.h,
+                          width: 400.w,
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(5)),
+                          child: DropdownButton(
+                            isExpanded: true,
+                            value: "",
+                            icon: Icon(Icons.arrow_drop_down),
+                            onChanged: null,
+                            isDense: true,
+                            underline: SizedBox.shrink(),
+                            items: [],
+                          )),
+                    ),
+                  ),
+          ],
+        );
+      }),
+    );
+  }
 }

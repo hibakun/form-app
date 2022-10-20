@@ -6,6 +6,8 @@ import 'package:form_app/model/formtabelModel.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../model/database/content.dart';
+
 class FormTableDatabase {
   static final FormTableDatabase instance = FormTableDatabase.init();
 
@@ -55,6 +57,14 @@ class FormTableDatabase {
     ${QuestionFields.input_type} $textType,
     ${QuestionFields.question} $textType,
     ${QuestionFields.dropdown} $textType
+    )''');
+
+    await db.execute('''CREATE TABLE ${ContentFields.table} (
+    ${ContentFields.id} $idType,
+    ${ContentFields.formType} $textType,
+    ${ContentFields.key} $textType,
+    ${ContentFields.value} $textType,
+    ${ContentFields.code} $textType
     )''');
   }
 
@@ -128,6 +138,36 @@ class FormTableDatabase {
     final result = await db.query(tableFormTable);
 
     return result.map((json) => FormModel.fromJson(json)).toList();
+  }
+
+  // content
+
+  Future<int> createContent(String table, ContentDatabaseModel model) async {
+    final db = await instance.database;
+    final query = await db.insert(table, model.toJson());
+
+    return query;
+  }
+
+  Future<List<ContentDatabaseModel>> readContent(String? type) async {
+    final db = await instance.database;
+
+    final maps = await db.query(ContentFields.table,
+        where: '${ContentFields.formType} = ?', whereArgs: [type]);
+
+    if (maps.isNotEmpty) {
+      return maps.map((json) => ContentDatabaseModel.fromJson(json)).toList();
+    } else {
+      throw Exception('ID $type not found');
+    }
+  }
+
+  Future<List<ContentDatabaseModel>> contentReadAll() async {
+    Database db = await instance.database;
+    final data = await db.query(ContentFields.table);
+    List<ContentDatabaseModel> result = data.map((e) => ContentDatabaseModel.fromJson(e)).toList();
+
+    return result;
   }
 
   Future close() async {

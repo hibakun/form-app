@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dob_input_field/dob_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +19,8 @@ import 'package:form_app/ui/dashboard/dashboard.dart';
 import 'package:form_app/ui/dashboard/item/add_form.dart';
 import 'package:form_app/ui/widget/custom_text_field.dart';
 import 'package:intl/intl.dart';
+
+import '../../../model/database/content.dart';
 
 class FillFormPage extends StatefulWidget {
   final String formType;
@@ -58,7 +62,11 @@ class _FillFormPageState extends State<FillFormPage> {
   List dropdownQuestion = [];
   List selectVal = [];
   final Map<String, dynamic> answersQuestionMap = {};
-  final Map<String, dynamic> answersHeaderMap = {};
+
+  String municipalityValue = '';
+  String subDistrictValue = '';
+  String villageValue = '';
+  String subVillageValue = '';
 
   read() async {
     setState(() {
@@ -116,6 +124,102 @@ class _FillFormPageState extends State<FillFormPage> {
     setState(() {
       municipalityList = _resMunicipality.data;
       _isloading = false;
+    });
+  }
+
+  String _randomCode() {
+    Random random = Random();
+    int randomNumber = random.nextInt(900) + 100;
+    String date = DateFormat('ddMMyyyy').format(DateTime.now());
+
+    String result = '${headers[0].formType}-$date-$randomNumber';
+    return result;
+  }
+
+  Future addContent() async {
+    String code = _randomCode();
+
+    await FormTableDatabase.instance.createContent(
+        ContentFields.table,
+        ContentDatabaseModel(
+          formType: headers[0].formType.toString(),
+          key: headers[2].key,
+          value: _nameController.text,
+          code: code,
+        ));
+
+    await FormTableDatabase.instance.createContent(
+        ContentFields.table,
+        ContentDatabaseModel(
+          formType: headers[0].formType.toString(),
+          key: headers[3].key,
+          value: _selectDate,
+          code: code,
+        ));
+
+    await FormTableDatabase.instance.createContent(
+        ContentFields.table,
+        ContentDatabaseModel(
+          formType: headers[0].formType.toString(),
+          key: headers[4].key,
+          value: municipalityValue,
+          code: code,
+        ));
+
+    await FormTableDatabase.instance.createContent(
+        ContentFields.table,
+        ContentDatabaseModel(
+          formType: headers[0].formType.toString(),
+          key: headers[5].key,
+          value: subDistrictValue,
+          code: code,
+        ));
+
+    await FormTableDatabase.instance.createContent(
+        ContentFields.table,
+        ContentDatabaseModel(
+          formType: headers[0].formType.toString(),
+          key: headers[6].key,
+          value: villageValue,
+          code: code,
+        ));
+
+    await FormTableDatabase.instance.createContent(
+        ContentFields.table,
+        ContentDatabaseModel(
+          formType: headers[0].formType.toString(),
+          key: headers[7].key,
+          value: subVillageValue,
+          code: code,
+        ));
+
+    await FormTableDatabase.instance.createContent(
+        ContentFields.table,
+        ContentDatabaseModel(
+          formType: headers[0].formType.toString(),
+          key: headers[8].key,
+          value: _interviewerController.text,
+          code: code,
+        ));
+
+    await FormTableDatabase.instance.createContent(
+        ContentFields.table,
+        ContentDatabaseModel(
+          formType: headers[0].formType.toString(),
+          key: headers[9].key,
+          value: _headVillageController.text,
+          code: code,
+        ));
+
+    answersQuestionMap.forEach((key, value) async {
+      await FormTableDatabase.instance.createContent(
+          ContentFields.table,
+          ContentDatabaseModel(
+            formType: headers[0].formType.toString(),
+            key: key,
+            value: value,
+            code: code,
+          ));
     });
   }
 
@@ -217,7 +321,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[4].key.toString() + " :",
+          child: Text('headers[4].key.toString()' + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -239,9 +343,10 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         _isload = true;
                       });
+                      municipalityValue = newValue!.name;
                       SubdisctrictByMuniModel _resSubdistrict =
                           await ApiService().subdisctrictByMuniAPI(
-                              id: newValue!.id.toString(),
+                              id: newValue.id.toString(),
                               code: newValue.code,
                               name: newValue.name,
                               desc: newValue.description);
@@ -260,9 +365,10 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         _isload = true;
                       });
+                      municipalityValue = newValue!.name;
                       SubdisctrictByMuniModel _resSubdistrict =
                           await ApiService().subdisctrictByMuniAPI(
-                              id: newValue!.id.toString(),
+                              id: newValue.id.toString(),
                               code: newValue.code,
                               name: newValue.name,
                               desc: newValue.description);
@@ -299,7 +405,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[5].key.toString() + " :",
+          child: Text('headers[5].key.toString()' + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -321,9 +427,10 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         _isload = true;
                       });
+                      subDistrictValue = newValue!.name;
                       VillageBySubModel _resVillage = await ApiService()
                           .villageBySubAPI(
-                              id: newValue!.id,
+                              id: newValue.id,
                               code: newValue.code,
                               desc: newValue.description,
                               name: newValue.name);
@@ -341,9 +448,10 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         _isload = true;
                       });
+                      subDistrictValue = newValue!.name;
                       VillageBySubModel _resVillage = await ApiService()
                           .villageBySubAPI(
-                              id: newValue!.id,
+                              id: newValue.id,
                               code: newValue.code,
                               desc: newValue.description,
                               name: newValue.name);
@@ -380,7 +488,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[6].key.toString() + " :",
+          child: Text('headers[6].key.toString()' + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -402,9 +510,10 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         _isload = true;
                       });
+                      villageValue = newValue!.name;
                       SubvillageByVillModel _resSubvillage = await ApiService()
                           .subVillageByVillAPI(
-                              id: newValue!.id,
+                              id: newValue.id,
                               code: newValue.code,
                               name: newValue.name,
                               desc: newValue.description);
@@ -421,9 +530,10 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         _isload = true;
                       });
+                      villageValue = newValue!.name;
                       SubvillageByVillModel _resSubvillage = await ApiService()
                           .subVillageByVillAPI(
-                              id: newValue!.id,
+                              id: newValue.id,
                               code: newValue.code,
                               name: newValue.name,
                               desc: newValue.description);
@@ -460,7 +570,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[7].key.toString() + " :",
+          child: Text('headers[7].key.toString()' + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -479,7 +589,8 @@ class _FillFormPageState extends State<FillFormPage> {
                   icon: Icon(Icons.arrow_drop_down),
                   onChanged: (SubvillageByVillageData? newValue) {
                     setState(() {
-                      dropdownsubVillage = newValue!;
+                      subVillageValue = newValue!.name;
+                      dropdownsubVillage = newValue;
                     });
                   },
                   isDense: true,
@@ -507,17 +618,17 @@ class _FillFormPageState extends State<FillFormPage> {
         Padding(
           padding: EdgeInsets.only(top: 12),
           child: Center(
-              child: Text(headers[0].value.toString(),
+              child: Text('headers[0].value.toString()',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
         ),
         SizedBox(height: 30.h),
         Center(
-            child: Text(headers[1].value.toString(),
+            child: Text('headers[1].value.toString()',
                 style: TextStyle(fontSize: 15), textAlign: TextAlign.center)),
         SizedBox(height: 30.h),
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[2].key.toString() + " :",
+          child: Text('headers[2].key.toString()' + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -533,7 +644,7 @@ class _FillFormPageState extends State<FillFormPage> {
         SizedBox(height: 20.h),
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[3].key.toString() + " :",
+          child: Text('headers[3].key.toString()' + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -544,7 +655,7 @@ class _FillFormPageState extends State<FillFormPage> {
         _buildDropdownMunicipality(),
         Padding(
           padding: EdgeInsets.only(left: 12, top: 10),
-          child: Text(headers[8].key.toString() + " :",
+          child: Text('headers[8].key.toString()' + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -559,7 +670,7 @@ class _FillFormPageState extends State<FillFormPage> {
         ),
         Padding(
           padding: EdgeInsets.only(left: 12, top: 10),
-          child: Text(headers[9].key.toString() + " :",
+          child: Text('headers[9].key.toString()' + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -685,24 +796,9 @@ class _FillFormPageState extends State<FillFormPage> {
               onPressed: () {
                 SharedCode.showAlertDialog(
                     context, 'Aviso', 'Você quer salvar a resposta?', 'warning',
-                    onButtonPressed: () {
-                  print("name: " +
-                      _nameController.text +
-                      "birth date: " +
-                      _selectDate +
-                      "municipality: " +
-                      dropdownMunicipality!.name +
-                      "Sub distrcit: " +
-                      dropdownsubDistrict!.name +
-                      "village: " +
-                      dropdownVillage!.name +
-                      "Sub Village: " +
-                      dropdownsubVillage!.name +
-                      "Interviewer Name: " +
-                      _interviewerController.text +
-                      "Head Village Name: " +
-                      _headVillageController.text);
-                  print("SAVED" + answersQuestionMap.toString());
+                    onButtonPressed: () async {
+                  await addContent();
+                  if (!mounted) return;
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 });
               },

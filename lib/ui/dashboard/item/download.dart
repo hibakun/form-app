@@ -48,7 +48,6 @@ class _DownloadPageState extends State<DownloadPage> {
 
   Future read() async {
     _datalistform = await FormTableDatabase.instance.readAll();
-    setState(() {});
   }
 
   Future downloadForm(String type) async {

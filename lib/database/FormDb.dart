@@ -164,7 +164,7 @@ class FormTableDatabase {
 
   Future<List<ContentDatabaseModel>> contentReadAll() async {
     Database db = await instance.database;
-    final data = await db.query(ContentFields.table);
+    final data = await db.query(ContentFields.table, groupBy: ContentFields.code);
     List<ContentDatabaseModel> result = data.map((e) => ContentDatabaseModel.fromJson(e)).toList();
 
     return result;

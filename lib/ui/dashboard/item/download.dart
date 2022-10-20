@@ -220,7 +220,7 @@ class _DownloadPageState extends State<DownloadPage> {
           height: 40.h,
           width: 200.w,
           child: ElevatedButton(
-            child: Text('Download Form'),
+            child: Text('Baixar formulário'),
             onPressed: () async {
               if (_datalistform.isEmpty) {
                 addDb();

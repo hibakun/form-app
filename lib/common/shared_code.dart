@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:form_app/common/custom_alert_dialog.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 final Color blackColor = HexColor("#3d3d3d");
 final Color greyColor = HexColor("#f2f2f2");
 
 class SharedCode {
+  static showAlertDialog(
+      BuildContext context, String title, String content, String status,
+      {dynamic onButtonPressed = 0}) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CustomAlertDialog(
+              title: title,
+              content: content,
+              status: status,
+              onButtonPressed: onButtonPressed);
+        });
+  }
+
   String? emptyValidator(value) {
     return value.toString().trim().isEmpty
         ? 'O campo não pode estar vazio'

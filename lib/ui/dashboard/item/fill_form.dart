@@ -10,8 +10,11 @@ import 'package:form_app/model/subdisctrict_by_muni_model.dart';
 import 'package:form_app/model/subdisctrict_model.dart';
 import 'package:form_app/model/subvillage_by_vill_model.dart';
 import 'package:form_app/model/subvillage_model.dart';
+import 'package:form_app/model/surveyFormDownloadModel.dart';
 import 'package:form_app/model/village_by_sub_model.dart';
 import 'package:form_app/service/api_service.dart';
+import 'package:form_app/ui/dashboard/dashboard.dart';
+import 'package:form_app/ui/dashboard/item/add_form.dart';
 import 'package:form_app/ui/widget/custom_text_field.dart';
 import 'package:intl/intl.dart';
 
@@ -33,11 +36,13 @@ class _FillFormPageState extends State<FillFormPage> {
   List<SubdisctrictByMuniData> subDistrictList = [];
   List<VillageBySubData> villageList = [];
   List<SubvillageByVillageData> subVillageList = [];
+  List<SurveyLine> surveyLinesList = [];
 
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
   DateTime _selectedDate = DateTime.now();
   String _selectDate = "";
   final _nameController = TextEditingController();
+  final _questionsController = TextEditingController();
   final _interviewerController = TextEditingController();
   final _headVillageController = TextEditingController();
   bool _isload = false;
@@ -47,13 +52,13 @@ class _FillFormPageState extends State<FillFormPage> {
   bool _showsubVillage = false;
   List<HeaderDatabaseModel> headers = [];
   List<QuestionDbModel> questions = [];
-  List<String> dropdown = [];
-  List<String> dropdown1 = [];
-  List<String> dropdown2 = [];
-  List<String> dropdown3 = [];
-  List<String> dropdown4 = [];
-  List<String> dropdown5 = [];
-  List<String> dropdown6 = [];
+  List freeTextQuestion = [];
+  List dropdown = [];
+  List dropdownSplit = [];
+  List dropdownQuestion = [];
+  List selectVal = [];
+  final Map<String, dynamic> answersQuestionMap = {};
+  final Map<String, dynamic> answersHeaderMap = {};
 
   read() async {
     setState(() {
@@ -67,37 +72,46 @@ class _FillFormPageState extends State<FillFormPage> {
     }
     questions = await FormTableDatabase.instance.readQuestion(widget.formType);
     for (int i = 0; i < questions.length; i++) {
+      answersQuestionMap[questions[i].question.toString()] = "0";
       print("form question : " + questions[i].question.toString());
       if (questions[i].dropdown.toString() == "") continue;
       dropdown.add(questions[i].dropdown.toString());
     }
+    print("Answer Map: " + answersQuestionMap.toString());
+
+    for (int i = 0; i < questions.length; i++) {
+      print("QUESTION CHOICE: " + questions[i].question.toString());
+      if (questions[i].input_type == "FreeText") continue;
+      dropdownQuestion.add(questions[i].question.toString());
+      print("INPUT TYPE: " + questions[i].input_type.toString());
+    }
+    for (int i = 0; i < questions.length; i++) {
+      print("QUESTION FREETEXT: " + questions[i].question.toString());
+      if (questions[i].input_type == "Choice") continue;
+      freeTextQuestion.add(questions[i].question.toString());
+    }
+
     for (int i = 0; i < dropdown.length; i++) {
       print("DROPDOWNS: " + dropdown[i]);
+      dropdownSplit.add(dropdown[i].split("Îµ"));
     }
-    dropdown1 = dropdown[0].split("Îµ");
-    dropdown1.forEach((element) {
-      print("DROPDOWN 1: " + element);
+
+    dropdownSplit.forEach((element) {
+      print("SPLITTED DROPDOWN: " + element.toString());
     });
-    dropdown2 = dropdown[1].split("Îµ");
-    dropdown2.forEach((element) {
-      print("DROPDOWN 2: " + element);
-    });
-    dropdown3 = dropdown[2].split("Îµ");
-    dropdown3.forEach((element) {
-      print("DROPDOWN 3: " + element);
-    });
-    dropdown4 = dropdown[3].split("Îµ");
-    dropdown4.forEach((element) {
-      print("DROPDOWN 4: " + element);
-    });
-    dropdown5 = dropdown[4].split("Îµ");
-    dropdown5.forEach((element) {
-      print("DROPDOWN 5: " + element);
-    });
-    dropdown6 = dropdown[5].split("Îµ");
-    dropdown6.forEach((element) {
-      print("DROPDOWN 6: " + element);
-    });
+
+    for (int i = 0; i < dropdownSplit.length; i++) {
+      selectVal.add(dropdownSplit[i][0]);
+      print("SELECT VALUE: " + selectVal.toString());
+    }
+
+    for (int i = 0; i < dropdown.length; i++) {
+      print("QUESTION: " + questions[i].question.toString());
+      if (questions[i].input_type != "Choice") continue;
+      dropdownQuestion.add(questions[i].question.toString());
+      print("SPLITTED DROPDOWN QUESTION: " + dropdownQuestion[i].toString());
+    }
+
     MunicipalityModel _resMunicipality = await ApiService().municipalityAPI();
     setState(() {
       municipalityList = _resMunicipality.data;
@@ -109,6 +123,13 @@ class _FillFormPageState extends State<FillFormPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (dropdown.isNotEmpty) {
+      freeTextQuestion.clear();
+      dropdown.clear();
+      dropdownSplit.clear();
+      dropdownQuestion.clear();
+      selectVal.clear();
+    }
     _selectDate = _dateFormat.format(_selectedDate);
     read();
   }
@@ -117,6 +138,7 @@ class _FillFormPageState extends State<FillFormPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          appBar: AppBar(),
           body: _isloading
               ? Center(child: CircularProgressIndicator())
               : Stack(
@@ -126,84 +148,10 @@ class _FillFormPageState extends State<FillFormPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 12),
-                            child: Center(
-                                child: Text(headers[0].value.toString(),
-                                    style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold))),
-                          ),
-                          SizedBox(height: 30.h),
-                          Center(
-                              child: Text(headers[1].value.toString(),
-                                  style: TextStyle(fontSize: 15),
-                                  textAlign: TextAlign.center)),
-                          SizedBox(height: 30.h),
-                          Padding(
-                            padding: EdgeInsets.only(left: 12),
-                            child: Text(headers[2].key.toString() + " :",
-                                style: TextStyle(fontSize: 15)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: CustomTextField(
-                              isEnable: true,
-                              isreadOnly: false,
-                              controller: _nameController,
-                              inputType: TextInputType.text,
-                              validator: (value) =>
-                                  SharedCode().emptyValidator(value),
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-                          Padding(
-                            padding: EdgeInsets.only(left: 12),
-                            child: Text(headers[3].key.toString() + " :",
-                                style: TextStyle(fontSize: 15)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: _buildDatePickerField(),
-                          ),
-                          SizedBox(height: 20.h),
-                          _buildDropdownMunicipality(),
-                          Padding(
-                            padding: EdgeInsets.only(left: 12, top: 10),
-                            child: Text(headers[8].key.toString() + " :",
-                                style: TextStyle(fontSize: 15)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: CustomTextField(
-                              isEnable: true,
-                              isreadOnly: false,
-                              controller: _interviewerController,
-                              inputType: TextInputType.text,
-                              validator: (value) =>
-                                  SharedCode().emptyValidator(value),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 12, top: 10),
-                            child: Text(headers[9].key.toString() + " :",
-                                style: TextStyle(fontSize: 15)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: CustomTextField(
-                              isEnable: true,
-                              isreadOnly: false,
-                              controller: _headVillageController,
-                              inputType: TextInputType.text,
-                              validator: (value) =>
-                                  SharedCode().emptyValidator(value),
-                            ),
-                          ),
+                          _headerForm(),
+                          _bodyFormFreeText(),
+                          _bodyFormChoice(),
+                          _buttonSave()
                         ],
                       ),
                     ),
@@ -548,6 +496,223 @@ class _FillFormPageState extends State<FillFormPage> {
           ),
         ),
       ],
+    );
+  }
+
+  _headerForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 12),
+          child: Center(
+              child: Text(headers[0].value.toString(),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
+        ),
+        SizedBox(height: 30.h),
+        Center(
+            child: Text(headers[1].value.toString(),
+                style: TextStyle(fontSize: 15), textAlign: TextAlign.center)),
+        SizedBox(height: 30.h),
+        Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: Text(headers[2].key.toString() + " :",
+              style: TextStyle(fontSize: 15)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: CustomTextField(
+            isEnable: true,
+            isreadOnly: false,
+            controller: _nameController,
+            inputType: TextInputType.text,
+            validator: (value) => SharedCode().emptyValidator(value),
+          ),
+        ),
+        SizedBox(height: 20.h),
+        Padding(
+          padding: EdgeInsets.only(left: 12),
+          child: Text(headers[3].key.toString() + " :",
+              style: TextStyle(fontSize: 15)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: _buildDatePickerField(),
+        ),
+        SizedBox(height: 20.h),
+        _buildDropdownMunicipality(),
+        Padding(
+          padding: EdgeInsets.only(left: 12, top: 10),
+          child: Text(headers[8].key.toString() + " :",
+              style: TextStyle(fontSize: 15)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: CustomTextField(
+            isEnable: true,
+            isreadOnly: false,
+            controller: _interviewerController,
+            inputType: TextInputType.text,
+            validator: (value) => SharedCode().emptyValidator(value),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 12, top: 10),
+          child: Text(headers[9].key.toString() + " :",
+              style: TextStyle(fontSize: 15)),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: CustomTextField(
+            isEnable: true,
+            isreadOnly: false,
+            controller: _headVillageController,
+            inputType: TextInputType.text,
+            validator: (value) => SharedCode().emptyValidator(value),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _bodyFormChoice() {
+    return Column(
+      children: List<Widget>.generate(dropdown.length, (int index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 12, top: 10),
+              child: Text(dropdownQuestion[index].toString() + " :",
+                  style: TextStyle(fontSize: 15)),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: Center(
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    height: 50.h,
+                    width: 400.w,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(5)),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: selectVal[index],
+                      icon: Icon(Icons.arrow_drop_down),
+                      onChanged: (value) {
+                        setState(() {
+                          selectVal[index] = value!;
+                          answersQuestionMap[dropdownQuestion[index]
+                              .toString()] = selectVal[index];
+                        });
+                      },
+                      isDense: true,
+                      underline: SizedBox.shrink(),
+                      items: dropdown[index]
+                          .split("Îµ")
+                          .map<DropdownMenuItem<String>>((e) {
+                        return DropdownMenuItem<String>(
+                          value: e,
+                          child: Text(e),
+                        );
+                      }).toList(),
+                    )),
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  _bodyFormFreeText() {
+    return Column(
+      children: List<Widget>.generate(freeTextQuestion.length, (int index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 12, top: 10),
+              child: Text(freeTextQuestion[index].toString() + " :",
+                  style: TextStyle(fontSize: 15)),
+            ),
+            FocusTraversalGroup(
+              child: Form(
+                autovalidateMode: AutovalidateMode.always,
+                onChanged: () {
+                  Form.of(primaryFocus!.context!)!.save();
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: TextFormField(
+                    style: Theme.of(context).textTheme.bodyText1,
+                    validator: (value) => SharedCode().emptyValidator(value),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (String? value) {
+                      print('Value for field $index saved as "$value"');
+                      print('Question Text: ' +
+                          freeTextQuestion[index].toString());
+                      answersQuestionMap[freeTextQuestion[index].toString()] =
+                          value;
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  _buttonSave() {
+    return Padding(
+      padding: EdgeInsets.only(top: 15, bottom: 15),
+      child: Center(
+        child: Container(
+          height: 50.h,
+          width: 250.w,
+          child: ElevatedButton(
+              onPressed: () {
+                SharedCode.showAlertDialog(
+                    context, 'Aviso', 'Você quer salvar a resposta?', 'warning',
+                    onButtonPressed: () {
+                  print("name: " +
+                      _nameController.text +
+                      "birth date: " +
+                      _selectDate +
+                      "municipality: " +
+                      dropdownMunicipality!.name +
+                      "Sub distrcit: " +
+                      dropdownsubDistrict!.name +
+                      "village: " +
+                      dropdownVillage!.name +
+                      "Sub Village: " +
+                      dropdownsubVillage!.name +
+                      "Interviewer Name: " +
+                      _interviewerController.text +
+                      "Head Village Name: " +
+                      _headVillageController.text);
+                  print("SAVED" + answersQuestionMap.toString());
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                });
+              },
+              child:
+                  Text("Salvar", style: TextStyle(fontWeight: FontWeight.bold)),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue))),
+        ),
+      ),
     );
   }
 }

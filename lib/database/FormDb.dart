@@ -34,6 +34,7 @@ class FormTableDatabase {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final intType = 'INTEGER NOT NULL';
     final textType = 'TEXT NOT NULL';
+    final textNullType = 'TEXT';
 
     await db.execute('''CREATE TABLE $tableFormTable (
     ${FormFields.idDb} $idType,
@@ -70,12 +71,12 @@ class FormTableDatabase {
 
     await db.execute('''CREATE TABLE ${QuestionAnswerFields.questionanswerTable} (
     ${QuestionAnswerFields.id} $idType,
-    ${QuestionAnswerFields.id_soal} $idType,
+    ${QuestionAnswerFields.id_soal} $intType,
     ${QuestionAnswerFields.formType} $textType,
     ${QuestionAnswerFields.question} $textType,
-    ${QuestionAnswerFields.dropdown} $textType,
+    ${QuestionAnswerFields.dropdown} $textNullType,
     ${QuestionAnswerFields.code} $textType,
-    ${QuestionAnswerFields.answer} $textType,
+    ${QuestionAnswerFields.answer} $textType
     )''');
   }
 
@@ -171,7 +172,7 @@ class FormTableDatabase {
     final db = await instance.database;
 
     final maps = await db.query(ContentFields.table,
-        where: '${ContentFields.formType} = ?', whereArgs: [type]);
+        where: '${ContentFields.code} = ?', whereArgs: [type]);
 
     if (maps.isNotEmpty) {
       return maps.map((json) => ContentDatabaseModel.fromJson(json)).toList();
@@ -188,27 +189,52 @@ class FormTableDatabase {
     return result;
   }
 
+  deleteContent(String code) async {
+    final db = await instance.database;
+    try {
+      await db.delete(
+        ContentFields.table,
+        where: '${ContentFields.code} = ?',
+        whereArgs: [code],
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
 
 
-  Future<List<ContentDatabaseModel>> readQuestionAnswer(String? type) async {
+
+  Future<List<QuestionAnswerDbModel>> readQuestionAnswer(String? type) async {
     final db = await instance.database;
 
-    final maps = await db.query(ContentFields.table,
-        where: '${ContentFields.code} = ?', whereArgs: [type]);
+    final maps = await db.query(QuestionAnswerFields.questionanswerTable,
+        where: '${QuestionAnswerFields.code} = ?', whereArgs: [type]);
 
     if (maps.isNotEmpty) {
-      return maps.map((json) => ContentDatabaseModel.fromJson(json)).toList();
+      return maps.map((json) => QuestionAnswerDbModel.fromJson(json)).toList();
     } else {
       throw Exception('ID $type not found');
     }
   }
 
-  Future<List<ContentDatabaseModel>> readQuestionAnswerAll() async {
+  Future<List<QuestionAnswerDbModel>> readQuestionAnswerAll() async {
     Database db = await instance.database;
-    final data = await db.query(ContentFields.table);
-    List<ContentDatabaseModel> result = data.map((e) => ContentDatabaseModel.fromJson(e)).toList();
-
+    final data = await db.query(QuestionAnswerFields.questionanswerTable, groupBy: QuestionAnswerFields.code);
+    List<QuestionAnswerDbModel> result = data.map((e) => QuestionAnswerDbModel.fromJson(e)).toList();
     return result;
+  }
+
+  deleteQuestion(String code) async {
+    final db = await instance.database;
+    try {
+      await db.delete(
+        QuestionAnswerFields.questionanswerTable,
+        where: '${QuestionAnswerFields.code} = ?',
+        whereArgs: [code],
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future close() async {

@@ -15,20 +15,20 @@ class QuestionAnswerFields {
 class QuestionAnswerDbModel {
   int? id;
   String? formType;
-  int? kode_soal;
+  int? id_soal;
   String? question;
   String? dropdown;
   String? code;
   String? answer;
 
 
-  QuestionAnswerDbModel({this.id, this.formType, this.kode_soal, this.question, this.dropdown, this.code, this.answer});
+  QuestionAnswerDbModel({this.id, this.formType, this.id_soal, this.question, this.dropdown, this.code, this.answer});
 
   factory QuestionAnswerDbModel.fromJson(Map<String, dynamic> json) {
     return QuestionAnswerDbModel(
       id: json['id'],
       formType: json['formType'],
-      kode_soal: json['kode_soal'],
+      id_soal: json['id_soal'],
       question: json['question'],
       dropdown: json['dropdown'],
       code: json['code'],
@@ -40,7 +40,7 @@ class QuestionAnswerDbModel {
   Map<String, dynamic> toJson() => {
     QuestionAnswerFields.id: id,
     QuestionAnswerFields.formType: formType,
-    QuestionAnswerFields.id_soal: kode_soal,
+    QuestionAnswerFields.id_soal: id_soal,
     QuestionAnswerFields.question: question,
     QuestionAnswerFields.dropdown: dropdown,
     QuestionAnswerFields.answer: answer,

@@ -92,7 +92,6 @@ class _FillFormPageState extends State<FillFormPage> {
       dropdown.add(questions[i].dropdown.toString());
     }
 
-
     questionIdChoice.forEach((element) {
       print(element.toString());
     });
@@ -103,7 +102,6 @@ class _FillFormPageState extends State<FillFormPage> {
       questionIdFreeText.add(questions[i].kode_soal);
     }
 
-
     for (int i = 0; i < questions.length; i++) {
       print("QUESTION CHOICE: " + questions[i].question.toString());
       if (questions[i].input_type == "FreeText") continue;
@@ -113,7 +111,6 @@ class _FillFormPageState extends State<FillFormPage> {
       print("INPUT TYPE: " + questions[i].input_type.toString());
     }
 
-
     for (int i = 0; i < questions.length; i++) {
       print("QUESTION FREETEXT: " + questions[i].question.toString());
       if (questions[i].input_type == "Choice") continue;
@@ -122,7 +119,6 @@ class _FillFormPageState extends State<FillFormPage> {
       print("FREE TEXT MAP: " + answersFreeTextMap.toString());
       freeTextQuestion.add(questions[i].question.toString());
     }
-
 
     for (int i = 0; i < dropdown.length; i++) {
       print("DROPDOWNS: " + dropdown[i]);
@@ -238,34 +234,37 @@ class _FillFormPageState extends State<FillFormPage> {
 
     print("FREE TEXT MAP SAVED: " + answersFreeTextMap.toString());
     print("Choice MAP SAVED: " + answersChoiceMap.toString());
-    answersFreeTextMap.forEach((key, value) async {
-      int i = 0;
-      await FormTableDatabase.instance.createQuestionAnswer(
+    int indexFreeText = 0;
+    answersFreeTextMap.forEach((key, value) {
+      print('QUESTION ID FREE TEXT : ' +
+          questionIdFreeText[indexFreeText].toString());
+      FormTableDatabase.instance.createQuestionAnswer(
           QuestionAnswerFields.questionanswerTable,
           QuestionAnswerDbModel(
-            kode_soal: questionIdFreeText[i],
+            id_soal: questionIdFreeText[indexFreeText],
             formType: headers[0].formType.toString(),
             question: key,
             answer: value,
             code: code,
           ));
-      i ++;
+
+      indexFreeText++;
     });
 
-     answersChoiceMap.forEach((key, value) async {
-       int i = 0;
-      await FormTableDatabase.instance.createQuestionAnswer(
+    int indexChoice = 0;
+    answersChoiceMap.forEach((key, value) {
+      print('QUESTION ID CHOICE : ' +
+          questionIdChoice[indexChoice].toString());
+      FormTableDatabase.instance.createQuestionAnswer(
           QuestionAnswerFields.questionanswerTable,
           QuestionAnswerDbModel(
-            kode_soal: questionIdChoice[i],
-            formType: headers[0].formType.toString(),
-            question: key,
-            answer: value,
-            code: code,
-            dropdown: dropdown[i]
-          ));
-      i ++;
-
+              id_soal: questionIdChoice[indexChoice],
+              formType: headers[0].formType.toString(),
+              question: key,
+              answer: value,
+              code: code,
+              dropdown: dropdown[indexChoice]));
+      indexChoice++;
     });
   }
 
@@ -367,7 +366,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text('headers[4].key.toString()' + " :",
+          child: Text(headers[4].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -451,7 +450,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text('headers[5].key.toString()' + " :",
+          child: Text(headers[5].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -534,7 +533,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text('headers[6].key.toString()' + " :",
+          child: Text(headers[6].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -616,7 +615,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text('headers[7].key.toString()' + " :",
+          child: Text(headers[7].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -664,17 +663,17 @@ class _FillFormPageState extends State<FillFormPage> {
         Padding(
           padding: EdgeInsets.only(top: 12),
           child: Center(
-              child: Text('headers[0].value.toString()',
+              child: Text(headers[0].value.toString(),
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
         ),
         SizedBox(height: 30.h),
         Center(
-            child: Text('headers[1].value.toString()',
+            child: Text(headers[1].value.toString(),
                 style: TextStyle(fontSize: 15), textAlign: TextAlign.center)),
         SizedBox(height: 30.h),
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text('headers[2].key.toString()' + " :",
+          child: Text(headers[2].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -690,7 +689,7 @@ class _FillFormPageState extends State<FillFormPage> {
         SizedBox(height: 20.h),
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text('headers[3].key.toString()' + " :",
+          child: Text(headers[3].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -701,7 +700,7 @@ class _FillFormPageState extends State<FillFormPage> {
         _buildDropdownMunicipality(),
         Padding(
           padding: EdgeInsets.only(left: 12, top: 10),
-          child: Text('headers[8].key.toString()' + " :",
+          child: Text(headers[8].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -716,7 +715,7 @@ class _FillFormPageState extends State<FillFormPage> {
         ),
         Padding(
           padding: EdgeInsets.only(left: 12, top: 10),
-          child: Text('headers[9].key.toString()' + " :",
+          child: Text(headers[9].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(

@@ -61,7 +61,8 @@ class _FillFormPageState extends State<FillFormPage> {
   List dropdown = [];
   List dropdownSplit = [];
   List dropdownQuestion = [];
-  List questionId = [];
+  List questionIdFreeText = [];
+  List questionIdChoice = [];
 
   List selectVal = [];
   final Map<String, dynamic> answersFreeTextMap = {};
@@ -84,11 +85,24 @@ class _FillFormPageState extends State<FillFormPage> {
     }
     questions = await FormTableDatabase.instance.readQuestion(widget.formType);
     for (int i = 0; i < questions.length; i++) {
-      questionId.add(questions[i].id);
+      print("Question IDS: " + questions[i].kode_soal.toString());
       if (questions[i].dropdown.toString() == "") continue;
+      questionIdChoice.add(questions[i].kode_soal);
+      print("Question IDS continue: " + questions[i].kode_soal.toString());
       dropdown.add(questions[i].dropdown.toString());
     }
-    print("Answer Map: " + answersFreeTextMap.toString());
+
+
+    questionIdChoice.forEach((element) {
+      print(element.toString());
+    });
+
+    for (int i = 0; i < questions.length; i++) {
+      print("Question IDS: " + questions[i].kode_soal.toString());
+      if (questions[i].dropdown.toString().isNotEmpty) continue;
+      questionIdFreeText.add(questions[i].kode_soal);
+    }
+
 
     for (int i = 0; i < questions.length; i++) {
       print("QUESTION CHOICE: " + questions[i].question.toString());
@@ -99,13 +113,16 @@ class _FillFormPageState extends State<FillFormPage> {
       print("INPUT TYPE: " + questions[i].input_type.toString());
     }
 
+
     for (int i = 0; i < questions.length; i++) {
       print("QUESTION FREETEXT: " + questions[i].question.toString());
       if (questions[i].input_type == "Choice") continue;
+      questionIdFreeText.add(questions[i].kode_soal);
       answersFreeTextMap[questions[i].question.toString()] = "0";
       print("FREE TEXT MAP: " + answersFreeTextMap.toString());
       freeTextQuestion.add(questions[i].question.toString());
     }
+
 
     for (int i = 0; i < dropdown.length; i++) {
       print("DROPDOWNS: " + dropdown[i]);
@@ -221,19 +238,35 @@ class _FillFormPageState extends State<FillFormPage> {
 
     print("FREE TEXT MAP SAVED: " + answersFreeTextMap.toString());
     print("Choice MAP SAVED: " + answersChoiceMap.toString());
-    // answersFreeTextMap.forEach((key, value) async {
-    //   int i = 0;
-    //   await FormTableDatabase.instance.createQuestionAnswer(
-    //       ContentFields.table,
-    //       QuestionAnswerDbModel(
-    //         id: questionId[i],
-    //         formType: headers[0].formType.toString(),
-    //         question: key,
-    //         answer: value,
-    //         code: code,
-    //       ));
-    //   i ++;
-    // });
+    answersFreeTextMap.forEach((key, value) async {
+      int i = 0;
+      await FormTableDatabase.instance.createQuestionAnswer(
+          QuestionAnswerFields.questionanswerTable,
+          QuestionAnswerDbModel(
+            kode_soal: questionIdFreeText[i],
+            formType: headers[0].formType.toString(),
+            question: key,
+            answer: value,
+            code: code,
+          ));
+      i ++;
+    });
+
+     answersChoiceMap.forEach((key, value) async {
+       int i = 0;
+      await FormTableDatabase.instance.createQuestionAnswer(
+          QuestionAnswerFields.questionanswerTable,
+          QuestionAnswerDbModel(
+            kode_soal: questionIdChoice[i],
+            formType: headers[0].formType.toString(),
+            question: key,
+            answer: value,
+            code: code,
+            dropdown: dropdown[i]
+          ));
+      i ++;
+
+    });
   }
 
   @override
@@ -729,8 +762,8 @@ class _FillFormPageState extends State<FillFormPage> {
                       onChanged: (value) {
                         setState(() {
                           selectVal[index] = value!;
-                          answersChoiceMap[dropdownQuestion[index]
-                              .toString()] = selectVal[index];
+                          answersChoiceMap[dropdownQuestion[index].toString()] =
+                              selectVal[index];
                         });
                       },
                       isDense: true,
@@ -810,7 +843,7 @@ class _FillFormPageState extends State<FillFormPage> {
                 SharedCode.showAlertDialog(
                     context, 'Aviso', 'Você quer salvar a resposta?', 'warning',
                     onButtonPressed: () async {
-                      print(answersFreeTextMap);
+                  print(answersFreeTextMap);
                   await addContent();
                   if (!mounted) return;
                   Navigator.of(context).popUntil((route) => route.isFirst);

@@ -20,13 +20,13 @@ class _AddFormPageState extends State<AddFormPage> {
       isLoading = true;
     });
     contentList = await FormTableDatabase.instance.contentReadAll();
-    if (contentList.isEmpty){
+    if (contentList.isEmpty) {
       setState(() {
         isLoading = true;
       });
     } else {
       setState(() {
-        isLoading = true;
+        isLoading = false;
       });
     }
   }

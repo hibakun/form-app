@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/database/question.dart';
+import 'package:form_app/model/database/question_answer.dart';
 import 'package:form_app/model/formtabelModel.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -66,6 +67,16 @@ class FormTableDatabase {
     ${ContentFields.value} $textType,
     ${ContentFields.code} $textType
     )''');
+
+    await db.execute('''CREATE TABLE ${QuestionAnswerFields.questionanswerTable} (
+    ${QuestionAnswerFields.id} $idType,
+    ${QuestionAnswerFields.id_soal} $idType,
+    ${QuestionAnswerFields.formType} $textType,
+    ${QuestionAnswerFields.question} $textType,
+    ${QuestionAnswerFields.dropdown} $textType,
+    ${QuestionAnswerFields.code} $textType,
+    ${QuestionAnswerFields.answer} $textType,
+    )''');
   }
 
   Future<FormModel> createForm(FormModel form) async {
@@ -83,6 +94,13 @@ class FormTableDatabase {
   }
 
   Future<int> createQuestion(String table, QuestionDbModel model) async {
+    final db = await instance.database;
+    final query = await db.insert(table, model.toJson());
+
+    return query;
+  }
+
+  Future<int> createQuestionAnswer(String table, QuestionAnswerDbModel model) async {
     final db = await instance.database;
     final query = await db.insert(table, model.toJson());
 
@@ -165,6 +183,29 @@ class FormTableDatabase {
   Future<List<ContentDatabaseModel>> contentReadAll() async {
     Database db = await instance.database;
     final data = await db.query(ContentFields.table, groupBy: ContentFields.code);
+    List<ContentDatabaseModel> result = data.map((e) => ContentDatabaseModel.fromJson(e)).toList();
+
+    return result;
+  }
+
+
+
+  Future<List<ContentDatabaseModel>> readQuestionAnswer(String? type) async {
+    final db = await instance.database;
+
+    final maps = await db.query(ContentFields.table,
+        where: '${ContentFields.code} = ?', whereArgs: [type]);
+
+    if (maps.isNotEmpty) {
+      return maps.map((json) => ContentDatabaseModel.fromJson(json)).toList();
+    } else {
+      throw Exception('ID $type not found');
+    }
+  }
+
+  Future<List<ContentDatabaseModel>> readQuestionAnswerAll() async {
+    Database db = await instance.database;
+    final data = await db.query(ContentFields.table);
     List<ContentDatabaseModel> result = data.map((e) => ContentDatabaseModel.fromJson(e)).toList();
 
     return result;

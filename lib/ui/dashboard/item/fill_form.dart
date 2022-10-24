@@ -253,8 +253,7 @@ class _FillFormPageState extends State<FillFormPage> {
 
     int indexChoice = 0;
     answersChoiceMap.forEach((key, value) {
-      print('QUESTION ID CHOICE : ' +
-          questionIdChoice[indexChoice].toString());
+      print('QUESTION ID CHOICE : ' + questionIdChoice[indexChoice].toString());
       FormTableDatabase.instance.createQuestionAnswer(
           QuestionAnswerFields.questionanswerTable,
           QuestionAnswerDbModel(
@@ -839,14 +838,7 @@ class _FillFormPageState extends State<FillFormPage> {
           width: 250.w,
           child: ElevatedButton(
               onPressed: () {
-                SharedCode.showAlertDialog(
-                    context, 'Aviso', 'Você quer salvar a resposta?', 'warning',
-                    onButtonPressed: () async {
-                  print(answersFreeTextMap);
-                  await addContent();
-                  if (!mounted) return;
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                });
+                showAlertDialogSave(context);
               },
               child:
                   Text("Salvar", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -855,6 +847,43 @@ class _FillFormPageState extends State<FillFormPage> {
                       MaterialStateProperty.all<Color>(Colors.blue))),
         ),
       ),
+    );
+  }
+
+  showAlertDialogSave(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Não"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Sim"),
+      onPressed: () async {
+        print(answersFreeTextMap);
+        await addContent();
+        if (!mounted) return;
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Aviso"),
+      content: Text("Você quer salvar a resposta?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

@@ -96,17 +96,8 @@ class _AddFormPageState extends State<AddFormPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                       leading: IconButton(
-                          onPressed: () async {
-                            isLoading = true;
-                            insert(contentList[index].code.toString());
-                            Future.delayed(const Duration(milliseconds: 500),
-                                () {
-                              setState(() {
-                                // Here you can write your code for open new view
-                                read();
-                                isLoading = false;
-                              });
-                            });
+                          onPressed: () {
+                            showAlertDialogDuplicate(context, index);
                           },
                           icon: Icon(
                             Icons.copy,
@@ -115,19 +106,7 @@ class _AddFormPageState extends State<AddFormPage> {
                       subtitle: Text(contentList[index].formType.toString()),
                       trailing: IconButton(
                           onPressed: () async {
-                            isLoading = true;
-                            await FormTableDatabase.instance.deleteContent(
-                                contentList[index].code.toString());
-                            await FormTableDatabase.instance.deleteQuestion(
-                                contentList[index].code.toString());
-                            Future.delayed(const Duration(milliseconds: 500),
-                                () {
-                              setState(() {
-                                // Here you can write your code for open new view
-                                read();
-                                isLoading = false;
-                              });
-                            });
+                            showAlertDialogDelete(context, index);
                           },
                           icon: Icon(
                             Icons.delete,
@@ -145,6 +124,95 @@ class _AddFormPageState extends State<AddFormPage> {
         },
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  showAlertDialogDuplicate(BuildContext context, int index) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Não"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Sim"),
+      onPressed: () async {
+        isLoading = true;
+        insert(contentList[index].code.toString());
+        Future.delayed(const Duration(milliseconds: 500), () {
+          setState(() {
+            // Here you can write your code for open new view
+            read();
+            isLoading = false;
+          });
+        });
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Aviso"),
+      content: Text("Tem certeza de que deseja copiar este item?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  showAlertDialogDelete(BuildContext context, int index) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Não"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Sim"),
+      onPressed: () async {
+        isLoading = true;
+        await FormTableDatabase.instance
+            .deleteContent(contentList[index].code.toString());
+        await FormTableDatabase.instance
+            .deleteQuestion(contentList[index].code.toString());
+        Future.delayed(const Duration(milliseconds: 500), () {
+          setState(() {
+            // Here you can write your code for open new view
+            read();
+            isLoading = false;
+          });
+        });
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Aviso"),
+      content: Text("Tem certeza de que deseja excluir este item?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

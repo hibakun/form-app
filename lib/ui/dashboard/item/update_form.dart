@@ -23,21 +23,22 @@ import 'package:intl/intl.dart';
 
 import '../../../model/database/content.dart';
 
-class FillFormPage extends StatefulWidget {
-  final String formType;
+class UpdateFormPage extends StatefulWidget {
+  final String code;
 
-  const FillFormPage({Key? key, required this.formType}) : super(key: key);
+  const UpdateFormPage({Key? key, required this.code}) : super(key: key);
 
   @override
-  State<FillFormPage> createState() => _FillFormPageState();
+  State<UpdateFormPage> createState() => _UpdateFormPageState();
 }
 
-class _FillFormPageState extends State<FillFormPage> {
+class _UpdateFormPageState extends State<UpdateFormPage> {
   MunicipalityData? dropdownMunicipality = null;
   SubdisctrictByMuniData? dropdownsubDistrict = null;
   VillageBySubData? dropdownVillage = null;
   SubvillageByVillageData? dropdownsubVillage = null;
   List<MunicipalityData> municipalityList = [];
+  List<MunicipalityData> municipalityListInitVal = [];
   List<SubdisctrictByMuniData> subDistrictList = [];
   List<VillageBySubData> villageList = [];
   List<SubvillageByVillageData> subVillageList = [];
@@ -55,14 +56,17 @@ class _FillFormPageState extends State<FillFormPage> {
   bool _showsubDistrict = false;
   bool _showvillage = false;
   bool _showsubVillage = false;
-  List<HeaderDatabaseModel> headers = [];
-  List<QuestionDbModel> questions = [];
+  List<ContentDatabaseModel> headers = [];
+  List<QuestionAnswerDbModel> questions = [];
   List freeTextQuestion = [];
+  List freeTextValue = [];
   List dropdown = [];
+  List dropdownAnswer = [];
   List dropdownSplit = [];
   List dropdownQuestion = [];
   List questionIdFreeText = [];
   List questionIdChoice = [];
+  List headerAnswer = [];
 
   List selectVal = [];
   final Map<String, dynamic> answersFreeTextMap = {};
@@ -77,62 +81,38 @@ class _FillFormPageState extends State<FillFormPage> {
     setState(() {
       _isloading = true;
     });
-    headers = await FormTableDatabase.instance.readHeader(widget.formType);
+    headers = await FormTableDatabase.instance.readContent(widget.code);
     for (int i = 0; i < headers.length; i++) {
       print("form type : " + headers[i].formType.toString());
       print("form key : " + headers[i].key.toString());
       print("form value : " + headers[i].value.toString());
     }
-    questions = await FormTableDatabase.instance.readQuestion(widget.formType);
-    for (int i = 0; i < questions.length; i++) {
-      print("Question IDS: " + questions[i].kode_soal.toString());
-      if (questions[i].dropdown.toString() == "") continue;
-      questionIdChoice.add(questions[i].kode_soal);
-      print("Question IDS continue: " + questions[i].kode_soal.toString());
-      dropdown.add(questions[i].dropdown.toString());
-    }
+    _nameController.text = headers[2].value.toString();
+    _interviewerController.text = headers[8].value.toString();
+    _headVillageController.text = headers[9].value.toString();
 
-    questionIdChoice.forEach((element) {
-      print(element.toString());
-    });
-
+    questions =
+        await FormTableDatabase.instance.readQuestionAnswer(widget.code);
     for (int i = 0; i < questions.length; i++) {
-      print("QUESTION CHOICE: " + questions[i].question.toString());
       if (questions[i].input_type == "FreeText") continue;
-      answersChoiceMap[questions[i].question.toString()] = "0";
-      print("Choice MAP: " + answersChoiceMap.toString());
+      questionIdChoice.add(questions[i].id);
+      print("dropdowns: " + questions[i].dropdown.toString());
+      dropdown.add(questions[i].dropdown);
+      dropdownAnswer.add(questions[i].answer);
       dropdownQuestion.add(questions[i].question.toString());
-      print("INPUT TYPE: " + questions[i].input_type.toString());
     }
+
+    dropdownAnswer.forEach((element) {
+      print("DROPDOWN ANSWER: " + element);
+    });
 
     for (int i = 0; i < questions.length; i++) {
       print("QUESTION FREETEXT: " + questions[i].question.toString());
       if (questions[i].input_type == "Choice") continue;
-      questionIdFreeText.add(questions[i].kode_soal);
-      answersFreeTextMap[questions[i].question.toString()] = "0";
-      print("FREE TEXT MAP: " + answersFreeTextMap.toString());
+      questionIdFreeText.add(questions[i].id);
       freeTextQuestion.add(questions[i].question.toString());
-    }
-
-    for (int i = 0; i < dropdown.length; i++) {
-      print("DROPDOWNS: " + dropdown[i]);
-      dropdownSplit.add(dropdown[i].split("Îµ"));
-    }
-
-    dropdownSplit.forEach((element) {
-      print("SPLITTED DROPDOWN: " + element.toString());
-    });
-
-    for (int i = 0; i < dropdownSplit.length; i++) {
-      selectVal.add(dropdownSplit[i][0]);
-      print("SELECT VALUE: " + selectVal.toString());
-    }
-
-    for (int i = 0; i < dropdown.length; i++) {
-      print("QUESTION: " + questions[i].question.toString());
-      if (questions[i].input_type != "Choice") continue;
-      dropdownQuestion.add(questions[i].question.toString());
-      print("SPLITTED DROPDOWN QUESTION: " + dropdownQuestion[i].toString());
+      freeTextValue.add(questions[i].answer.toString());
+      answersFreeTextMap[questions[i].question.toString()] = freeTextValue[i];
     }
 
     MunicipalityModel _resMunicipality = await ApiService().municipalityAPI();
@@ -142,144 +122,50 @@ class _FillFormPageState extends State<FillFormPage> {
     });
   }
 
-  String _randomCode() {
-    Random random = Random();
-    int randomNumber = random.nextInt(900) + 100;
-    String date = DateFormat('ddMMyyyy').format(DateTime.now());
+  // String _randomCode() {
+  //   Random random = Random();
+  //   int randomNumber = random.nextInt(900) + 100;
+  //   String date = DateFormat('ddMMyyyy').format(DateTime.now());
+  //
+  //   String result = '${headers[0].formType}-$date-$randomNumber';
+  //   return result;
+  // }
 
-    String result = '${headers[0].formType}-$date-$randomNumber';
-    return result;
-  }
+  Future update() async {
+    headerAnswer.add(headers[0].value);
+    headerAnswer.add(headers[1].value);
+    headerAnswer.add(_nameController.text);
+    headerAnswer.add(_selectDate);
+    municipalityValue.isEmpty ? headerAnswer.add(headers[4].value.toString()) : headerAnswer.add(municipalityValue);
+    subDistrictValue.isEmpty ? headerAnswer.add(headers[5].value.toString()) : headerAnswer.add(subDistrictValue);
+    villageValue.isEmpty ? headerAnswer.add(headers[6].value.toString()) : headerAnswer.add(villageValue);
+    subVillageValue.isEmpty ? headerAnswer.add(headers[7].value.toString()) : headerAnswer.add(subVillageValue);
+    headerAnswer.add(_interviewerController.text);
+    headerAnswer.add(_headVillageController.text);
+    var headerUpdate;
+    headerAnswer.forEach((element) {
+      print("HEADER ANSWER: " + element);
+    });
+    for (int i = 0; i < headers.length; i++) {
+      await FormTableDatabase.instance
+          .updateContent(headerAnswer[i], headers[i].id!);
+    }
 
-  Future addContent() async {
-    String code = _randomCode();
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: "title",
-          value: headers[0].value,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: "description",
-          value: headers[1].value,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[2].key,
-          value: _nameController.text,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[3].key,
-          value: _selectDate,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[4].key,
-          value: municipalityValue,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[5].key,
-          value: subDistrictValue,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[6].key,
-          value: villageValue,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[7].key,
-          value: subVillageValue,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[8].key,
-          value: _interviewerController.text,
-          code: code,
-        ));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[9].key,
-          value: _headVillageController.text,
-          code: code,
-        ));
-
-    print("FREE TEXT MAP SAVED: " + answersFreeTextMap.toString());
-    print("Choice MAP SAVED: " + answersChoiceMap.toString());
     int indexFreeText = 0;
     answersFreeTextMap.forEach((key, value) {
-      print('QUESTION ID FREE TEXT : ' +
-          questionIdFreeText[indexFreeText].toString());
-      FormTableDatabase.instance.createQuestionAnswer(
-          QuestionAnswerFields.questionanswerTable,
-          QuestionAnswerDbModel(
-            id_soal: questionIdFreeText[indexFreeText],
-            formType: headers[0].formType.toString(),
-            question: key,
-            answer: value,
-            input_type: "FreeText",
-            code: code,
-          ));
-
+      FormTableDatabase.instance
+          .updateQuestionAnswer(value, questionIdFreeText[indexFreeText]);
       indexFreeText++;
     });
 
     int indexChoice = 0;
     answersChoiceMap.forEach((key, value) {
-      print('QUESTION ID CHOICE : ' + questionIdChoice[indexChoice].toString());
-      FormTableDatabase.instance.createQuestionAnswer(
-          QuestionAnswerFields.questionanswerTable,
-          QuestionAnswerDbModel(
-              id_soal: questionIdChoice[indexChoice],
-              formType: headers[0].formType.toString(),
-              question: key,
-              answer: value,
-              code: code,
-              input_type: "Choice",
-              dropdown: dropdown[indexChoice]));
+      FormTableDatabase.instance
+          .updateQuestionAnswer(value, questionIdChoice[indexChoice]);
       indexChoice++;
     });
   }
+
 
   @override
   void initState() {
@@ -379,8 +265,9 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[4].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
+          child: Text(
+              headers[4].key.toString() + " : " + headers[4].value.toString(),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -413,9 +300,6 @@ class _FillFormPageState extends State<FillFormPage> {
                         dropdownVillage = null;
                         dropdownsubVillage = null;
                         dropdownMunicipality = newValue;
-                        _showsubDistrict = true;
-                        _showvillage = false;
-                        _showsubVillage = false;
                         subDistrictList = _resSubdistrict.data;
                         _isload = false;
                       });
@@ -433,7 +317,6 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         dropdownMunicipality = newValue;
                         subDistrictList = _resSubdistrict.data;
-                        _showsubDistrict = true;
                         _isload = false;
                       });
                     }
@@ -451,7 +334,7 @@ class _FillFormPageState extends State<FillFormPage> {
                 )),
           ),
         ),
-        _showsubDistrict ? _buildDropdownsubDistrict() : Container()
+        _buildDropdownsubDistrict()
       ],
     );
   }
@@ -463,8 +346,9 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[5].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
+          child: Text(
+              headers[5].key.toString() + " : " + headers[5].value.toString(),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -497,9 +381,6 @@ class _FillFormPageState extends State<FillFormPage> {
                         dropdownsubVillage = null;
                         dropdownsubDistrict = newValue;
                         villageList = _resVillage.data;
-                        _showsubDistrict = true;
-                        _showvillage = true;
-                        _showsubVillage = false;
                         _isload = false;
                       });
                     } else {
@@ -516,7 +397,6 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         dropdownsubDistrict = newValue;
                         villageList = _resVillage.data;
-                        _showvillage = true;
                         _isload = false;
                       });
                     }
@@ -534,7 +414,7 @@ class _FillFormPageState extends State<FillFormPage> {
                 )),
           ),
         ),
-        _showvillage ? _buildDropdownVillage() : Container()
+        _buildDropdownVillage()
       ],
     );
   }
@@ -546,8 +426,9 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[6].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
+          child: Text(
+              headers[6].key.toString() + " : " + headers[6].value.toString(),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -579,9 +460,6 @@ class _FillFormPageState extends State<FillFormPage> {
                         dropdownsubVillage = null;
                         dropdownVillage = newValue;
                         subVillageList = _resSubvillage.data;
-                        _showsubDistrict = true;
-                        _showvillage = true;
-                        _showsubVillage = true;
                         _isload = false;
                       });
                     } else {
@@ -598,7 +476,6 @@ class _FillFormPageState extends State<FillFormPage> {
                       setState(() {
                         dropdownVillage = newValue;
                         subVillageList = _resSubvillage.data;
-                        _showsubVillage = true;
                         _isload = false;
                       });
                     }
@@ -616,7 +493,7 @@ class _FillFormPageState extends State<FillFormPage> {
                 )),
           ),
         ),
-        _showsubVillage ? _buildDropdownsubVillage() : Container()
+        _buildDropdownsubVillage()
       ],
     );
   }
@@ -628,8 +505,9 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[7].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
+          child: Text(
+              headers[7].key.toString() + " : " + headers[7].value.toString(),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -702,8 +580,9 @@ class _FillFormPageState extends State<FillFormPage> {
         SizedBox(height: 20.h),
         Padding(
           padding: EdgeInsets.only(left: 12),
-          child: Text(headers[3].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
+          child: Text(
+              headers[3].key.toString() + " : " + headers[3].value.toString(),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -769,13 +648,13 @@ class _FillFormPageState extends State<FillFormPage> {
                         borderRadius: BorderRadius.circular(5)),
                     child: DropdownButton<String>(
                       isExpanded: true,
-                      value: selectVal[index],
+                      value: dropdownAnswer[index],
                       icon: Icon(Icons.arrow_drop_down),
                       onChanged: (value) {
                         setState(() {
-                          selectVal[index] = value!;
+                          dropdownAnswer[index] = value!;
                           answersChoiceMap[dropdownQuestion[index].toString()] =
-                              selectVal[index];
+                              dropdownAnswer[index];
                         });
                       },
                       isDense: true,
@@ -818,6 +697,7 @@ class _FillFormPageState extends State<FillFormPage> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: TextFormField(
+                    initialValue: freeTextValue[index],
                     style: Theme.of(context).textTheme.bodyText1,
                     validator: (value) => SharedCode().emptyValidator(value),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -854,8 +734,8 @@ class _FillFormPageState extends State<FillFormPage> {
               onPressed: () {
                 showAlertDialogSave(context);
               },
-              child:
-                  Text("Salvar", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text("Atualizar",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.blue))),
@@ -876,7 +756,7 @@ class _FillFormPageState extends State<FillFormPage> {
       child: Text("Sim"),
       onPressed: () async {
         print(answersFreeTextMap);
-        await addContent();
+        update();
         if (!mounted) return;
         Navigator.of(context).popUntil((route) => route.isFirst);
       },

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:form_app/model/database/content.dart';
 import 'package:form_app/model/database/question_answer.dart';
 import 'package:form_app/ui/dashboard/item/list_form.dart';
+import 'package:form_app/ui/dashboard/item/update_form.dart';
 import 'package:intl/intl.dart';
 
 import '../../../database/FormDb.dart';
@@ -94,24 +95,32 @@ class _AddFormPageState extends State<AddFormPage> {
                 )
               : ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: IconButton(
-                          onPressed: () {
-                            showAlertDialogDuplicate(context, index);
-                          },
-                          icon: Icon(
-                            Icons.copy,
-                          )),
-                      title: Text(contentList[index].code.toString()),
-                      subtitle: Text(contentList[index].formType.toString()),
-                      trailing: IconButton(
-                          onPressed: () async {
-                            showAlertDialogDelete(context, index);
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                          )),
+                    return InkWell(
+                      onTap: (){ Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => UpdateFormPage(
+                                code: contentList[index].code.toString(),
+                              ))));},
+                      child: ListTile(
+                        leading: IconButton(
+                            onPressed: () {
+                              showAlertDialogDuplicate(context, index);
+                            },
+                            icon: Icon(
+                              Icons.copy,
+                            )),
+                        title: Text(contentList[index].code.toString()),
+                        subtitle: Text(contentList[index].formType.toString()),
+                        trailing: IconButton(
+                            onPressed: () async {
+                              showAlertDialogDelete(context, index);
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            )),
+                      ),
                     );
                   },
                   itemCount: contentList.length,

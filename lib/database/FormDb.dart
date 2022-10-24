@@ -76,6 +76,7 @@ class FormTableDatabase {
     ${QuestionAnswerFields.question} $textType,
     ${QuestionAnswerFields.dropdown} $textNullType,
     ${QuestionAnswerFields.code} $textType,
+    ${QuestionAnswerFields.input_type} $textType,
     ${QuestionAnswerFields.answer} $textType
     )''');
   }
@@ -138,6 +139,8 @@ class FormTableDatabase {
     }
   }
 
+
+
   Future<List<QuestionDbModel>> readQuestion(String? type) async {
     final db = await instance.database;
 
@@ -189,6 +192,18 @@ class FormTableDatabase {
     return result;
   }
 
+  Future updateContent(String value, int id) async{
+    final db = await instance.database;
+    try{
+      db.rawUpdate(''' UPDATE ${ContentFields.table} SET ${ContentFields.value} =? WHERE ${ContentFields.id} =?  ''', [
+        value,
+        id
+      ]);
+    } catch(e){
+      print('error: ' + e.toString());
+    }
+  }
+
   deleteContent(String code) async {
     final db = await instance.database;
     try {
@@ -222,6 +237,18 @@ class FormTableDatabase {
     final data = await db.query(QuestionAnswerFields.questionanswerTable, groupBy: QuestionAnswerFields.code);
     List<QuestionAnswerDbModel> result = data.map((e) => QuestionAnswerDbModel.fromJson(e)).toList();
     return result;
+  }
+
+  Future updateQuestionAnswer(String value, int id) async{
+    final db = await instance.database;
+    try{
+      db.rawUpdate(''' UPDATE ${QuestionAnswerFields.questionanswerTable} SET ${QuestionAnswerFields.answer} =? WHERE ${QuestionAnswerFields.id} =?  ''', [
+        value,
+        id
+      ]);
+    } catch(e){
+      print('error: ' + e.toString());
+    }
   }
 
   deleteQuestion(String code) async {

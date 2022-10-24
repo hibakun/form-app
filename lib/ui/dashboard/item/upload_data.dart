@@ -11,6 +11,10 @@ class _UploadDataPageState extends State<UploadDataPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("Página inicial (Enviar formulário)"),
+      ),
       body: Center(
         child: Text('Upload Data'),
       ),

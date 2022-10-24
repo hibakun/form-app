@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_app/ui/dashboard/dashboard.dart';
 import 'package:form_app/ui/login/login.dart';
@@ -16,8 +17,12 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  String _deviceData = "";
+
   @override
   void initState() {
+    initPlatformState();
     // TODO: implement initState
     Future.delayed(Duration(seconds: 3), () async {
       final prefs = await SharedPreferences.getInstance();
@@ -30,6 +35,31 @@ class _SplashState extends State<Splash> {
       }
     });
     super.initState();
+  }
+
+  Future<void> initPlatformState() async {
+    var deviceData = "";
+
+    try {
+      if (Platform.isAndroid) {
+        deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+      }
+    } on PlatformException {
+      deviceData = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _deviceData = deviceData;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('deviceId', _deviceData);
+    print("DEVICE ID: " + prefs.getString("deviceId").toString());
+  }
+
+  String _readAndroidBuildData(AndroidDeviceInfo build) {
+    return build.id.toString();
   }
 
   @override
@@ -47,7 +77,7 @@ class _SplashState extends State<Splash> {
           ),
           SizedBox(height: 50.h),
           Center(
-              child: Text("Survey App",
+              child: Text("Aplicativo de pesquisa",
                   style: TextStyle(
                       color: Colors.red[400],
                       fontWeight: FontWeight.bold,

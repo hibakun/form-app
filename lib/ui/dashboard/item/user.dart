@@ -18,6 +18,10 @@ class _UserPageState extends State<UserPage> {
     var theme = Theme.of(context).textTheme;
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("Perfil"),
+      ),
       body: SafeArea(
         child: Center(
           child: Container(

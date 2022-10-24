@@ -24,7 +24,7 @@ class _DownloadPageState extends State<DownloadPage> {
 
   Future addDb() async {
     showWarningDialog("process",
-        customMessage: "Loading the data.\nIt may take a few seconds");
+        customMessage: "Carregando os dados.\nPode demorar alguns segundos");
     try {
       FormtableModel result = await ApiService().formtableAPI();
       _data = result.data;
@@ -200,39 +200,22 @@ class _DownloadPageState extends State<DownloadPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            _buildDownloadButton(),
-            Padding(padding: EdgeInsets.only(top: 12), child: _buildListForm()),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("Página inicial (Formulário de download)"),
       ),
-    );
-  }
-
-  _buildDownloadButton() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.only(top: 10),
-        child: Container(
-          height: 40.h,
-          width: 200.w,
-          child: ElevatedButton(
-            child: Text('Baixar formulário'),
-            onPressed: () async {
-              if (_datalistform.isEmpty) {
-                addDb();
-              } else {
-                _datalistform.clear();
-                read();
-              }
-            },
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
-          ),
-        ),
+      body: _buildListForm(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          if (_datalistform.isEmpty) {
+            addDb();
+          } else {
+            _datalistform.clear();
+            read();
+          }
+        },
+        child: Icon(Icons.download),
       ),
     );
   }
@@ -240,34 +223,31 @@ class _DownloadPageState extends State<DownloadPage> {
   _buildListForm() {
     return _datalistform.length == 0
         ? Center(child: Text("no data available"))
-        : Container(
-            height: 625.h,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 5.0,
-                mainAxisSpacing: 5.0,
-              ),
-              itemCount: _datalistform.length,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => ReadFormPage(
-                                  formType: _datalistform[index].formType,
-                                ))));
-                  },
-                  child: Card(
-                    color: Colors.white70,
-                    elevation: 4,
-                    shadowColor: Colors.black,
-                    child: Center(child: Text(_datalistform[index].code)),
-                  ),
-                );
-              },
+        : GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
             ),
+            itemCount: _datalistform.length,
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => ReadFormPage(
+                                formType: _datalistform[index].formType,
+                              ))));
+                },
+                child: Card(
+                  color: Colors.white70,
+                  elevation: 4,
+                  shadowColor: Colors.black,
+                  child: Center(child: Text(_datalistform[index].code)),
+                ),
+              );
+            },
           );
   }
 

@@ -85,6 +85,10 @@ class _AddFormPageState extends State<AddFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("Página inicial (preencher formulário)"),
+      ),
       body: contentList.isEmpty
           ? Center(
               child: Text("Nenhum formulário adicionado ainda"),
@@ -132,7 +136,7 @@ class _AddFormPageState extends State<AddFormPage> {
               .then((value) => read());
         },
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 

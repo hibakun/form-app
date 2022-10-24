@@ -14,7 +14,6 @@ import 'package:form_app/model/village_like_model.dart';
 import 'package:form_app/model/village_model.dart';
 import 'package:form_app/service/api_service.dart';
 import 'package:form_app/ui/dashboard/dashboard.dart';
-import 'package:form_app/ui/test.dart';
 import 'package:form_app/ui/widget/custom_text_field.dart';
 import 'package:form_app/ui/widget/waringdialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     showWarningDialog("process",
-        customMessage: "Loading the data.\nIt may take a few seconds");
+        customMessage: "Carregando os dados.\nPode demorar alguns segundos");
     if (_usernameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
       LoginModel result = await ApiService().loginAPI(

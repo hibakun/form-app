@@ -43,6 +43,7 @@ dependencies:
   flutter_svg:
   intl:
   hexcolor:
+  device_info_plus:
 
 dev_dependencies:
   flutter_test:

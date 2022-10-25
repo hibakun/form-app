@@ -7,7 +7,7 @@ class ContentFields {
   static const formType = 'formType';
   static const key = 'key';
   static const value = 'value';
-  static const code = 'code';
+  static const code = 'transId';
 }
 
 class ContentDatabaseModel {
@@ -26,7 +26,7 @@ class ContentDatabaseModel {
       formType: json['formType'],
       key: json['key'],
       value: json['value'],
-      code: json['code'],
+      code: json['transId'],
     );
   }
 

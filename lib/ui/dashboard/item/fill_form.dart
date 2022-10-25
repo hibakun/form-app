@@ -259,6 +259,7 @@ class _FillFormPageState extends State<FillFormPage> {
             answer: value,
             input_type: "FreeText",
             code: code,
+            dropdown: ""
           ));
 
       indexFreeText++;

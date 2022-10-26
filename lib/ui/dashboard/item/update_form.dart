@@ -72,21 +72,20 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
   final Map<String, dynamic> answersFreeTextMap = {};
   final Map<String, dynamic> answersChoiceMap = {};
 
-  String municipalityValue = '';
-  String subDistrictValue = '';
-  String villageValue = '';
-  String subVillageValue = '';
+  var municipalityValue;
+  var municipalityId;
+  var subDistrictValue;
+  var subDistrictId;
+  var villageValue;
+  var villageId;
+  var subVillageValue;
+  var subVillageId;
 
   read() async {
     setState(() {
       _isloading = true;
     });
     headers = await FormTableDatabase.instance.readContent(widget.code);
-    for (int i = 0; i < headers.length; i++) {
-      print("form type : " + headers[i].formType.toString());
-      print("form key : " + headers[i].key.toString());
-      print("form value : " + headers[i].value.toString());
-    }
     _nameController.text = headers[2].value.toString();
     _interviewerController.text = headers[8].value.toString();
     _headVillageController.text = headers[9].value.toString();
@@ -136,10 +135,14 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
     headerAnswer.add(headers[1].value);
     headerAnswer.add(_nameController.text);
     headerAnswer.add(_selectDate);
-    municipalityValue.isEmpty ? headerAnswer.add(headers[4].value.toString()) : headerAnswer.add(municipalityValue);
-    subDistrictValue.isEmpty ? headerAnswer.add(headers[5].value.toString()) : headerAnswer.add(subDistrictValue);
-    villageValue.isEmpty ? headerAnswer.add(headers[6].value.toString()) : headerAnswer.add(villageValue);
-    subVillageValue.isEmpty ? headerAnswer.add(headers[7].value.toString()) : headerAnswer.add(subVillageValue);
+    municipalityValue == null ? headerAnswer.add(headers[4].value.toString()) : headerAnswer.add(municipalityValue);
+    subDistrictValue == null ? headerAnswer.add(headers[5].value.toString()) : headerAnswer.add(subDistrictValue);
+    villageValue == null ? headerAnswer.add(headers[6].value.toString()) : headerAnswer.add(villageValue);
+    subVillageValue == null ? headerAnswer.add(headers[7].value.toString()) : headerAnswer.add(subVillageValue);
+    municipalityId == null ? headerAnswer.add(headers[4].dropdownId.toString()) : headerAnswer.add(municipalityId);
+    subDistrictId == null ? headerAnswer.add(headers[5].dropdownId.toString()) : headerAnswer.add(subDistrictId);
+    villageId == null ? headerAnswer.add(headers[6].dropdownId.toString()) : headerAnswer.add(villageId);
+    subVillageId == null ? headerAnswer.add(headers[7].dropdownId.toString()) : headerAnswer.add(subVillageId);
     headerAnswer.add(_interviewerController.text);
     headerAnswer.add(_headVillageController.text);
     var headerUpdate;
@@ -289,6 +292,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       municipalityValue = newValue!.name;
+                      municipalityId = newValue.id;
                       SubdisctrictByMuniModel _resSubdistrict =
                           await ApiService().subdisctrictByMuniAPI(
                               id: newValue.id.toString(),
@@ -308,6 +312,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       municipalityValue = newValue!.name;
+                      municipalityId = newValue.id;
                       SubdisctrictByMuniModel _resSubdistrict =
                           await ApiService().subdisctrictByMuniAPI(
                               id: newValue.id.toString(),
@@ -370,6 +375,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       subDistrictValue = newValue!.name;
+                      subDistrictId = newValue.id;
                       VillageBySubModel _resVillage = await ApiService()
                           .villageBySubAPI(
                               id: newValue.id,
@@ -388,6 +394,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       subDistrictValue = newValue!.name;
+                      subDistrictId = newValue.id;
                       VillageBySubModel _resVillage = await ApiService()
                           .villageBySubAPI(
                               id: newValue.id,
@@ -450,6 +457,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       villageValue = newValue!.name;
+                      villageId = newValue.id;
                       SubvillageByVillModel _resSubvillage = await ApiService()
                           .subVillageByVillAPI(
                               id: newValue.id,
@@ -467,6 +475,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       villageValue = newValue!.name;
+                      villageId = newValue.id;
                       SubvillageByVillModel _resSubvillage = await ApiService()
                           .subVillageByVillAPI(
                               id: newValue.id,
@@ -526,6 +535,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                   onChanged: (SubvillageByVillageData? newValue) {
                     setState(() {
                       subVillageValue = newValue!.name;
+                      subVillageId = newValue.id;
                       dropdownsubVillage = newValue;
                     });
                   },

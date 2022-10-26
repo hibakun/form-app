@@ -55,6 +55,7 @@ class _AddFormPageState extends State<AddFormPage> {
             key: itemHeader[i].key,
             value: itemHeader[i].value,
             code: result,
+            dropdownId: itemHeader[i].dropdownId
           ));
     }
 
@@ -66,6 +67,7 @@ class _AddFormPageState extends State<AddFormPage> {
             formType: itemQuestion[i].formType,
             question: itemQuestion[i].question,
             answer: itemQuestion[i].answer,
+            input_type: itemQuestion[i].input_type,
             dropdown: itemQuestion[i].dropdown,
             code: result,
           ));

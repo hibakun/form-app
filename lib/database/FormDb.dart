@@ -206,6 +206,18 @@ class FormTableDatabase {
     }
   }
 
+  Future updateContentID(int? dropdownId, int id) async{
+    final db = await instance.database;
+    try{
+      db.rawUpdate(''' UPDATE ${ContentFields.table} SET ${ContentFields.dropdownId} =? WHERE ${ContentFields.id} =?  ''', [
+        dropdownId,
+        id
+      ]);
+    } catch(e){
+      print('error: ' + e.toString());
+    }
+  }
+
   deleteContent(String code) async {
     final db = await instance.database;
     try {

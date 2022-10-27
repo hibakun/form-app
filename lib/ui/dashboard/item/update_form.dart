@@ -68,7 +68,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
   List questionIdFreeText = [];
   List questionIdChoice = [];
   List headerAnswer = [];
-  List headerAnswerID = [];
+  List<int?> headerAnswerID = [];
 
   List selectVal = [];
   final Map<String, dynamic> answersFreeTextMap = {};
@@ -113,7 +113,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       print("DROPDOWN ANSWER: " + element);
     });
 
-    for(int i = 0; i < dropdownAnswer.length; i++){
+    for (int i = 0; i < dropdownAnswer.length; i++) {
       print("FOR DROPDOWN ANSWER: " + dropdownAnswer[i].toString());
       print("FOR DROPDOWN QUESTION: " + dropdownQuestion[i].toString());
       answersChoiceMap[dropdownQuestion[i]] = dropdownAnswer[i];
@@ -128,8 +128,6 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       freeTextValue.add(questions[i].answer.toString());
       answersFreeTextMap[questions[i].question.toString()] = freeTextValue[i];
     }
-
-
 
     MunicipalityModel _resMunicipality = await ApiService().municipalityAPI();
     setState(() {
@@ -156,34 +154,47 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
     headerAnswerID.add(headers[1].dropdownId);
     headerAnswerID.add(headers[2].dropdownId);
     headerAnswerID.add(headers[3].dropdownId);
-    municipalityValue.isEmpty ? headerAnswer.add(headers[4].value.toString()) : headerAnswer.add(municipalityValue);
-    subDistrictValue.isEmpty ? headerAnswer.add(headers[5].value.toString()) : headerAnswer.add(subDistrictValue);
-    villageValue.isEmpty ? headerAnswer.add(headers[6].value.toString()) : headerAnswer.add(villageValue);
-    subVillageValue.isEmpty ? headerAnswer.add(headers[7].value.toString()) : headerAnswer.add(subVillageValue);
-    municipalityId.isEmpty ? headerAnswerID.add(headers[4].dropdownId) : headerAnswerID.add(municipalityValue);
-    subDistrictId.isEmpty ? headerAnswerID.add(headers[5].dropdownId) : headerAnswerID.add(subDistrictValue);
-    villageId.isEmpty ? headerAnswerID.add(headers[6].dropdownId) : headerAnswerID.add(villageValue);
-    subVillageId.isEmpty ? headerAnswerID.add(headers[7].dropdownId) : headerAnswerID.add(subVillageValue);
+    municipalityValue == null
+        ? headerAnswer.add(headers[4].value.toString())
+        : headerAnswer.add(municipalityValue);
+    subDistrictValue == null
+        ? headerAnswer.add(headers[5].value.toString())
+        : headerAnswer.add(subDistrictValue);
+    villageValue == null
+        ? headerAnswer.add(headers[6].value.toString())
+        : headerAnswer.add(villageValue);
+    subVillageValue == null
+        ? headerAnswer.add(headers[7].value.toString())
+        : headerAnswer.add(subVillageValue);
+    municipalityId == null
+        ? headerAnswerID.add(headers[4].dropdownId)
+        : headerAnswerID.add(municipalityId);
+    subDistrictId == null
+        ? headerAnswerID.add(headers[5].dropdownId)
+        : headerAnswerID.add(subDistrictId);
+    villageId == null
+        ? headerAnswerID.add(headers[6].dropdownId)
+        : headerAnswerID.add(villageId);
+    subVillageId == null
+        ? headerAnswerID.add(headers[7].dropdownId)
+        : headerAnswerID.add(subVillageId);
     headerAnswer.add(_interviewerController.text);
     headerAnswer.add(_headVillageController.text);
     headerAnswerID.add(headers[8].dropdownId);
     headerAnswerID.add(headers[9].dropdownId);
-    var headerUpdate;
-    headerAnswer.forEach((element) {
-      print("HEADER ANSWER: " + element);
+
+    headerAnswerID.forEach((element) {
+      print("HEADER ID: " + element.toString());
     });
+
     for (int i = 0; i < headers.length; i++) {
       await FormTableDatabase.instance
           .updateContent(headerAnswer[i], headers[i].id!);
     }
     for (int i = 0; i < headers.length; i++) {
       await FormTableDatabase.instance
-          .updateContent(headerAnswerID[i], headers[i].id!);
+          .updateContentID(headerAnswerID[i], headers[i].id!);
     }
-
-
-
-
 
     int indexFreeText = 0;
     answersFreeTextMap.forEach((key, value) {
@@ -192,8 +203,6 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       indexFreeText++;
     });
 
-
-
     int indexChoice = 0;
     answersChoiceMap.forEach((key, value) {
       FormTableDatabase.instance
@@ -201,7 +210,6 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       indexChoice++;
     });
   }
-
 
   @override
   void initState() {

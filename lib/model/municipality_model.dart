@@ -58,14 +58,14 @@ class MunicipalityData {
       MunicipalityData(
         id: json["id"],
         code: json["code"],
-        name: json["name"],
+        name: utf8.decode(json["name"].runes.toList()),
         description: json["description"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "code": code,
-        "name": name,
+        "name": utf8.decode(name.runes.toList()),
         "description": description,
       };
 }

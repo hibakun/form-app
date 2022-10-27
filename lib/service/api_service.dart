@@ -12,12 +12,14 @@ import 'package:form_app/model/subvillage_by_vill_model.dart';
 import 'package:form_app/model/subvillage_find_like.dart';
 import 'package:form_app/model/subvillage_model.dart';
 import 'package:form_app/model/surveyFormDownloadModel.dart';
+import 'package:form_app/model/upload_model.dart';
 import 'package:form_app/model/village_by_sub_model.dart';
 import 'package:form_app/model/village_like_model.dart';
 import 'package:form_app/model/village_model.dart';
 import 'package:form_app/service/server_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer';
 
 class ApiService {
   Future<LoginModel> loginAPI(
@@ -399,6 +401,35 @@ class ApiService {
     print("RES SURVEY FORM DOWNLOAD: " + res.body.toString());
     if (res.statusCode == 200) {
       return SurveyFormDownloadModel.fromJson(jsonDecode(res.body));
+    } else {
+      print(res.statusCode);
+      throw HttpException('request error code ${res.statusCode}');
+    }
+  }
+
+  Future<UploadModel> surveyformupload({required dynamic jsonRaw}) async {
+    final prefs = await SharedPreferences.getInstance();
+    LoginModel result = await loginAPI(
+        username: prefs.getString('user').toString(),
+        password: prefs.getString('pass').toString());
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + result.accessToken,
+    };
+    final body = jsonRaw;
+    print("HEADER SURVEY FORM UPLOAD: " + headers.toString());
+    log("RAW SURVEY FORM UPLOAD: " + body.toString());
+    print("URL SURVEY FORM UPLOAD: " +
+        ServerConfig.baseUrl +
+        ServerConfig.surveyformupload);
+    final res = await http.post(
+        Uri.parse(ServerConfig.baseUrl + ServerConfig.surveyformupload),
+        headers: headers,
+        body: jsonEncode(body));
+    print("STATUS CODE(SURVEY FORM UPLOAD): " + res.statusCode.toString());
+    print("RES SURVEY FORM UPLOAD: " + res.body.toString());
+    if (res.statusCode == 200) {
+      return UploadModel.fromJson(jsonDecode(res.body));
     } else {
       print(res.statusCode);
       throw HttpException('request error code ${res.statusCode}');

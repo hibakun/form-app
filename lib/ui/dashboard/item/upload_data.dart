@@ -56,6 +56,10 @@ class _UploadDataPageState extends State<UploadDataPage> {
         header[readContent[p].key.toString()] = readContent[p].dropdownId;
         print(header);
       }
+      for (int p = 0; p < readContent.length; p++) {
+        if(readContent[p].dropdownId == null) continue;
+        header[readContent[p].key.toString()] = readContent[p].dropdownId.toString();
+      }
       readQuestion =
       await FormTableDatabase.instance.readQuestionAnswer(contentList[i].code);
       readQuestion.forEach((element) {

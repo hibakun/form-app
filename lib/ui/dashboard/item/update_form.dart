@@ -76,13 +76,10 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
 
   var municipalityValue;
   var municipalityId;
-
   var subDistrictValue;
   var subDistrictId;
-
   var villageValue;
   var villageId;
-
   var subVillageValue;
   var subVillageId;
 

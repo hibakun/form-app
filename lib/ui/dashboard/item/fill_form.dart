@@ -70,13 +70,10 @@ class _FillFormPageState extends State<FillFormPage> {
 
   var municipalityValue;
   var municipalityId;
-
   var subDistrictValue;
   var subDistrictId;
-
   var villageValue;
   var villageId;
-
   var subVillageValue;
   var subVillageId;
 
@@ -185,38 +182,43 @@ class _FillFormPageState extends State<FillFormPage> {
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[2].key,
-            value: _nameController.text,
-            code: code,
-            dropdownId: null));
+          formType: headers[0].formType.toString(),
+          key: headers[2].key,
+          value: _nameController.text,
+          code: code,
+          dropdownId: null
+        ));
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[3].key,
-            value: _selectDate,
-            code: code,
-            dropdownId: null));
+          formType: headers[0].formType.toString(),
+          key: headers[3].key,
+          value: _selectDate,
+          code: code,
+          dropdownId: null
+        ));
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[4].key,
-            value: municipalityValue,
-            code: code,
-            dropdownId: municipalityId));
+          formType: headers[0].formType.toString(),
+          key: headers[4].key,
+          value: municipalityValue,
+          code: code,
+          dropdownId: municipalityId
+        ));
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[5].key,
-            value: subDistrictValue,
-            code: code,
-            dropdownId: subDistrictId));
+          formType: headers[0].formType.toString(),
+          key: headers[5].key,
+          value: subDistrictValue,
+          code: code,
+          dropdownId: subDistrictId
+
+        ));
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
@@ -231,29 +233,32 @@ class _FillFormPageState extends State<FillFormPage> {
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[7].key,
-            value: subVillageValue,
-            code: code,
-            dropdownId: subVillageId));
+          formType: headers[0].formType.toString(),
+          key: headers[7].key,
+          value: subVillageValue,
+          code: code,
+          dropdownId: subVillageId
+        ));
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[8].key,
-            value: _interviewerController.text,
-            code: code,
-            dropdownId: null));
+          formType: headers[0].formType.toString(),
+          key: headers[8].key,
+          value: _interviewerController.text,
+          code: code,
+          dropdownId: null
+        ));
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[9].key,
-            value: _headVillageController.text,
-            code: code,
-            dropdownId: null));
+          formType: headers[0].formType.toString(),
+          key: headers[9].key,
+          value: _headVillageController.text,
+          code: code,
+          dropdownId: null
+        ));
 
     print("FREE TEXT MAP SAVED: " + answersFreeTextMap.toString());
     print("Choice MAP SAVED: " + answersChoiceMap.toString());
@@ -585,7 +590,6 @@ class _FillFormPageState extends State<FillFormPage> {
                       });
                       villageValue = newValue!.name;
                       villageId = newValue.id;
-                      print("VILLAGE ID: "  + newValue.id.toString());
                       SubvillageByVillModel _resSubvillage = await ApiService()
                           .subVillageByVillAPI(
                               id: newValue.id,

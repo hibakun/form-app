@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dob_input_field/dob_input_field.dart';
@@ -819,7 +820,7 @@ class _FillFormPageState extends State<FillFormPage> {
                           .map<DropdownMenuItem<String>>((e) {
                         return DropdownMenuItem<String>(
                           value: e,
-                          child: Text(e),
+                          child: Text(utf8.decode(e.runes.toList())),
                         );
                       }).toList(),
                     )),

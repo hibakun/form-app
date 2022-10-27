@@ -105,7 +105,7 @@ class _UploadDataPageState extends State<UploadDataPage> {
     }
     Navigator.pop(context);
     showWarningDialog("succeed", customMessage: "Dados de upload concluídos");
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 2), () {
       Navigator.pop(context);
       Navigator.pop(context);
     });
@@ -139,13 +139,10 @@ class _UploadDataPageState extends State<UploadDataPage> {
                 )
               : ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        title: Text(contentStatus[index].code.toString()),
-                        subtitle:
-                            Text(contentStatus[index].formType.toString()),
-                      ),
+                    return ListTile(
+                      title: Text(contentStatus[index].code.toString()),
+                      subtitle:
+                          Text(contentStatus[index].formType.toString()),
                     );
                   },
                   itemCount: contentStatus.length,

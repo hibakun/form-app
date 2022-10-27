@@ -64,7 +64,7 @@ class SubvillageByVillageData {
       SubvillageByVillageData(
         id: json["id"],
         code: json["code"],
-        name: json["name"],
+        name: utf8.decode(json["name"].runes.toList()),
         description: json["description"],
         village: json["village"] == null
             ? null
@@ -80,7 +80,7 @@ class SubvillageByVillageData {
   Map<String, dynamic> toJson() => {
         "id": id,
         "code": code,
-        "name": name,
+        "name": utf8.decode(name.runes.toList()),
         "description": description,
         "village": village == null ? null : village!.toJson(),
         "subDistrict": subDistrict == null ? null : subDistrict!.toJson(),

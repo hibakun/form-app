@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:form_app/model/upload_model.dart';
+import 'package:form_app/service/api_service.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,19 +47,19 @@ class _UploadDataPageState extends State<UploadDataPage> {
     List listQuestion = [];
     for (int i = 0; i < contentList.length; i++) {
       readContent =
-      await FormTableDatabase.instance.readContent(contentList[i].code);
+          await FormTableDatabase.instance.readContent(contentList[i].code);
       for (int p = 0; p < readContent.length; p++) {
-        if(readContent[p].dropdownId != null) continue;
+        if (readContent[p].dropdownId != null) continue;
         header[readContent[p].key.toString()] = readContent[p].value.toString();
         print(header);
       }
       for (int p = 0; p < readContent.length; p++) {
-        if(readContent[p].dropdownId == null) continue;
+        if (readContent[p].dropdownId == null) continue;
         header[readContent[p].key.toString()] = readContent[p].dropdownId;
         print(header);
       }
-      readQuestion =
-      await FormTableDatabase.instance.readQuestionAnswer(contentList[i].code);
+      readQuestion = await FormTableDatabase.instance
+          .readQuestionAnswer(contentList[i].code);
       readQuestion.forEach((element) {
         var question = Map<String, dynamic>();
         question["id"] = element.id_soal;
@@ -76,9 +78,11 @@ class _UploadDataPageState extends State<UploadDataPage> {
       header["deviceId"] = deviceId.toString();
       surveyTable["surveyTable"] = header;
       surveyTable["surveyLines"] = listQuestion;
-      await Clipboard.setData(ClipboardData(text: '${jsonEncode(surveyTable)}'));
+      await Clipboard.setData(
+          ClipboardData(text: '${jsonEncode(surveyTable)}'));
       //post disini
-
+      UploadModel _model =
+          await ApiService().surveyformupload(jsonRaw: surveyTable);
     }
   }
 
@@ -98,24 +102,24 @@ class _UploadDataPageState extends State<UploadDataPage> {
       ),
       body: contentList.isEmpty
           ? Center(
-        child: Text("Nenhum formulário adicionado ainda"),
-      )
+              child: Text("Nenhum formulário adicionado ainda"),
+            )
           : isLoading
-          ? Center(
-        child: CircularProgressIndicator(),
-      )
-          : ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            onTap: () {},
-            child: ListTile(
-              title: Text(contentList[index].code.toString()),
-              subtitle: Text(contentList[index].formType.toString()),
-            ),
-          );
-        },
-        itemCount: contentList.length,
-      ),
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView.builder(
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      onTap: () {},
+                      child: ListTile(
+                        title: Text(contentList[index].code.toString()),
+                        subtitle: Text(contentList[index].formType.toString()),
+                      ),
+                    );
+                  },
+                  itemCount: contentList.length,
+                ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           upload();

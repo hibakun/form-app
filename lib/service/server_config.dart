@@ -14,4 +14,5 @@ class ServerConfig {
   static String subvillageByVill = "v1/subvillage/findsByVillage";
   static String formtable = "v1/formtable/finds";
   static String surveyformdownload = "v1/surveyform/download";
+  static String surveyformupload = "v1/surveyform/upload";
 }

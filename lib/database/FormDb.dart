@@ -33,6 +33,7 @@ class FormTableDatabase {
   Future _createDB(Database db, int version) async {
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final intType = 'INTEGER NOT NULL';
+    final intNullType = 'INTEGER';
     final textType = 'TEXT NOT NULL';
     final textNullType = 'TEXT';
 
@@ -66,7 +67,8 @@ class FormTableDatabase {
     ${ContentFields.formType} $textType,
     ${ContentFields.key} $textType,
     ${ContentFields.value} $textType,
-    ${ContentFields.code} $textType
+    ${ContentFields.code} $textType,
+    ${ContentFields.dropdownId} $intNullType
     )''');
 
     await db.execute('''CREATE TABLE ${QuestionAnswerFields.questionanswerTable} (

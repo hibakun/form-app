@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,32 +38,37 @@ class _UploadDataPageState extends State<UploadDataPage> {
   upload() async {
     String tdata = DateFormat("hh:mm:ss").format(DateTime.now());
     String cdate = DateFormat("yyyy-MM-dd").format(DateTime.now());
-    var header = Map<String, String>();
+    var header = Map<String, dynamic>();
     final prefs = await SharedPreferences.getInstance();
     var deviceId = prefs.getString('deviceId');
     var surveyTable = Map<String, dynamic>();
-    List<String> listQuestion = [];
-    var question = Map<String, String>();
-    var dtoForm = Map<String, dynamic>();
+    List listQuestion = [];
     for (int i = 0; i < contentList.length; i++) {
       readContent =
-          await FormTableDatabase.instance.readContent(contentList[i].code);
+      await FormTableDatabase.instance.readContent(contentList[i].code);
       for (int p = 0; p < readContent.length; p++) {
+        if(readContent[p].dropdownId != null) continue;
         header[readContent[p].key.toString()] = readContent[p].value.toString();
+        print(header);
+      }
+      for (int p = 0; p < readContent.length; p++) {
+        if(readContent[p].dropdownId == null) continue;
+        header[readContent[p].key.toString()] = readContent[p].dropdownId;
+        print(header);
       }
       readQuestion =
       await FormTableDatabase.instance.readQuestionAnswer(contentList[i].code);
       readQuestion.forEach((element) {
-        question["id"] = element.id_soal.toString();
-        question["inputType"] = element.input_type.toString();
-        question["question"] = element.question.toString();
-        question["dropDown"] = element.dropdown.toString();
-
+        var question = Map<String, dynamic>();
+        question["id"] = element.id_soal;
+        question["inputType"] = element.input_type;
+        question["question"] = element.question;
+        question["dropDown"] = element.dropdown;
+        var dtoForm = Map<String, dynamic>();
         dtoForm["dtoFormLine"] = question;
-        dtoForm["userInput"] = element.answer;
+        dtoForm["userInput"] = element.answer.toString();
         dtoForm["transTime"] = tdata;
-        print("dtoForm: " + dtoForm.toString());
-        listQuestion.add(dtoForm.toString());
+        listQuestion.add(dtoForm);
       });
       header["transId"] = readQuestion[i].code.toString();
       header["transTime"] = tdata;
@@ -68,7 +76,7 @@ class _UploadDataPageState extends State<UploadDataPage> {
       header["deviceId"] = deviceId.toString();
       surveyTable["surveyTable"] = header;
       surveyTable["surveyLines"] = listQuestion;
-      print(surveyTable.toString());
+      await Clipboard.setData(ClipboardData(text: '${jsonEncode(surveyTable)}'));
       //post disini
 
     }
@@ -90,24 +98,24 @@ class _UploadDataPageState extends State<UploadDataPage> {
       ),
       body: contentList.isEmpty
           ? Center(
-              child: Text("Nenhum formulário adicionado ainda"),
-            )
+        child: Text("Nenhum formulário adicionado ainda"),
+      )
           : isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.builder(
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        title: Text(contentList[index].code.toString()),
-                        subtitle: Text(contentList[index].formType.toString()),
-                      ),
-                    );
-                  },
-                  itemCount: contentList.length,
-                ),
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {},
+            child: ListTile(
+              title: Text(contentList[index].code.toString()),
+              subtitle: Text(contentList[index].formType.toString()),
+            ),
+          );
+        },
+        itemCount: contentList.length,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           upload();

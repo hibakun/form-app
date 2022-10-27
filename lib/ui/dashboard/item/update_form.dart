@@ -62,20 +62,29 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
   List freeTextValue = [];
   List dropdown = [];
   List dropdownAnswer = [];
+  List dropdownAnswerDef = [];
   List dropdownSplit = [];
   List dropdownQuestion = [];
   List questionIdFreeText = [];
   List questionIdChoice = [];
   List headerAnswer = [];
+  List headerAnswerID = [];
 
   List selectVal = [];
   final Map<String, dynamic> answersFreeTextMap = {};
   final Map<String, dynamic> answersChoiceMap = {};
 
-  String municipalityValue = '';
-  String subDistrictValue = '';
-  String villageValue = '';
-  String subVillageValue = '';
+  var municipalityValue;
+  var municipalityId;
+
+  var subDistrictValue;
+  var subDistrictId;
+
+  var villageValue;
+  var villageId;
+
+  var subVillageValue;
+  var subVillageId;
 
   read() async {
     setState(() {
@@ -86,6 +95,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       print("form type : " + headers[i].formType.toString());
       print("form key : " + headers[i].key.toString());
       print("form value : " + headers[i].value.toString());
+      print("form dropdown id : " + headers[i].dropdownId.toString());
     }
     _nameController.text = headers[2].value.toString();
     _interviewerController.text = headers[8].value.toString();
@@ -98,13 +108,20 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       questionIdChoice.add(questions[i].id);
       print("dropdowns: " + questions[i].dropdown.toString());
       dropdown.add(questions[i].dropdown);
-      dropdownAnswer.add(questions[i].answer);
+      dropdownAnswer.add(questions[i].answer.toString());
       dropdownQuestion.add(questions[i].question.toString());
     }
 
     dropdownAnswer.forEach((element) {
       print("DROPDOWN ANSWER: " + element);
     });
+
+    for(int i = 0; i < dropdownAnswer.length; i++){
+      print("FOR DROPDOWN ANSWER: " + dropdownAnswer[i].toString());
+      print("FOR DROPDOWN QUESTION: " + dropdownQuestion[i].toString());
+      answersChoiceMap[dropdownQuestion[i]] = dropdownAnswer[i];
+      print(answersChoiceMap);
+    }
 
     for (int i = 0; i < questions.length; i++) {
       print("QUESTION FREETEXT: " + questions[i].question.toString());
@@ -114,6 +131,8 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       freeTextValue.add(questions[i].answer.toString());
       answersFreeTextMap[questions[i].question.toString()] = freeTextValue[i];
     }
+
+
 
     MunicipalityModel _resMunicipality = await ApiService().municipalityAPI();
     setState(() {
@@ -136,12 +155,22 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
     headerAnswer.add(headers[1].value);
     headerAnswer.add(_nameController.text);
     headerAnswer.add(_selectDate);
+    headerAnswerID.add(headers[0].dropdownId);
+    headerAnswerID.add(headers[1].dropdownId);
+    headerAnswerID.add(headers[2].dropdownId);
+    headerAnswerID.add(headers[3].dropdownId);
     municipalityValue.isEmpty ? headerAnswer.add(headers[4].value.toString()) : headerAnswer.add(municipalityValue);
     subDistrictValue.isEmpty ? headerAnswer.add(headers[5].value.toString()) : headerAnswer.add(subDistrictValue);
     villageValue.isEmpty ? headerAnswer.add(headers[6].value.toString()) : headerAnswer.add(villageValue);
     subVillageValue.isEmpty ? headerAnswer.add(headers[7].value.toString()) : headerAnswer.add(subVillageValue);
+    municipalityId.isEmpty ? headerAnswerID.add(headers[4].dropdownId) : headerAnswerID.add(municipalityValue);
+    subDistrictId.isEmpty ? headerAnswerID.add(headers[5].dropdownId) : headerAnswerID.add(subDistrictValue);
+    villageId.isEmpty ? headerAnswerID.add(headers[6].dropdownId) : headerAnswerID.add(villageValue);
+    subVillageId.isEmpty ? headerAnswerID.add(headers[7].dropdownId) : headerAnswerID.add(subVillageValue);
     headerAnswer.add(_interviewerController.text);
     headerAnswer.add(_headVillageController.text);
+    headerAnswerID.add(headers[8].dropdownId);
+    headerAnswerID.add(headers[9].dropdownId);
     var headerUpdate;
     headerAnswer.forEach((element) {
       print("HEADER ANSWER: " + element);
@@ -150,6 +179,14 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       await FormTableDatabase.instance
           .updateContent(headerAnswer[i], headers[i].id!);
     }
+    for (int i = 0; i < headers.length; i++) {
+      await FormTableDatabase.instance
+          .updateContent(headerAnswerID[i], headers[i].id!);
+    }
+
+
+
+
 
     int indexFreeText = 0;
     answersFreeTextMap.forEach((key, value) {
@@ -157,6 +194,8 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
           .updateQuestionAnswer(value, questionIdFreeText[indexFreeText]);
       indexFreeText++;
     });
+
+
 
     int indexChoice = 0;
     answersChoiceMap.forEach((key, value) {
@@ -289,6 +328,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       municipalityValue = newValue!.name;
+                      municipalityId = newValue.id;
                       SubdisctrictByMuniModel _resSubdistrict =
                           await ApiService().subdisctrictByMuniAPI(
                               id: newValue.id.toString(),
@@ -308,6 +348,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       municipalityValue = newValue!.name;
+                      municipalityId = newValue.id;
                       SubdisctrictByMuniModel _resSubdistrict =
                           await ApiService().subdisctrictByMuniAPI(
                               id: newValue.id.toString(),
@@ -370,6 +411,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       subDistrictValue = newValue!.name;
+                      subDistrictId = newValue.id;
                       VillageBySubModel _resVillage = await ApiService()
                           .villageBySubAPI(
                               id: newValue.id,
@@ -388,6 +430,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       subDistrictValue = newValue!.name;
+                      subDistrictId = newValue.id;
                       VillageBySubModel _resVillage = await ApiService()
                           .villageBySubAPI(
                               id: newValue.id,
@@ -450,6 +493,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       villageValue = newValue!.name;
+                      villageId = newValue.id;
                       SubvillageByVillModel _resSubvillage = await ApiService()
                           .subVillageByVillAPI(
                               id: newValue.id,
@@ -467,6 +511,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                         _isload = true;
                       });
                       villageValue = newValue!.name;
+                      villageId = newValue.id;
                       SubvillageByVillModel _resSubvillage = await ApiService()
                           .subVillageByVillAPI(
                               id: newValue.id,
@@ -526,6 +571,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                   onChanged: (SubvillageByVillageData? newValue) {
                     setState(() {
                       subVillageValue = newValue!.name;
+                      subVillageId = newValue.id;
                       dropdownsubVillage = newValue;
                     });
                   },
@@ -655,6 +701,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
                           dropdownAnswer[index] = value!;
                           answersChoiceMap[dropdownQuestion[index].toString()] =
                               dropdownAnswer[index];
+                          print(answersChoiceMap);
                         });
                       },
                       isDense: true,

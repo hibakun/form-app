@@ -103,8 +103,6 @@ class _FillFormPageState extends State<FillFormPage> {
     for (int i = 0; i < questions.length; i++) {
       print("QUESTION CHOICE: " + questions[i].question.toString());
       if (questions[i].input_type == "FreeText") continue;
-      answersChoiceMap[questions[i].question.toString()] = "0";
-      print("Choice MAP: " + answersChoiceMap.toString());
       dropdownQuestion.add(questions[i].question.toString());
       print("INPUT TYPE: " + questions[i].input_type.toString());
     }
@@ -130,6 +128,11 @@ class _FillFormPageState extends State<FillFormPage> {
     for (int i = 0; i < dropdownSplit.length; i++) {
       selectVal.add(dropdownSplit[i][0]);
       print("SELECT VALUE: " + selectVal.toString());
+    }
+
+    for (int i = 0; i < selectVal.length; i++) {
+      answersChoiceMap[dropdownQuestion[i]] = selectVal[i];
+      print("Choice MAP: " + answersChoiceMap.toString());
     }
 
     for (int i = 0; i < dropdown.length; i++) {
@@ -161,20 +164,20 @@ class _FillFormPageState extends State<FillFormPage> {
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: "title",
-          value: headers[0].value,
-          code: code,
-        ));
+            formType: headers[0].formType.toString(),
+            key: "title",
+            value: headers[0].value,
+            code: code,
+            dropdownId: null));
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: "description",
-          value: headers[1].value,
-          code: code,
-        ));
+            formType: headers[0].formType.toString(),
+            key: "description",
+            value: headers[1].value,
+            code: code,
+            dropdownId: null));
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
@@ -220,12 +223,12 @@ class _FillFormPageState extends State<FillFormPage> {
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
         ContentDatabaseModel(
-          formType: headers[0].formType.toString(),
-          key: headers[6].key,
-          value: villageValue,
-          code: code,
-          dropdownId: villageId
-        ));
+            formType: headers[0].formType.toString(),
+            key: headers[6].key,
+            value: villageValue,
+            code: code,
+            dropdownId: villageId));
+    print("VILLAGE ID: " + villageId.toString());
 
     await FormTableDatabase.instance.createContent(
         ContentFields.table,
@@ -266,14 +269,13 @@ class _FillFormPageState extends State<FillFormPage> {
       FormTableDatabase.instance.createQuestionAnswer(
           QuestionAnswerFields.questionanswerTable,
           QuestionAnswerDbModel(
-            id_soal: questionIdFreeText[indexFreeText],
-            formType: headers[0].formType.toString(),
-            question: key,
-            answer: value,
-            input_type: "FreeText",
-            code: code,
-            dropdown: ""
-          ));
+              id_soal: questionIdFreeText[indexFreeText],
+              formType: headers[0].formType.toString(),
+              question: key,
+              answer: value,
+              input_type: "FreeText",
+              code: code,
+              dropdown: ""));
 
       indexFreeText++;
     });
@@ -797,6 +799,7 @@ class _FillFormPageState extends State<FillFormPage> {
                           selectVal[index] = value!;
                           answersChoiceMap[dropdownQuestion[index].toString()] =
                               selectVal[index];
+                          print(answersChoiceMap);
                         });
                       },
                       isDense: true,

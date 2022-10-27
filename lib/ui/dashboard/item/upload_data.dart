@@ -38,20 +38,23 @@ class _UploadDataPageState extends State<UploadDataPage> {
   upload() async {
     String tdata = DateFormat("hh:mm:ss").format(DateTime.now());
     String cdate = DateFormat("yyyy-MM-dd").format(DateTime.now());
-    var header = Map<String, String>();
+    var header = Map<String, dynamic>();
     final prefs = await SharedPreferences.getInstance();
     var deviceId = prefs.getString('deviceId');
     var surveyTable = Map<String, dynamic>();
-
-
-
     List listQuestion = [];
     for (int i = 0; i < contentList.length; i++) {
       readContent =
-          await FormTableDatabase.instance.readContent(contentList[i].code);
+      await FormTableDatabase.instance.readContent(contentList[i].code);
       for (int p = 0; p < readContent.length; p++) {
         if(readContent[p].dropdownId != null) continue;
         header[readContent[p].key.toString()] = readContent[p].value.toString();
+        print(header);
+      }
+      for (int p = 0; p < readContent.length; p++) {
+        if(readContent[p].dropdownId == null) continue;
+        header[readContent[p].key.toString()] = readContent[p].dropdownId;
+        print(header);
       }
       for (int p = 0; p < readContent.length; p++) {
         if(readContent[p].dropdownId == null) continue;
@@ -69,7 +72,6 @@ class _UploadDataPageState extends State<UploadDataPage> {
         dtoForm["dtoFormLine"] = question;
         dtoForm["userInput"] = element.answer.toString();
         dtoForm["transTime"] = tdata;
-        print("dtoForm: " + dtoForm.toString());
         listQuestion.add(dtoForm);
       });
       header["transId"] = readQuestion[i].code.toString();
@@ -78,7 +80,6 @@ class _UploadDataPageState extends State<UploadDataPage> {
       header["deviceId"] = deviceId.toString();
       surveyTable["surveyTable"] = header;
       surveyTable["surveyLines"] = listQuestion;
-      print(surveyTable.toString());
       await Clipboard.setData(ClipboardData(text: '${jsonEncode(surveyTable)}'));
       //post disini
 
@@ -101,24 +102,24 @@ class _UploadDataPageState extends State<UploadDataPage> {
       ),
       body: contentList.isEmpty
           ? Center(
-              child: Text("Nenhum formulário adicionado ainda"),
-            )
+        child: Text("Nenhum formulário adicionado ainda"),
+      )
           : isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView.builder(
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        title: Text(contentList[index].code.toString()),
-                        subtitle: Text(contentList[index].formType.toString()),
-                      ),
-                    );
-                  },
-                  itemCount: contentList.length,
-                ),
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {},
+            child: ListTile(
+              title: Text(contentList[index].code.toString()),
+              subtitle: Text(contentList[index].formType.toString()),
+            ),
+          );
+        },
+        itemCount: contentList.length,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           upload();

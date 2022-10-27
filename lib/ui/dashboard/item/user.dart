@@ -21,6 +21,16 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("Perfil"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showAlertDialogLogout(context);
+              },
+              icon: Icon(
+                Icons.logout,
+                size: 28.h,
+              )),
+        ],
       ),
       body: SafeArea(
         child: Center(
@@ -29,18 +39,6 @@ class _UserPageState extends State<UserPage> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      onPressed: () {
-                        showAlertDialogLogout(context);
-                      },
-                      icon: Icon(
-                        Icons.logout,
-                        size: 28.h,
-                        color: Colors.red,
-                      )),
-                ),
                 SizedBox(
                   height: 50.h,
                 ),

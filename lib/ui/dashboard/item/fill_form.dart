@@ -168,6 +168,7 @@ class _FillFormPageState extends State<FillFormPage> {
             key: "title",
             value: headers[0].value,
             code: code,
+            status: 0,
             dropdownId: null));
 
     await FormTableDatabase.instance.createContent(
@@ -177,6 +178,7 @@ class _FillFormPageState extends State<FillFormPage> {
             key: "description",
             value: headers[1].value,
             code: code,
+            status: 0,
             dropdownId: null));
 
     await FormTableDatabase.instance.createContent(
@@ -186,6 +188,7 @@ class _FillFormPageState extends State<FillFormPage> {
           key: headers[2].key,
           value: _nameController.text,
           code: code,
+          status: 0,
           dropdownId: null
         ));
 
@@ -196,6 +199,7 @@ class _FillFormPageState extends State<FillFormPage> {
           key: headers[3].key,
           value: _selectDate,
           code: code,
+          status: 0,
           dropdownId: null
         ));
 
@@ -206,6 +210,7 @@ class _FillFormPageState extends State<FillFormPage> {
           key: headers[4].key,
           value: municipalityValue,
           code: code,
+          status: 0,
           dropdownId: municipalityId
         ));
 
@@ -216,6 +221,7 @@ class _FillFormPageState extends State<FillFormPage> {
           key: headers[5].key,
           value: subDistrictValue,
           code: code,
+          status: 0,
           dropdownId: subDistrictId
 
         ));
@@ -227,6 +233,7 @@ class _FillFormPageState extends State<FillFormPage> {
             key: headers[6].key,
             value: villageValue,
             code: code,
+            status: 0,
             dropdownId: villageId));
     print("VILLAGE ID: " + villageId.toString());
 
@@ -237,6 +244,7 @@ class _FillFormPageState extends State<FillFormPage> {
           key: headers[7].key,
           value: subVillageValue,
           code: code,
+          status: 0,
           dropdownId: subVillageId
         ));
 
@@ -247,6 +255,7 @@ class _FillFormPageState extends State<FillFormPage> {
           key: headers[8].key,
           value: _interviewerController.text,
           code: code,
+          status: 0,
           dropdownId: null
         ));
 
@@ -257,6 +266,7 @@ class _FillFormPageState extends State<FillFormPage> {
           key: headers[9].key,
           value: _headVillageController.text,
           code: code,
+          status: 0,
           dropdownId: null
         ));
 

@@ -9,6 +9,7 @@ class ContentFields {
   static const value = 'value';
   static const code = 'transId';
   static const dropdownId = 'dropdownId';
+  static const status = 'status';
 }
 
 class ContentDatabaseModel {
@@ -17,10 +18,11 @@ class ContentDatabaseModel {
   String? key;
   String? value;
   String? code;
+  int? status;
   int? dropdownId;
 
   ContentDatabaseModel(
-      {this.id, this.formType, this.key, this.value, this.code, this.dropdownId});
+      {this.id, this.formType, this.key, this.value, this.code, this.dropdownId, this.status});
 
   factory ContentDatabaseModel.fromJson(Map<String, dynamic> json) {
     return ContentDatabaseModel(
@@ -30,6 +32,7 @@ class ContentDatabaseModel {
       value: json['value'],
       code: json['transId'],
       dropdownId: json['dropdownId'],
+      status: json['status'],
     );
   }
 
@@ -39,6 +42,7 @@ class ContentDatabaseModel {
         ContentFields.key: key,
         ContentFields.value: value,
         ContentFields.code: code,
+        ContentFields.status: status,
         ContentFields.dropdownId: dropdownId,
       };
 }

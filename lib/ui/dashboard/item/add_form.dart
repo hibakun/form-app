@@ -55,7 +55,8 @@ class _AddFormPageState extends State<AddFormPage> {
             key: itemHeader[i].key,
             value: itemHeader[i].value,
             code: result,
-            dropdownId: itemHeader[i].dropdownId
+            dropdownId: itemHeader[i].dropdownId,
+            status: 0
           ));
     }
 
@@ -101,7 +102,7 @@ class _AddFormPageState extends State<AddFormPage> {
                 )
               : ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
+                    return contentList[index].status == 0 ? InkWell(
                       onTap: (){ Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -127,6 +128,16 @@ class _AddFormPageState extends State<AddFormPage> {
                               color: Colors.red,
                             )),
                       ),
+                    ) : ListTile(
+                      leading: IconButton(
+                          onPressed: () {
+                            showAlertDialogDuplicate(context, index);
+                          },
+                          icon: Icon(
+                            Icons.copy,
+                          )),
+                      title: Text(contentList[index].code.toString()),
+                      subtitle: Text(contentList[index].formType.toString() + " - Uploaded", style: TextStyle(fontStyle: FontStyle.italic),),
                     );
                   },
                   itemCount: contentList.length,

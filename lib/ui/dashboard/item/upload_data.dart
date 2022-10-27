@@ -23,6 +23,7 @@ class UploadDataPage extends StatefulWidget {
 class _UploadDataPageState extends State<UploadDataPage> {
   List<QuestionAnswerDbModel> questionList = [];
   List<ContentDatabaseModel> contentList = [];
+  List<ContentDatabaseModel> contentStatus = [];
   List<ContentDatabaseModel> readContent = [];
   List<QuestionAnswerDbModel> readQuestion = [];
   bool isLoading = false;
@@ -33,12 +34,22 @@ class _UploadDataPageState extends State<UploadDataPage> {
     });
     contentList = await FormTableDatabase.instance.contentReadAll();
     questionList = await FormTableDatabase.instance.readQuestionAnswerAll();
+    contentList.forEach((element) {
+      print("STATUS: " + element.status.toString());
+    });
+    for (int i = 0; i < contentList.length; i++) {
+      if (contentList[i].status != 0) continue;
+      contentStatus.add(contentList[i]);
+    }
     setState(() {
       isLoading = false;
     });
   }
 
   upload() async {
+    setState(() {
+      isLoading = true;
+    });
     showWarningDialog("process",
         customMessage: "Carregando os dados.\nPode demorar alguns segundos");
     String tdata = DateFormat("hh:mm:ss").format(DateTime.now());
@@ -47,10 +58,14 @@ class _UploadDataPageState extends State<UploadDataPage> {
     final prefs = await SharedPreferences.getInstance();
     var deviceId = prefs.getString('deviceId');
     var surveyTable = Map<String, dynamic>();
+    List status = [];
     List listQuestion = [];
     for (int i = 0; i < contentList.length; i++) {
-      readContent =
-          await FormTableDatabase.instance.readContent(contentList[i].code);
+      if (contentList[i].status != 0) continue;
+      status.add(contentList[i].code);
+    }
+    for (int i = 0; i < status.length; i++) {
+      readContent = await FormTableDatabase.instance.readContent(status[i]);
       for (int p = 0; p < readContent.length; p++) {
         if (readContent[p].dropdownId != null) continue;
         header[readContent[p].key.toString()] = readContent[p].value.toString();
@@ -61,8 +76,8 @@ class _UploadDataPageState extends State<UploadDataPage> {
         header[readContent[p].key.toString()] = readContent[p].dropdownId;
         print(header);
       }
-      readQuestion = await FormTableDatabase.instance
-          .readQuestionAnswer(contentList[i].code);
+      readQuestion =
+          await FormTableDatabase.instance.readQuestionAnswer(status[i]);
       readQuestion.forEach((element) {
         var question = Map<String, dynamic>();
         question["id"] = element.id_soal;
@@ -75,7 +90,7 @@ class _UploadDataPageState extends State<UploadDataPage> {
         dtoForm["transTime"] = tdata;
         listQuestion.add(dtoForm);
       });
-      header["transId"] = readQuestion[i].code.toString();
+      header["transId"] = status[i].toString();
       header["transTime"] = tdata;
       header["transDate"] = cdate;
       header["deviceId"] = deviceId.toString();
@@ -86,12 +101,17 @@ class _UploadDataPageState extends State<UploadDataPage> {
       //post disini
       UploadModel _model =
           await ApiService().surveyformupload(jsonRaw: surveyTable);
+      FormTableDatabase.instance.updateContentStatus(1, status[i]);
     }
     Navigator.pop(context);
     showWarningDialog("succeed", customMessage: "Dados de upload concluídos");
     Future.delayed(Duration(seconds: 1), () {
       Navigator.pop(context);
       Navigator.pop(context);
+    });
+    contentStatus.clear();
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -109,25 +129,26 @@ class _UploadDataPageState extends State<UploadDataPage> {
         automaticallyImplyLeading: false,
         title: Text("Página inicial (Enviar formulário)"),
       ),
-      body: contentList.isEmpty
+      body: isLoading
           ? Center(
-              child: Text("Nenhum formulário adicionado ainda"),
+              child: CircularProgressIndicator(),
             )
-          : isLoading
+          : contentStatus.isEmpty
               ? Center(
-                  child: CircularProgressIndicator(),
+                  child: Text("Nenhum formulário adicionado ainda"),
                 )
               : ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {},
                       child: ListTile(
-                        title: Text(contentList[index].code.toString()),
-                        subtitle: Text(contentList[index].formType.toString()),
+                        title: Text(contentStatus[index].code.toString()),
+                        subtitle:
+                            Text(contentStatus[index].formType.toString()),
                       ),
                     );
                   },
-                  itemCount: contentList.length,
+                  itemCount: contentStatus.length,
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

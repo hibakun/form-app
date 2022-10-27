@@ -68,6 +68,7 @@ class FormTableDatabase {
     ${ContentFields.key} $textType,
     ${ContentFields.value} $textType,
     ${ContentFields.code} $textType,
+    ${ContentFields.status} $intType,
     ${ContentFields.dropdownId} $intNullType
     )''');
 
@@ -194,12 +195,25 @@ class FormTableDatabase {
     return result;
   }
 
+
   Future updateContent(String value, int id) async{
     final db = await instance.database;
     try{
       db.rawUpdate(''' UPDATE ${ContentFields.table} SET ${ContentFields.value} =? WHERE ${ContentFields.id} =?  ''', [
         value,
         id
+      ]);
+    } catch(e){
+      print('error: ' + e.toString());
+    }
+  }
+
+  Future updateContentStatus(int status, String? code) async{
+    final db = await instance.database;
+    try{
+      db.rawUpdate(''' UPDATE ${ContentFields.table} SET ${ContentFields.status} =? WHERE ${ContentFields.code} =?  ''', [
+        status,
+        code
       ]);
     } catch(e){
       print('error: ' + e.toString());

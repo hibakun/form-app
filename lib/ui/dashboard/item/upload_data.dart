@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_app/model/upload_model.dart';
 import 'package:form_app/service/api_service.dart';
+import 'package:form_app/ui/widget/waringdialog.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +39,8 @@ class _UploadDataPageState extends State<UploadDataPage> {
   }
 
   upload() async {
+    showWarningDialog("process",
+        customMessage: "Carregando os dados.\nPode demorar alguns segundos");
     String tdata = DateFormat("hh:mm:ss").format(DateTime.now());
     String cdate = DateFormat("yyyy-MM-dd").format(DateTime.now());
     var header = Map<String, dynamic>();
@@ -84,6 +87,12 @@ class _UploadDataPageState extends State<UploadDataPage> {
       UploadModel _model =
           await ApiService().surveyformupload(jsonRaw: surveyTable);
     }
+    Navigator.pop(context);
+    showWarningDialog("succeed", customMessage: "Dados de upload concluídos");
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    });
   }
 
   @override
@@ -122,10 +131,89 @@ class _UploadDataPageState extends State<UploadDataPage> {
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          upload();
+          showAlertDialogUpload(context);
         },
         child: Icon(Icons.upload),
       ),
     );
+  }
+
+  showAlertDialogUpload(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Não"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Sim"),
+      onPressed: () {
+        upload();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Aviso"),
+      content: Text("você quer carregar?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void showWarningDialog(String type, {required String customMessage}) {
+    String dialogType = "";
+    String title = "";
+    String message = "";
+    IconData icon = Icons.warning;
+
+    switch (type) {
+      case "warning":
+        dialogType = "warning";
+        title = "Review";
+        message = customMessage;
+        icon = Icons.warning;
+        break;
+      case "process":
+        dialogType = "process";
+        title = "Process";
+        message = customMessage;
+        icon = Icons.hourglass_bottom;
+        break;
+      case "succeed":
+        dialogType = "succeed";
+        title = "Succeed";
+        message = customMessage;
+        icon = Icons.check_circle_outline;
+        break;
+      case "error":
+        dialogType = "error";
+        message = customMessage;
+        title = "Error";
+        icon = Icons.error;
+        break;
+      default:
+    }
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => new Dialog(
+                child: WarningDialog(
+              type: dialogType,
+              title: title,
+              message: message,
+              icon: icon,
+            )));
   }
 }

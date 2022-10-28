@@ -243,7 +243,7 @@ class _DownloadPageState extends State<DownloadPage> {
                               ))));
                 },
                 child: Card(
-                  color: Colors.white70,
+                  color: Colors.white54,
                   elevation: 4,
                   shadowColor: Colors.black,
                   child: Center(child: Text(_datalistform[index].code)),

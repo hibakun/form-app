@@ -41,30 +41,38 @@ class _UserPageState extends State<UserPage> {
             children: [
               Row(
                 children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: 110.w,
+                  Expanded(
+                    child: Center(
+                      child: Image.asset(
+                        'assets/logo.png',
+                        width: 100.w,
+                      ),
                     ),
                   ),
-                  SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Republica Democratica De Timor-Leste",
-                          style: TextStyle(
-                              color: Colors.blue[800],
-                              fontWeight: FontWeight.bold,
-                              fontSize: 23)),
-                      SizedBox(height: 10.h),
-                      Text(
-                          "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Reprodusaun",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15)),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text("Republica Democratica De Timor-Leste",
+                              style: TextStyle(
+                                  color: Colors.blue[800],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 23)),
+                        ),
+                        SizedBox(height: 10.h),
+                        FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                              "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Reprodusaun",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15)),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

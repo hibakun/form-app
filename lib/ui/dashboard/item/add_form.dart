@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_app/model/database/content.dart';
 import 'package:form_app/model/database/question_answer.dart';
 import 'package:form_app/ui/dashboard/item/list_form.dart';
@@ -96,7 +97,20 @@ class _AddFormPageState extends State<AddFormPage> {
       ),
       body: contentList.isEmpty
           ? Center(
-              child: Text("Nenhum formulário adicionado ainda"),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset("assets/no_data.svg", width: 100.w),
+                  SizedBox(height: 30.h),
+                  FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text("Nenhum formulário\ndisponível",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 25)),
+                  ),
+                ],
+              ),
             )
           : isLoading
               ? Center(
@@ -105,51 +119,73 @@ class _AddFormPageState extends State<AddFormPage> {
               : ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
                     return contentList[index].status == 0
-                        ? InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: ((context) => UpdateFormPage(
-                                            code: contentList[index]
-                                                .code
-                                                .toString(),
-                                          ))));
-                            },
-                            child: ListTile(
-                              leading: IconButton(
-                                  onPressed: () {
-                                    showAlertDialogDuplicate(context, index);
-                                  },
-                                  icon: Icon(
-                                    Icons.copy,
-                                  )),
-                              title: Text(contentList[index].code.toString()),
-                              subtitle:
-                                  Text(contentList[index].formType.toString()),
-                              trailing: IconButton(
-                                  onPressed: () async {
-                                    showAlertDialogDelete(context, index);
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  )),
+                        ? Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: ((context) => UpdateFormPage(
+                                              code: contentList[index]
+                                                  .code
+                                                  .toString(),
+                                            ))));
+                              },
+                              child: Card(
+                                elevation: 4,
+                                shadowColor: Colors.black,
+                                child: ListTile(
+                                  leading: IconButton(
+                                      onPressed: () {
+                                        showAlertDialogDuplicate(
+                                            context, index);
+                                      },
+                                      icon: Icon(
+                                        Icons.copy,
+                                        size: 13.w,
+                                      )),
+                                  title: Text(
+                                      contentList[index].code.toString()),
+                                  subtitle: Text(
+                                      contentList[index].formType.toString()),
+                                  trailing: IconButton(
+                                      onPressed: () async {
+                                        showAlertDialogDelete(context, index);
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        size: 13.w,
+                                        color: Colors.red,
+                                      )),
+                                ),
+                              ),
                             ),
                           )
-                        : ListTile(
-                            leading: IconButton(
-                                onPressed: () {
-                                  showAlertDialogDuplicate(context, index);
-                                },
-                                icon: Icon(
-                                  Icons.copy,
-                                )),
-                            title: Text(contentList[index].code.toString()),
-                            subtitle: Text(
-                              contentList[index].formType.toString() +
-                                  " - Uploaded",
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                        : Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Card(
+                              elevation: 4,
+                              shadowColor: Colors.black,
+                              child: ListTile(
+                                leading: IconButton(
+                                    onPressed: () {
+                                      showAlertDialogDuplicate(
+                                          context, index);
+                                    },
+                                    icon: Icon(
+                                      Icons.copy,
+                                      size: 13.w,
+                                    )),
+                                title:
+                                    Text(contentList[index].code.toString()),
+                                subtitle: Text(
+                                  contentList[index].formType.toString() +
+                                      " - Uploaded",
+                                  style:
+                                      TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
                             ),
                           );
                   },
@@ -193,7 +229,7 @@ class _AddFormPageState extends State<AddFormPage> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Aviso"),
-      content: Text("Tem certeza de que deseja copiar este item?"),
+      content: Text("Deseja copiar este item?"),
       actions: [
         cancelButton,
         continueButton,
@@ -239,7 +275,7 @@ class _AddFormPageState extends State<AddFormPage> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Aviso"),
-      content: Text("Tem certeza de que deseja excluir este item?"),
+      content: Text("Você quer apagar este item ?"),
       actions: [
         cancelButton,
         continueButton,

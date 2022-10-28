@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_app/model/upload_model.dart';
 import 'package:form_app/service/api_service.dart';
 import 'package:form_app/ui/widget/waringdialog.dart';
@@ -139,20 +140,45 @@ class _UploadDataPageState extends State<UploadDataPage> {
             )
           : contentStatus.isEmpty
               ? Center(
-                  child: Text("Nenhum formulário adicionado ainda"),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/no_data.svg", width: 100.w),
+                      SizedBox(height: 30.h),
+                      FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text("Nenhum formulário\ndisponível",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 25)),
+                      ),
+                    ],
+                  ),
                 )
               : ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text(contentStatus[index].code.toString()),
-                      subtitle: Text(contentStatus[index].formType.toString()),
+                    return Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Card(
+                        elevation: 4,
+                        shadowColor: Colors.black,
+                        child: ListTile(
+                          title: Text(contentStatus[index].code.toString()),
+                          subtitle:
+                              Text(contentStatus[index].formType.toString()),
+                        ),
+                      ),
                     );
                   },
                   itemCount: contentStatus.length,
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showAlertDialogUpload(context);
+          if (contentStatus.isEmpty) {
+            read();
+          } else {
+            showAlertDialogUpload(context);
+          }
         },
         child: Icon(Icons.upload),
       ),

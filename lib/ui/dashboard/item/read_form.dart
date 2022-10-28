@@ -62,16 +62,24 @@ class _ReadFormPageState extends State<ReadFormPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 50.h,
+            title: Text("Formulário " + widget.formType + " de visualização",
+                style: TextStyle(fontSize: 20)),
+          ),
           body: _isloading
               ? Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _headerForm(),
-                      _bodyForm(),
-                    ],
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        _headerForm(),
+                        _bodyForm(),
+                      ],
+                    ),
                   ),
                 )),
     );
@@ -81,19 +89,19 @@ class _ReadFormPageState extends State<ReadFormPage> {
     return Container(
       decoration: BoxDecoration(
           color: Colors.grey[100], borderRadius: BorderRadius.circular(4)),
-      height: 60.h,
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("2005-10-10", style: TextStyle(fontSize: 14)),
-            SizedBox(
-              width: 10.w,
-            ),
-            Icon(Icons.arrow_drop_down)
-          ],
-        ),
+      height: 40.h,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 25),
+            child: Text("2005-10-10", style: TextStyle(fontSize: 14)),
+          ),
+          SizedBox(
+            width: 10.w,
+          ),
+          Icon(Icons.arrow_drop_down)
+        ],
       ),
     );
   }
@@ -104,17 +112,15 @@ class _ReadFormPageState extends State<ReadFormPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 12),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(headers[4].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Center(
             child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                height: 50.h,
-                width: 400.w,
+                padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(5)),
@@ -139,17 +145,15 @@ class _ReadFormPageState extends State<ReadFormPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 12),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(headers[5].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Center(
             child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                height: 50.h,
-                width: 400.w,
+                padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(5)),
@@ -174,17 +178,15 @@ class _ReadFormPageState extends State<ReadFormPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 12),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(headers[6].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Center(
             child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                height: 50.h,
-                width: 400.w,
+                padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(5)),
@@ -209,17 +211,15 @@ class _ReadFormPageState extends State<ReadFormPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 12),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(headers[7].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Center(
             child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                height: 50.h,
-                width: 400.w,
+                padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(5)),
@@ -244,74 +244,86 @@ class _ReadFormPageState extends State<ReadFormPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 12),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
           child: Center(
               child: Text(headers[0].value.toString(),
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))),
         ),
-        SizedBox(height: 30.h),
         Center(
             child: Text(headers[1].value.toString(),
                 style: TextStyle(fontSize: 15), textAlign: TextAlign.center)),
         SizedBox(height: 30.h),
         Padding(
-          padding: EdgeInsets.only(left: 12),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(headers[2].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: CustomTextField(
             isEnable: false,
             isreadOnly: true,
             controller: _nameController,
             inputType: TextInputType.text,
             validator: (value) => SharedCode().emptyValidator(value),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           ),
         ),
-        SizedBox(height: 20.h),
         Padding(
-          padding: EdgeInsets.only(left: 12),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(headers[3].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: _buildDatePickerField(),
         ),
-        SizedBox(height: 20.h),
         _buildDropdownMunicipality(),
         _buildDropdownsubDistrict(),
         _buildDropdownVillage(),
         _buildDropdownsubVillage(),
         Padding(
-          padding: EdgeInsets.only(left: 12, top: 10),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(headers[8].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: CustomTextField(
             isEnable: false,
             isreadOnly: true,
             controller: _interviewerController,
             inputType: TextInputType.text,
             validator: (value) => SharedCode().emptyValidator(value),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 12, top: 10),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(headers[9].key.toString() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: CustomTextField(
             isEnable: false,
             isreadOnly: true,
             controller: _headVillageController,
             inputType: TextInputType.text,
             validator: (value) => SharedCode().emptyValidator(value),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           ),
         ),
       ],
@@ -326,29 +338,32 @@ class _ReadFormPageState extends State<ReadFormPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 12, top: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Text(questions[index].question.toString() + " :",
                   style: TextStyle(fontSize: 15)),
             ),
             questions[index].input_type == "FreeText"
                 ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: CustomTextField(
                       isEnable: false,
                       isreadOnly: true,
                       controller: _naranController,
                       inputType: TextInputType.text,
                       validator: (value) => SharedCode().emptyValidator(value),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
                   )
                 : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Center(
                       child: Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: 15, vertical: 10),
-                          height: 50.h,
-                          width: 400.w,
                           decoration: BoxDecoration(
                               color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(5)),

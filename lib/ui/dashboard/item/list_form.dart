@@ -44,7 +44,9 @@ class _ListFormPageState extends State<ListFormPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Selecione o formulário"),
+          toolbarHeight: 50.h,
+          title: Text("Selecione o formulário",
+              style: TextStyle(fontSize: 20)),
         ),
         body: _buildListForm(),
       ),

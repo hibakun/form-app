@@ -26,22 +26,22 @@ class _DashboardState extends State<Dashboard> {
 
   final _items = [
     BottomNavigationBarItem(
-      icon: Icon(Icons.download),
+      icon: Icon(Icons.download, size: 25.h),
       label: "Download",
       tooltip: "Download",
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.add_chart),
+      icon: Icon(Icons.add_chart, size: 25.h),
       label: "Forma",
       tooltip: "Forma",
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.upload),
+      icon: Icon(Icons.upload, size: 25.h),
       label: "Envio",
       tooltip: "Envio",
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.person),
+      icon: Icon(Icons.person, size: 25.h),
       label: "Usuário",
       tooltip: "Usuário",
     ),

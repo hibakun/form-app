@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/model/upload_model.dart';
 import 'package:form_app/service/api_service.dart';
 import 'package:form_app/ui/widget/waringdialog.dart';
@@ -68,7 +69,8 @@ class _UploadDataPageState extends State<UploadDataPage> {
       readContent = await FormTableDatabase.instance.readContent(status[i]);
       for (int p = 0; p < readContent.length; p++) {
         if (readContent[p].dropdownId != null) continue;
-        header[readContent[p].key.toString()] = readContent[p].value.toString();
+        header[readContent[p].key.toString()] =
+            utf8.decode(readContent[p].value.toString().runes.toList());
         print(header);
       }
       for (int p = 0; p < readContent.length; p++) {
@@ -127,7 +129,9 @@ class _UploadDataPageState extends State<UploadDataPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Página inicial (Enviar formulário)"),
+        toolbarHeight: 50.h,
+        title: Text("Página inicial (Enviar formulário)",
+            style: TextStyle(fontSize: 20)),
       ),
       body: isLoading
           ? Center(
@@ -141,8 +145,7 @@ class _UploadDataPageState extends State<UploadDataPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                       title: Text(contentStatus[index].code.toString()),
-                      subtitle:
-                          Text(contentStatus[index].formType.toString()),
+                      subtitle: Text(contentStatus[index].formType.toString()),
                     );
                   },
                   itemCount: contentStatus.length,

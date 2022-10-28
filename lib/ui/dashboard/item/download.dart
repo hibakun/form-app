@@ -203,7 +203,9 @@ class _DownloadPageState extends State<DownloadPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Página inicial (Formulário de download)"),
+        toolbarHeight: 50.h,
+        title: Text("Página inicial (Formulário de download)",
+            style: TextStyle(fontSize: 20)),
       ),
       body: _buildListForm(),
       floatingActionButton: FloatingActionButton(

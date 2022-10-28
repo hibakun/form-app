@@ -20,7 +20,8 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Perfil"),
+        toolbarHeight: 50.h,
+        title: Text("Perfil", style: TextStyle(fontSize: 20)),
         actions: [
           IconButton(
               onPressed: () {
@@ -28,40 +29,71 @@ class _UserPageState extends State<UserPage> {
               },
               icon: Icon(
                 Icons.logout,
-                size: 28.h,
+                size: 20.h,
               )),
         ],
       ),
       body: SafeArea(
-        child: Center(
-          child: Container(
-            margin: EdgeInsets.only(top: 20.h),
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 50.h,
-                ),
-                SvgPicture.asset(
-                  'assets/profile.svg',
-                  width: 125.w,
-                ),
-                SizedBox(
-                  height: 20.h,
-                ),
-                Text(
-                  'Admin',
-                  style: theme.headline1,
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Text(
-                  'admin@gmail.com',
-                  style: theme.bodyText1,
-                ),
-              ],
-            ),
+        child: Container(
+          margin: EdgeInsets.only(top: 20.h),
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: 110.w,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Republica Democratica De Timor-Leste",
+                          style: TextStyle(
+                              color: Colors.blue[800],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 23)),
+                      SizedBox(height: 10.h),
+                      Text(
+                          "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Reprodusaun",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15)),
+                    ],
+                  ),
+                ],
+              ),
+              Divider(
+                thickness: 2,
+                color: Colors.red,
+              ),
+              SizedBox(
+                height: 50.h,
+              ),
+              SvgPicture.asset(
+                'assets/profile.svg',
+                width: 125.w,
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              Text(
+                'Admin',
+                style: theme.headline1,
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Text(
+                'admin@gmail.com',
+                style: theme.bodyText1,
+              ),
+            ],
           ),
         ),
       ),

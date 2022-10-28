@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/model/database/content.dart';
 import 'package:form_app/model/database/question_answer.dart';
 import 'package:form_app/ui/dashboard/item/list_form.dart';
@@ -51,13 +52,12 @@ class _AddFormPageState extends State<AddFormPage> {
       await FormTableDatabase.instance.createContent(
           ContentFields.table,
           ContentDatabaseModel(
-            formType: itemHeader[i].formType,
-            key: itemHeader[i].key,
-            value: itemHeader[i].value,
-            code: result,
-            dropdownId: itemHeader[i].dropdownId,
-            status: 0
-          ));
+              formType: itemHeader[i].formType,
+              key: itemHeader[i].key,
+              value: itemHeader[i].value,
+              code: result,
+              dropdownId: itemHeader[i].dropdownId,
+              status: 0));
     }
 
     for (int i = 0; i < itemQuestion.length; i++) {
@@ -90,7 +90,9 @@ class _AddFormPageState extends State<AddFormPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Página inicial (preencher formulário)"),
+        toolbarHeight: 50.h,
+        title: Text("Página inicial (preencher formulário)",
+            style: TextStyle(fontSize: 20)),
       ),
       body: contentList.isEmpty
           ? Center(
@@ -102,43 +104,54 @@ class _AddFormPageState extends State<AddFormPage> {
                 )
               : ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    return contentList[index].status == 0 ? InkWell(
-                      onTap: (){ Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => UpdateFormPage(
-                                code: contentList[index].code.toString(),
-                              ))));},
-                      child: ListTile(
-                        leading: IconButton(
-                            onPressed: () {
-                              showAlertDialogDuplicate(context, index);
+                    return contentList[index].status == 0
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) => UpdateFormPage(
+                                            code: contentList[index]
+                                                .code
+                                                .toString(),
+                                          ))));
                             },
-                            icon: Icon(
-                              Icons.copy,
-                            )),
-                        title: Text(contentList[index].code.toString()),
-                        subtitle: Text(contentList[index].formType.toString()),
-                        trailing: IconButton(
-                            onPressed: () async {
-                              showAlertDialogDelete(context, index);
-                            },
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            )),
-                      ),
-                    ) : ListTile(
-                      leading: IconButton(
-                          onPressed: () {
-                            showAlertDialogDuplicate(context, index);
-                          },
-                          icon: Icon(
-                            Icons.copy,
-                          )),
-                      title: Text(contentList[index].code.toString()),
-                      subtitle: Text(contentList[index].formType.toString() + " - Uploaded", style: TextStyle(fontStyle: FontStyle.italic),),
-                    );
+                            child: ListTile(
+                              leading: IconButton(
+                                  onPressed: () {
+                                    showAlertDialogDuplicate(context, index);
+                                  },
+                                  icon: Icon(
+                                    Icons.copy,
+                                  )),
+                              title: Text(contentList[index].code.toString()),
+                              subtitle:
+                                  Text(contentList[index].formType.toString()),
+                              trailing: IconButton(
+                                  onPressed: () async {
+                                    showAlertDialogDelete(context, index);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  )),
+                            ),
+                          )
+                        : ListTile(
+                            leading: IconButton(
+                                onPressed: () {
+                                  showAlertDialogDuplicate(context, index);
+                                },
+                                icon: Icon(
+                                  Icons.copy,
+                                )),
+                            title: Text(contentList[index].code.toString()),
+                            subtitle: Text(
+                              contentList[index].formType.toString() +
+                                  " - Uploaded",
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          );
                   },
                   itemCount: contentList.length,
                 ),

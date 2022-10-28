@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/database/question.dart';
@@ -224,12 +225,27 @@ class _DownloadPageState extends State<DownloadPage> {
 
   _buildListForm() {
     return _datalistform.length == 0
-        ? Center(child: Text("sem dados disponíveis"))
+        ? Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset("assets/no_data.svg", width: 100.w),
+                SizedBox(height: 30.h),
+                FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text("Nenhum formulário\ndisponível",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 25)),
+                ),
+              ],
+            ),
+          )
         : GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 5.0,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
             ),
             itemCount: _datalistform.length,
             itemBuilder: (BuildContext context, int index) {
@@ -246,7 +262,11 @@ class _DownloadPageState extends State<DownloadPage> {
                   color: Colors.white54,
                   elevation: 4,
                   shadowColor: Colors.black,
-                  child: Center(child: Text(_datalistform[index].code)),
+                  child: Center(
+                      child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(_datalistform[index].code,
+                              style: TextStyle(fontSize: 20)))),
                 ),
               );
             },

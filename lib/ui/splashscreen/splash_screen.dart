@@ -77,11 +77,11 @@ class _SplashState extends State<Splash> {
           ),
           SizedBox(height: 50.h),
           Center(
-              child: Text("Aplicativo de pesquisa",
+              child: Text("Formulário de Pesquisa",
                   style: TextStyle(
                       color: Colors.red[400],
                       fontWeight: FontWeight.bold,
-                      fontSize: 20)))
+                      fontSize: 30)))
         ],
       ),
     );

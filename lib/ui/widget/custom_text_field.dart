@@ -8,12 +8,14 @@ class CustomTextField extends StatefulWidget {
   final TextInputType inputType;
   final String? Function(String?)? validator;
   final bool isPassword;
+  final InputDecoration decoration;
 
   const CustomTextField(
       {Key? key,
       required this.controller,
       this.inputType = TextInputType.text,
       this.validator,
+      required this.decoration,
       this.isPassword = false,
       required this.isEnable,
       required this.isreadOnly})
@@ -38,13 +40,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
       validator: validator,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       obscureText: widget.isPassword,
-      autocorrect: !widget.isPassword,
-      enableSuggestions: !widget.isPassword,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
+      autocorrect: true,
+      enableSuggestions: true,
+      decoration: widget.decoration,
     );
   }
 }

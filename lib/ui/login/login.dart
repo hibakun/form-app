@@ -28,6 +28,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isVisible = true;
 
   Future<void> _login() async {
     showWarningDialog("process",
@@ -50,73 +51,104 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(child: _buildLogin(context)),
+      body: Center(child: SingleChildScrollView(child: _buildLogin(context))),
     );
   }
 
   _buildLogin(BuildContext context) {
     var theme = Theme.of(context).textTheme;
-    return Container(
-      margin: EdgeInsets.only(top: 100.h),
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Conecte-se',
-            style: theme.headline1,
-          ),
-          SizedBox(
-            height: 7.h,
-          ),
-          Text(
-            'Faça login para continuar.',
-            style: theme.subtitle1,
-          ),
-          SizedBox(
-            height: 50.h,
-          ),
-          Text(
-            'Nome de usuário',
-            style: theme.bodyText1,
-          ),
-          SizedBox(
-            height: 7.h,
-          ),
-          CustomTextField(
-            isEnable: true,
-            isreadOnly: false,
-            controller: _usernameController,
-            inputType: TextInputType.emailAddress,
-            validator: (value) => SharedCode().emailValidator(value),
-          ),
-          SizedBox(
-            height: 25.h,
-          ),
-          Text(
-            'Senha',
-            style: theme.bodyText1,
-          ),
-          SizedBox(
-            height: 7.h,
-          ),
-          CustomTextField(
-            isEnable: true,
-            isreadOnly: false,
-            controller: _passwordController,
-            isPassword: true,
-            validator: (value) => SharedCode().passwordValidator(value),
-          ),
-          SizedBox(
-            height: 35.h,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              _login();
-            },
-            child: const Text('Conecte-se'),
-          ),
-        ],
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(35.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                'Conecte-se',
+                style: theme.headline1,
+              ),
+            ),
+            SizedBox(
+              height: 7.h,
+            ),
+            SizedBox(
+              height: 50.h,
+            ),
+            Text(
+              'Conta',
+              style: theme.bodyText1,
+            ),
+            SizedBox(
+              height: 7.h,
+            ),
+            CustomTextField(
+              isEnable: true,
+              isreadOnly: false,
+              controller: _usernameController,
+              inputType: TextInputType.emailAddress,
+              validator: (value) => SharedCode().emailValidator(value),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 25.h,
+            ),
+            Text(
+              'Senha',
+              style: theme.bodyText1,
+            ),
+            SizedBox(
+              height: 7.h,
+            ),
+            CustomTextField(
+              inputType: TextInputType.text,
+              isEnable: true,
+              isreadOnly: false,
+              controller: _passwordController,
+              isPassword: _isVisible,
+              validator: (value) => SharedCode().passwordValidator(value),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isVisible ? Icons.visibility_off : Icons.visibility,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isVisible = !_isVisible;
+                    });
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 35.h,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_usernameController.text == "admin@gmail.com" &&
+                    _passwordController.text == "admin77") {
+                  _login();
+                } else if (_usernameController.text.isEmpty &&
+                    _passwordController.text.isEmpty) {
+                  showWarningDialog("error",
+                      customMessage: "Usuário/senha vazio");
+                } else {
+                  showWarningDialog("error",
+                      customMessage: "Usuário/senha não corresponde");
+                }
+              },
+              child: const Text('Conecte-se'),
+            ),
+          ],
+        ),
       ),
     );
   }

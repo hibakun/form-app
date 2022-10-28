@@ -50,6 +50,7 @@ class _UserPageState extends State<UserPage> {
                     ),
                   ),
                   Expanded(
+                    flex: 2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -60,32 +61,34 @@ class _UserPageState extends State<UserPage> {
                               style: TextStyle(
                                   color: Colors.blue[800],
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 23)),
+                                  fontSize: 25)),
                         ),
-                        SizedBox(height: 10.h),
+                        SizedBox(height: 5.h),
                         FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(
                               "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Reprodusaun",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15)),
+                                  fontWeight: FontWeight.bold, fontSize: 17)),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
+              SizedBox(
+                height: 10.h,
+              ),
               Divider(
                 thickness: 2,
-                color: Colors.red,
               ),
               SizedBox(
                 height: 50.h,
               ),
               SvgPicture.asset(
                 'assets/profile.svg',
-                width: 125.w,
+                width: 100.w,
               ),
               SizedBox(
                 height: 20.h,

@@ -133,8 +133,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (_usernameController.text == "admin@gmail.com" &&
-                    _passwordController.text == "admin77") {
+                if (_usernameController.text.isNotEmpty &&
+                    _passwordController.text.isNotEmpty) {
                   _login();
                 } else if (_usernameController.text.isEmpty &&
                     _passwordController.text.isEmpty) {

@@ -72,11 +72,13 @@ class _UploadDataPageState extends State<UploadDataPage> {
         if (readContent[p].dropdownId != null) continue;
         header[readContent[p].key.toString()] =
             utf8.decode(readContent[p].value.toString().runes.toList());
+        header['formType'] = (readContent[p].formType.toString());
         print(header);
       }
       for (int p = 0; p < readContent.length; p++) {
         if (readContent[p].dropdownId == null) continue;
         header[readContent[p].key.toString()] = readContent[p].dropdownId;
+        header['formType'] = (readContent[p].formType.toString());
         print(header);
       }
       readQuestion =

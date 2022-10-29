@@ -79,8 +79,9 @@ class _DownloadPageState extends State<DownloadPage> {
       result.add(model.data.surveyTable.subVillage);
       result.add('interviewerName');
       result.add(model.data.surveyTable.interviewerName);
-      result.add('headVillageName');
-      result.add(model.data.surveyTable.headVillageName);
+      result.add('villageHeadName');
+      result.add(model.data.surveyTable.villageHeadName);
+      print("FORM TYPE" + result[0].toString());
 
       question = model.data.surveyLines;
       print("Question LENGTH" + question.length.toString());

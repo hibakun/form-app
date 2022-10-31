@@ -59,7 +59,7 @@ class VillageData {
   factory VillageData.fromJson(Map<String, dynamic> json) => VillageData(
         id: json["id"],
         code: json["code"],
-        name: json["name"],
+        name: utf8.decode(json["name"].runes.toList()),
         description: json["description"],
         subDistrict: json["subDistrict"] == null
             ? null
@@ -72,7 +72,7 @@ class VillageData {
   Map<String, dynamic> toJson() => {
         "id": id,
         "code": code,
-        "name": name,
+        "name": utf8.decode(name.runes.toList()),
         "description": description,
         "subDistrict": subDistrict == null ? null : subDistrict!.toJson(),
         "municipality": municipality == null ? null : municipality!.toJson(),

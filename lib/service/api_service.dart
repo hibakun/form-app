@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:form_app/model/formtabelModel.dart';
+import 'package:form_app/model/database/formtabelModel.dart';
 import 'package:form_app/model/login_model.dart';
 import 'package:form_app/model/municipality_like_model.dart';
 import 'package:form_app/model/municipality_model.dart';

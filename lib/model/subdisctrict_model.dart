@@ -60,7 +60,7 @@ class SubdisctrictData {
       SubdisctrictData(
         id: json["id"],
         code: json["code"],
-        name: json["name"],
+        name: utf8.decode(json["name"].runes.toList()),
         description: json["description"],
         municipality: json["municipality"] == null
             ? null
@@ -70,7 +70,7 @@ class SubdisctrictData {
   Map<String, dynamic> toJson() => {
         "id": id,
         "code": code,
-        "name": name,
+        "name": utf8.decode(name.runes.toList()),
         "description": description,
         "municipality": municipality == null ? null : municipality!.toJson(),
       };

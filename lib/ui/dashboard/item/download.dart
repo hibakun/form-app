@@ -3,12 +3,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/database/header.dart';
+import 'package:form_app/model/database/municipality.dart';
 import 'package:form_app/model/database/question.dart';
-import 'package:form_app/model/formtabelModel.dart';
+import 'package:form_app/model/database/formtabelModel.dart';
+import 'package:form_app/model/database/subdistrict.dart';
+import 'package:form_app/model/database/subvillage.dart';
+import 'package:form_app/model/database/village.dart';
+import 'package:form_app/model/municipality_model.dart';
+import 'package:form_app/model/subvillage_model.dart';
 import 'package:form_app/model/surveyFormDownloadModel.dart';
+import 'package:form_app/model/village_model.dart';
 import 'package:form_app/service/api_service.dart';
 import 'package:form_app/ui/dashboard/item/read_form.dart';
 import 'package:form_app/ui/widget/waringdialog.dart';
+
+import '../../../model/subdisctrict_model.dart';
 
 class DownloadPage extends StatefulWidget {
   DownloadPage({Key? key}) : super(key: key);
@@ -20,7 +29,16 @@ class DownloadPage extends StatefulWidget {
 class _DownloadPageState extends State<DownloadPage> {
   List<FormModel> _datalistform = [];
   FormTableData? _dataTable;
+  MunicipalityData? _municipalityTable;
+  SubdisctrictData? _subdisctrictTable;
+  VillageData? _villageTable;
+  SubvillageData? _subvillageTable;
+
   var _data = [];
+  var _municipalityData = [];
+  var _subdistrictData = [];
+  var _villageData = [];
+  var _subvillageData = [];
   var form;
 
   Future addDb() async {
@@ -32,6 +50,81 @@ class _DownloadPageState extends State<DownloadPage> {
     } catch (error) {
       print('no internet');
     }
+
+    try {
+      MunicipalityModel result = await ApiService().municipalityAPI();
+      _municipalityData = result.data;
+    } catch (error) {
+      print('no internet');
+    }
+
+    try {
+      SubdisctrictModel result = await ApiService().subdisctrictAPI();
+      _subdistrictData = result.data;
+    } catch (error) {
+      print('no internet');
+    }
+
+    try {
+      VillageModel result = await ApiService().villageAPI();
+      _villageData = result.data;
+    } catch (error) {
+      print('no internet');
+    }
+
+    try {
+      SubvillageModel result = await ApiService().subvillageAPI();
+      _subvillageData = result.data;
+    } catch (error) {
+      print('no internet');
+    }
+
+
+    for(int i = 0; i < _municipalityData.length; i++){
+      _municipalityTable = _municipalityData[i];
+      await FormTableDatabase.instance.createMunicipality(MunicipalityFields.tableMunicipality,
+          MunicipalityDatabaseModel(
+            id_dropdown: _municipalityTable?.id,
+            name: _municipalityTable?.name,
+            kode_municipality: _municipalityTable?.code
+          ));
+    }
+
+    for(int i = 0; i < _subdistrictData.length; i++){
+      _subdisctrictTable = _subdistrictData[i];
+      await FormTableDatabase.instance.createSubdistrict(SubdistrictFields.tableSubdistrict,
+          SubdistrictDatabaseModel(
+            id_dropdown: _subdisctrictTable?.id,
+            name: _subdisctrictTable?.name,
+            kode_subdistrict: _subdisctrictTable?.code,
+            kode_municipality: _subdisctrictTable?.municipality?.code
+          ));
+    }
+
+    for(int i = 0; i < _villageData.length; i++){
+    _villageTable = _villageData[i];
+      await FormTableDatabase.instance.createVillage(VillageFields.tableVillage,
+          VillageDatabaseModel(
+            id_dropdown: _villageTable?.id,
+            name: _villageTable?.name,
+            kode_village: _villageTable?.code,
+            kode_subdistrict: _villageTable?.subDistrict?.code,
+          ));
+    }
+
+    for(int i = 0; i < _subvillageData.length; i++){
+      _subvillageTable = _subvillageData[i];
+      await FormTableDatabase.instance.createSubvillage(SubvillageFields.tableSubvillage,
+          SubVillageDatabaseModel(
+            id_dropdown: _subvillageTable?.id,
+            name: _subvillageTable?.name,
+            kode_subvillage: _subvillageTable?.code,
+            kode_village: _subvillageTable?.village?.code
+          ));
+    }
+
+
+
     for (int i = 0; i < _data.length; i++) {
       _dataTable = _data[i];
       form = FormModel(
@@ -43,6 +136,8 @@ class _DownloadPageState extends State<DownloadPage> {
       await downloadForm(_dataTable!.formType);
       await FormTableDatabase.instance.createForm(form);
     }
+
+
     Navigator.pop(context);
     read();
   }

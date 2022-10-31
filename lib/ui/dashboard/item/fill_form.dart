@@ -5,8 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/common/shared_code.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/database/header.dart';
+import 'package:form_app/model/database/municipality.dart';
 import 'package:form_app/model/database/question.dart';
 import 'package:form_app/model/database/question_answer.dart';
+import 'package:form_app/model/database/subdistrict.dart';
+import 'package:form_app/model/database/subvillage.dart';
+import 'package:form_app/model/database/village.dart';
 import 'package:form_app/model/municipality_model.dart';
 import 'package:form_app/model/subdisctrict_by_muni_model.dart';
 import 'package:form_app/model/subdisctrict_model.dart';
@@ -32,14 +36,13 @@ class FillFormPage extends StatefulWidget {
 }
 
 class _FillFormPageState extends State<FillFormPage> {
-  MunicipalityData? dropdownMunicipality = null;
-  SubdisctrictByMuniData? dropdownsubDistrict = null;
-  VillageBySubData? dropdownVillage = null;
-  SubvillageByVillageData? dropdownsubVillage = null;
-  List<MunicipalityData> municipalityList = [];
-  List<SubdisctrictByMuniData> subDistrictList = [];
-  List<VillageBySubData> villageList = [];
-  List<SubvillageByVillageData> subVillageList = [];
+  MunicipalityDatabaseModel? dropdownMunicipality = null;
+  SubdistrictDatabaseModel? dropdownsubDistrict = null;
+  VillageDatabaseModel? dropdownVillage = null;
+  SubVillageDatabaseModel? dropdownsubVillage = null;
+  List<SubdistrictDatabaseModel> subDistrictList = [];
+  List<VillageDatabaseModel> villageList = [];
+  List<SubVillageDatabaseModel> subVillageList = [];
   List<SurveyLine> surveyLinesList = [];
 
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
@@ -56,6 +59,7 @@ class _FillFormPageState extends State<FillFormPage> {
   bool _showsubVillage = false;
   List<HeaderDatabaseModel> headers = [];
   List<QuestionDbModel> questions = [];
+  List<MunicipalityDatabaseModel> municipalityList = [];
   List freeTextQuestion = [];
   List dropdown = [];
   List dropdownSplit = [];
@@ -69,10 +73,13 @@ class _FillFormPageState extends State<FillFormPage> {
 
   var municipalityValue;
   var municipalityId;
+  var municipalityCode;
   var subDistrictValue;
+  var subDistrictCode;
   var subDistrictId;
   var villageValue;
   var villageId;
+  var villageCode;
   var subVillageValue;
   var subVillageId;
 
@@ -80,6 +87,14 @@ class _FillFormPageState extends State<FillFormPage> {
     setState(() {
       _isloading = true;
     });
+
+    municipalityList = await FormTableDatabase.instance.readMunicipality();
+    for (int i = 0; i < municipalityList.length; i++){
+      print("name: " + municipalityList[i].name.toString());
+      print("name: " + municipalityList[i].kode_municipality.toString());
+    }
+
+
     headers = await FormTableDatabase.instance.readHeader(widget.formType);
     for (int i = 0; i < headers.length; i++) {
       print("form type : " + headers[i].formType.toString());
@@ -141,9 +156,7 @@ class _FillFormPageState extends State<FillFormPage> {
       print("SPLITTED DROPDOWN QUESTION: " + dropdownQuestion[i].toString());
     }
 
-    MunicipalityModel _resMunicipality = await ApiService().municipalityAPI();
     setState(() {
-      municipalityList = _resMunicipality.data;
       _isloading = false;
     });
   }
@@ -400,7 +413,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[4].key.toString() + " :",
+          child: Text(headers[4].key.toString() + " : ",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -410,58 +423,48 @@ class _FillFormPageState extends State<FillFormPage> {
               decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(5)),
-              child: DropdownButton<MunicipalityData>(
+              child: DropdownButton<MunicipalityDatabaseModel>(
                 isExpanded: true,
                 value: dropdownMunicipality,
                 icon: Icon(Icons.arrow_drop_down),
-                onChanged: (MunicipalityData? newValue) async {
-                  if (dropdownMunicipality != null) {
+                onChanged: (MunicipalityDatabaseModel? value) async {
+                  if(dropdownMunicipality != null){
                     setState(() {
                       _isload = true;
                     });
-                    municipalityValue = newValue!.name;
-                    municipalityId = newValue.id;
-                    SubdisctrictByMuniModel _resSubdistrict = await ApiService()
-                        .subdisctrictByMuniAPI(
-                            id: newValue.id.toString(),
-                            code: newValue.code,
-                            name: newValue.name,
-                            desc: newValue.description);
+                    municipalityValue = value?.name;
+                    municipalityId = value?.id_dropdown;
+                    municipalityCode = value?.kode_municipality;
+                    subDistrictList = await FormTableDatabase.instance.readSubdistrict(municipalityCode);
                     setState(() {
+                      dropdownMunicipality = value;
                       dropdownsubDistrict = null;
                       dropdownVillage = null;
                       dropdownsubVillage = null;
-                      dropdownMunicipality = newValue;
                       _showsubDistrict = true;
                       _showvillage = false;
                       _showsubVillage = false;
-                      subDistrictList = _resSubdistrict.data;
                       _isload = false;
                     });
                   } else {
                     setState(() {
                       _isload = true;
                     });
-                    municipalityValue = newValue!.name;
-                    municipalityId = newValue.id;
-                    SubdisctrictByMuniModel _resSubdistrict = await ApiService()
-                        .subdisctrictByMuniAPI(
-                            id: newValue.id.toString(),
-                            code: newValue.code,
-                            name: newValue.name,
-                            desc: newValue.description);
+                    municipalityValue = value?.name;
+                    municipalityId = value?.id_dropdown;
+                    municipalityCode = value?.kode_municipality;
+                    subDistrictList = await FormTableDatabase.instance.readSubdistrict(municipalityCode);
                     setState(() {
-                      dropdownMunicipality = newValue;
-                      subDistrictList = _resSubdistrict.data;
                       _showsubDistrict = true;
                       _isload = false;
+                      dropdownMunicipality = value;
                     });
                   }
                 },
                 isDense: true,
                 underline: SizedBox.shrink(),
-                items: municipalityList.map((MunicipalityData item) {
-                  return DropdownMenuItem<MunicipalityData>(
+                items: municipalityList.map((MunicipalityDatabaseModel item) {
+                  return DropdownMenuItem<MunicipalityDatabaseModel>(
                     child: Text(
                       item.name.toString(),
                       style: TextStyle(fontSize: 17),
@@ -483,7 +486,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[5].key.toString() + " :",
+          child: Text(headers[5].key.toString() + " : ",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -493,28 +496,23 @@ class _FillFormPageState extends State<FillFormPage> {
               decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(5)),
-              child: DropdownButton<SubdisctrictByMuniData>(
+              child: DropdownButton<SubdistrictDatabaseModel>(
                 isExpanded: true,
                 value: dropdownsubDistrict,
                 icon: Icon(Icons.arrow_drop_down),
-                onChanged: (SubdisctrictByMuniData? newValue) async {
+                onChanged: (SubdistrictDatabaseModel? newValue) async {
                   if (dropdownsubDistrict != null) {
                     setState(() {
                       _isload = true;
                     });
                     subDistrictValue = newValue!.name;
-                    subDistrictId = newValue.id;
-                    VillageBySubModel _resVillage = await ApiService()
-                        .villageBySubAPI(
-                            id: newValue.id,
-                            code: newValue.code,
-                            desc: newValue.description,
-                            name: newValue.name);
+                    subDistrictCode = newValue.kode_subdistrict;
+                    subDistrictId = newValue.id_dropdown;
+                    villageList = await FormTableDatabase.instance.readVillage(subDistrictCode);
                     setState(() {
+                      dropdownsubDistrict = newValue;
                       dropdownVillage = null;
                       dropdownsubVillage = null;
-                      dropdownsubDistrict = newValue;
-                      villageList = _resVillage.data;
                       _showsubDistrict = true;
                       _showvillage = true;
                       _showsubVillage = false;
@@ -526,15 +524,10 @@ class _FillFormPageState extends State<FillFormPage> {
                     });
                     subDistrictValue = newValue!.name;
                     subDistrictId = newValue.id;
-                    VillageBySubModel _resVillage = await ApiService()
-                        .villageBySubAPI(
-                            id: newValue.id,
-                            code: newValue.code,
-                            desc: newValue.description,
-                            name: newValue.name);
+                    subDistrictCode = newValue.kode_subdistrict;
+                    villageList = await FormTableDatabase.instance.readVillage(subDistrictCode);
                     setState(() {
                       dropdownsubDistrict = newValue;
-                      villageList = _resVillage.data;
                       _showvillage = true;
                       _isload = false;
                     });
@@ -542,8 +535,8 @@ class _FillFormPageState extends State<FillFormPage> {
                 },
                 isDense: true,
                 underline: SizedBox.shrink(),
-                items: subDistrictList.map((SubdisctrictByMuniData item) {
-                  return DropdownMenuItem<SubdisctrictByMuniData>(
+                items: subDistrictList.map((SubdistrictDatabaseModel item) {
+                  return DropdownMenuItem<SubdistrictDatabaseModel>(
                     child: Text(
                       item.name.toString(),
                       style: TextStyle(fontSize: 17),
@@ -565,7 +558,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[6].key.toString() + " :",
+          child: Text(headers[6].key.toString() + " : ",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -575,30 +568,25 @@ class _FillFormPageState extends State<FillFormPage> {
               decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(5)),
-              child: DropdownButton<VillageBySubData>(
+              child: DropdownButton<VillageDatabaseModel>(
                 isExpanded: true,
                 value: dropdownVillage,
                 icon: Icon(Icons.arrow_drop_down),
-                onChanged: (VillageBySubData? newValue) async {
+                onChanged: (VillageDatabaseModel? newValue) async {
                   if (dropdownVillage != null) {
                     setState(() {
                       _isload = true;
                     });
                     villageValue = newValue!.name;
                     villageId = newValue.id;
-                    SubvillageByVillModel _resSubvillage = await ApiService()
-                        .subVillageByVillAPI(
-                            id: newValue.id,
-                            code: newValue.code,
-                            name: newValue.name,
-                            desc: newValue.description);
+                    villageCode = newValue.kode_village;
+                    subVillageList = await FormTableDatabase.instance.readSubVillage(villageCode);
+                    _showsubDistrict = true;
+                    _showvillage = true;
+                    _showsubVillage = true;
                     setState(() {
                       dropdownsubVillage = null;
                       dropdownVillage = newValue;
-                      subVillageList = _resSubvillage.data;
-                      _showsubDistrict = true;
-                      _showvillage = true;
-                      _showsubVillage = true;
                       _isload = false;
                     });
                   } else {
@@ -607,15 +595,10 @@ class _FillFormPageState extends State<FillFormPage> {
                     });
                     villageValue = newValue!.name;
                     villageId = newValue.id;
-                    SubvillageByVillModel _resSubvillage = await ApiService()
-                        .subVillageByVillAPI(
-                            id: newValue.id,
-                            code: newValue.code,
-                            name: newValue.name,
-                            desc: newValue.description);
+                    villageCode = newValue.kode_village;
+                    subVillageList = await FormTableDatabase.instance.readSubVillage(villageCode);
                     setState(() {
                       dropdownVillage = newValue;
-                      subVillageList = _resSubvillage.data;
                       _showsubVillage = true;
                       _isload = false;
                     });
@@ -623,8 +606,8 @@ class _FillFormPageState extends State<FillFormPage> {
                 },
                 isDense: true,
                 underline: SizedBox.shrink(),
-                items: villageList.map((VillageBySubData item) {
-                  return DropdownMenuItem<VillageBySubData>(
+                items: villageList.map((VillageDatabaseModel item) {
+                  return DropdownMenuItem<VillageDatabaseModel>(
                     child: Text(
                       item.name.toString(),
                       style: TextStyle(fontSize: 17),
@@ -646,7 +629,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[7].key.toString() + " :",
+          child: Text(headers[7].key.toString() + " : ",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -656,11 +639,11 @@ class _FillFormPageState extends State<FillFormPage> {
               decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(5)),
-              child: DropdownButton<SubvillageByVillageData>(
+              child: DropdownButton<SubVillageDatabaseModel>(
                 isExpanded: true,
                 value: dropdownsubVillage,
                 icon: Icon(Icons.arrow_drop_down),
-                onChanged: (SubvillageByVillageData? newValue) {
+                onChanged: (SubVillageDatabaseModel? newValue) {
                   setState(() {
                     subVillageValue = newValue!.name;
                     subVillageId = newValue.id;
@@ -669,8 +652,8 @@ class _FillFormPageState extends State<FillFormPage> {
                 },
                 isDense: true,
                 underline: SizedBox.shrink(),
-                items: subVillageList.map((SubvillageByVillageData item) {
-                  return DropdownMenuItem<SubvillageByVillageData>(
+                items: subVillageList.map((SubVillageDatabaseModel item) {
+                  return DropdownMenuItem<SubVillageDatabaseModel>(
                     child: Text(
                       item.name.toString(),
                       style: TextStyle(fontSize: 17),

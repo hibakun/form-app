@@ -28,8 +28,8 @@ class ContentDatabaseModel {
     return ContentDatabaseModel(
       id: json['id'],
       formType: json['formType'],
-      key: json['key'],
       value: json['value'],
+      key: json['key'],
       code: json['transId'],
       dropdownId: json['dropdownId'],
       status: json['status'],

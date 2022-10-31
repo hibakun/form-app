@@ -3,11 +3,15 @@ import 'dart:convert';
 import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/database/question.dart';
 import 'package:form_app/model/database/question_answer.dart';
-import 'package:form_app/model/formtabelModel.dart';
+import 'package:form_app/model/database/formtabelModel.dart';
+import 'package:form_app/model/database/subdistrict.dart';
+import 'package:form_app/model/database/subvillage.dart';
+import 'package:form_app/model/database/village.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/database/content.dart';
+import '../model/database/municipality.dart';
 
 class FormTableDatabase {
   static final FormTableDatabase instance = FormTableDatabase.init();
@@ -72,7 +76,8 @@ class FormTableDatabase {
     ${ContentFields.dropdownId} $intNullType
     )''');
 
-    await db.execute('''CREATE TABLE ${QuestionAnswerFields.questionanswerTable} (
+    await db
+        .execute('''CREATE TABLE ${QuestionAnswerFields.questionanswerTable} (
     ${QuestionAnswerFields.id} $idType,
     ${QuestionAnswerFields.id_soal} $intType,
     ${QuestionAnswerFields.formType} $textType,
@@ -81,6 +86,37 @@ class FormTableDatabase {
     ${QuestionAnswerFields.code} $textType,
     ${QuestionAnswerFields.input_type} $textType,
     ${QuestionAnswerFields.answer} $textType
+    )''');
+
+    await db.execute('''CREATE TABLE ${MunicipalityFields.tableMunicipality} (
+    ${MunicipalityFields.id} $idType,
+    ${MunicipalityFields.id_dropdown} $intType,
+    ${MunicipalityFields.name} $textType,
+    ${MunicipalityFields.kode_municipality} $textType
+    )''');
+
+    await db.execute('''CREATE TABLE ${SubdistrictFields.tableSubdistrict} (
+    ${SubdistrictFields.id} $idType,
+    ${SubdistrictFields.id_dropdown} $intType,
+    ${SubdistrictFields.name} $textType,
+    ${SubdistrictFields.kode_subdistrict} $textType,
+    ${SubdistrictFields.kode_municipality} $textType
+    )''');
+
+    await db.execute('''CREATE TABLE ${VillageFields.tableVillage} (
+    ${VillageFields.id} $idType,
+    ${VillageFields.id_dropdown} $intType,
+    ${VillageFields.name} $textType,
+    ${VillageFields.kode_village} $textType,
+    ${VillageFields.kode_subdistrict} $textType
+    )''');
+
+    await db.execute('''CREATE TABLE ${SubvillageFields.tableSubvillage} (
+    ${SubvillageFields.id} $idType,
+    ${SubvillageFields.id_dropdown} $intType,
+    ${SubvillageFields.name} $textType,
+    ${SubvillageFields.kode_subvillage} $textType,
+    ${SubvillageFields.kode_village} $textType
     )''');
   }
 
@@ -105,11 +141,93 @@ class FormTableDatabase {
     return query;
   }
 
-  Future<int> createQuestionAnswer(String table, QuestionAnswerDbModel model) async {
+  Future<int> createQuestionAnswer(
+      String table, QuestionAnswerDbModel model) async {
     final db = await instance.database;
     final query = await db.insert(table, model.toJson());
 
     return query;
+  }
+
+  Future<int> createMunicipality(
+      String table, MunicipalityDatabaseModel model) async {
+    final db = await instance.database;
+    final query = await db.insert(table, model.toJson());
+
+    return query;
+  }
+
+  Future<List<MunicipalityDatabaseModel>> readMunicipality() async {
+    Database db = await instance.database;
+    final data = await db.query(MunicipalityFields.tableMunicipality);
+    List<MunicipalityDatabaseModel> result =
+    data.map((e) => MunicipalityDatabaseModel.fromJson(e)).toList();
+
+    return result;
+  }
+
+
+  Future<int> createSubdistrict(
+      String table, SubdistrictDatabaseModel model) async {
+    final db = await instance.database;
+    final query = await db.insert(table, model.toJson());
+
+    return query;
+  }
+
+  Future<List<SubdistrictDatabaseModel>> readSubdistrict(String? type) async {
+    final db = await instance.database;
+
+    final maps = await db.query(SubdistrictFields.tableSubdistrict,
+        where: '${SubdistrictFields.kode_municipality} = ?', whereArgs: [type]);
+
+    if (maps.isNotEmpty) {
+      return maps.map((json) => SubdistrictDatabaseModel.fromJson(json)).toList();
+    } else {
+      throw Exception('ID $type not found');
+    }
+  }
+
+  Future<int> createVillage(
+      String table, VillageDatabaseModel model) async {
+    final db = await instance.database;
+    final query = await db.insert(table, model.toJson());
+
+    return query;
+  }
+
+  Future<List<VillageDatabaseModel>> readVillage(String? type) async {
+    final db = await instance.database;
+
+    final maps = await db.query(VillageFields.tableVillage,
+        where: '${VillageFields.kode_subdistrict} = ?', whereArgs: [type]);
+
+    if (maps.isNotEmpty) {
+      return maps.map((json) => VillageDatabaseModel.fromJson(json)).toList();
+    } else {
+      throw Exception('ID $type not found');
+    }
+  }
+
+  Future<int> createSubvillage(
+      String table, SubVillageDatabaseModel model) async {
+    final db = await instance.database;
+    final query = await db.insert(table, model.toJson());
+
+    return query;
+  }
+
+  Future<List<SubVillageDatabaseModel>> readSubVillage(String? type) async {
+    final db = await instance.database;
+
+    final maps = await db.query(SubvillageFields.tableSubvillage,
+        where: '${SubvillageFields.kode_village} = ?', whereArgs: [type]);
+
+    if (maps.isNotEmpty) {
+      return maps.map((json) => SubVillageDatabaseModel.fromJson(json)).toList();
+    } else {
+      throw Exception('ID $type not found');
+    }
   }
 
   Future<FormModel> read(int? id) async {
@@ -141,8 +259,6 @@ class FormTableDatabase {
       throw Exception('ID $type not found');
     }
   }
-
-
 
   Future<List<QuestionDbModel>> readQuestion(String? type) async {
     final db = await instance.database;
@@ -189,45 +305,43 @@ class FormTableDatabase {
 
   Future<List<ContentDatabaseModel>> contentReadAll() async {
     Database db = await instance.database;
-    final data = await db.query(ContentFields.table, groupBy: ContentFields.code);
-    List<ContentDatabaseModel> result = data.map((e) => ContentDatabaseModel.fromJson(e)).toList();
+    final data =
+        await db.query(ContentFields.table, groupBy: ContentFields.code);
+    List<ContentDatabaseModel> result =
+        data.map((e) => ContentDatabaseModel.fromJson(e)).toList();
 
     return result;
   }
 
-
-  Future updateContent(String value, int id) async{
+  Future updateContent(String value, int id) async {
     final db = await instance.database;
-    try{
-      db.rawUpdate(''' UPDATE ${ContentFields.table} SET ${ContentFields.value} =? WHERE ${ContentFields.id} =?  ''', [
-        value,
-        id
-      ]);
-    } catch(e){
+    try {
+      db.rawUpdate(
+          ''' UPDATE ${ContentFields.table} SET ${ContentFields.value} =? WHERE ${ContentFields.id} =?  ''',
+          [value, id]);
+    } catch (e) {
       print('error: ' + e.toString());
     }
   }
 
-  Future updateContentStatus(int status, String? code) async{
+  Future updateContentStatus(int status, String? code) async {
     final db = await instance.database;
-    try{
-      db.rawUpdate(''' UPDATE ${ContentFields.table} SET ${ContentFields.status} =? WHERE ${ContentFields.code} =?  ''', [
-        status,
-        code
-      ]);
-    } catch(e){
+    try {
+      db.rawUpdate(
+          ''' UPDATE ${ContentFields.table} SET ${ContentFields.status} =? WHERE ${ContentFields.code} =?  ''',
+          [status, code]);
+    } catch (e) {
       print('error: ' + e.toString());
     }
   }
 
-  Future updateContentID(int? dropdownId, int id) async{
+  Future updateContentID(int? dropdownId, int id) async {
     final db = await instance.database;
-    try{
-      db.rawUpdate(''' UPDATE ${ContentFields.table} SET ${ContentFields.dropdownId} =? WHERE ${ContentFields.id} =?  ''', [
-        dropdownId,
-        id
-      ]);
-    } catch(e){
+    try {
+      db.rawUpdate(
+          ''' UPDATE ${ContentFields.table} SET ${ContentFields.dropdownId} =? WHERE ${ContentFields.id} =?  ''',
+          [dropdownId, id]);
+    } catch (e) {
       print('error: ' + e.toString());
     }
   }
@@ -245,8 +359,6 @@ class FormTableDatabase {
     }
   }
 
-
-
   Future<List<QuestionAnswerDbModel>> readQuestionAnswer(String? type) async {
     final db = await instance.database;
 
@@ -262,19 +374,20 @@ class FormTableDatabase {
 
   Future<List<QuestionAnswerDbModel>> readQuestionAnswerAll() async {
     Database db = await instance.database;
-    final data = await db.query(QuestionAnswerFields.questionanswerTable, groupBy: QuestionAnswerFields.code);
-    List<QuestionAnswerDbModel> result = data.map((e) => QuestionAnswerDbModel.fromJson(e)).toList();
+    final data = await db.query(QuestionAnswerFields.questionanswerTable,
+        groupBy: QuestionAnswerFields.code);
+    List<QuestionAnswerDbModel> result =
+        data.map((e) => QuestionAnswerDbModel.fromJson(e)).toList();
     return result;
   }
 
-  Future updateQuestionAnswer(String value, int id) async{
+  Future updateQuestionAnswer(String value, int id) async {
     final db = await instance.database;
-    try{
-      db.rawUpdate(''' UPDATE ${QuestionAnswerFields.questionanswerTable} SET ${QuestionAnswerFields.answer} =? WHERE ${QuestionAnswerFields.id} =?  ''', [
-        value,
-        id
-      ]);
-    } catch(e){
+    try {
+      db.rawUpdate(
+          ''' UPDATE ${QuestionAnswerFields.questionanswerTable} SET ${QuestionAnswerFields.answer} =? WHERE ${QuestionAnswerFields.id} =?  ''',
+          [value, id]);
+    } catch (e) {
       print('error: ' + e.toString());
     }
   }

@@ -5,11 +5,9 @@
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-SurveyFormDownloadModel surveyFormDownloadModelFromJson(String str) =>
-    SurveyFormDownloadModel.fromJson(json.decode(str));
+SurveyFormDownloadModel surveyFormDownloadModelFromJson(String str) => SurveyFormDownloadModel.fromJson(json.decode(str));
 
-String surveyFormDownloadModelToJson(SurveyFormDownloadModel data) =>
-    json.encode(data.toJson());
+String surveyFormDownloadModelToJson(SurveyFormDownloadModel data) => json.encode(data.toJson());
 
 class SurveyFormDownloadModel {
   SurveyFormDownloadModel({
@@ -20,24 +18,23 @@ class SurveyFormDownloadModel {
 
   String status;
   List<String> messages;
-  SurveyFormDownloadData data;
+  Data data;
 
-  factory SurveyFormDownloadModel.fromJson(Map<String, dynamic> json) =>
-      SurveyFormDownloadModel(
-        status: json["status"],
-        messages: List<String>.from(json["messages"].map((x) => x)),
-        data: SurveyFormDownloadData.fromJson(json["data"]),
-      );
+  factory SurveyFormDownloadModel.fromJson(Map<String, dynamic> json) => SurveyFormDownloadModel(
+    status: json["status"],
+    messages: List<String>.from(json["messages"].map((x) => x)),
+    data: Data.fromJson(json["data"]),
+  );
 
   Map<String, dynamic> toJson() => {
-        "status": status,
-        "messages": List<dynamic>.from(messages.map((x) => x)),
-        "data": data.toJson(),
-      };
+    "status": status,
+    "messages": List<dynamic>.from(messages.map((x) => x)),
+    "data": data.toJson(),
+  };
 }
 
-class SurveyFormDownloadData {
-  SurveyFormDownloadData({
+class Data {
+  Data({
     required this.surveyTable,
     required this.surveyLines,
   });
@@ -45,17 +42,15 @@ class SurveyFormDownloadData {
   SurveyTable surveyTable;
   List<SurveyLine> surveyLines;
 
-  factory SurveyFormDownloadData.fromJson(Map<String, dynamic> json) =>
-      SurveyFormDownloadData(
-        surveyTable: SurveyTable.fromJson(json["surveyTable"]),
-        surveyLines: List<SurveyLine>.from(
-            json["surveyLines"].map((x) => SurveyLine.fromJson(x))),
-      );
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    surveyTable: SurveyTable.fromJson(json["surveyTable"]),
+    surveyLines: List<SurveyLine>.from(json["surveyLines"].map((x) => SurveyLine.fromJson(x))),
+  );
 
   Map<String, dynamic> toJson() => {
-        "surveyTable": surveyTable.toJson(),
-        "surveyLines": List<dynamic>.from(surveyLines.map((x) => x.toJson())),
-      };
+    "surveyTable": surveyTable.toJson(),
+    "surveyLines": List<dynamic>.from(surveyLines.map((x) => x.toJson())),
+  };
 }
 
 class SurveyLine {
@@ -70,16 +65,16 @@ class SurveyLine {
   String transTime;
 
   factory SurveyLine.fromJson(Map<String, dynamic> json) => SurveyLine(
-        dtoFormLine: DtoFormLine.fromJson(json["dtoFormLine"]),
-        userInput: json["userInput"],
-        transTime: json["transTime"],
-      );
+    dtoFormLine: DtoFormLine.fromJson(json["dtoFormLine"]),
+    userInput: json["userInput"],
+    transTime: json["transTime"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "dtoFormLine": dtoFormLine.toJson(),
-        "userInput": userInput,
-        "transTime": transTime,
-      };
+    "dtoFormLine": dtoFormLine.toJson(),
+    "userInput": userInput,
+    "transTime": transTime,
+  };
 }
 
 class DtoFormLine {
@@ -96,18 +91,18 @@ class DtoFormLine {
   String dropDown;
 
   factory DtoFormLine.fromJson(Map<String, dynamic> json) => DtoFormLine(
-        id: json["id"],
-        inputType: json["inputType"],
-        question: json["question"],
-        dropDown: json["dropDown"],
-      );
+    id: json["id"],
+    inputType: json["inputType"],
+    question: json["question"],
+    dropDown: json["dropDown"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "inputType": inputType,
-        "question": question,
-        "dropDown": dropDown,
-      };
+    "id": id,
+    "inputType": inputType,
+    "question": question,
+    "dropDown": dropDown,
+  };
 }
 
 class SurveyTable {
@@ -116,68 +111,60 @@ class SurveyTable {
     required this.title,
     required this.description,
     required this.transDate,
-    required this.name,
-    required this.birthDate,
+    required this.dataMoris,
     required this.formType,
-    required this.municipality,
-    required this.subDistrict,
-    required this.village,
-    required this.subVillage,
-    required this.interviewerName,
+    required this.municipiu,
+    required this.subDistritu,
+    required this.suku,
+    required this.aldeia,
+    required this.naranIntervistador,
     required this.transTime,
     required this.deviceId,
-    required this.villageHeadName,
   });
 
   String transId;
   String title;
   String description;
   String transDate;
-  String name;
-  String birthDate;
+  String dataMoris;
   String formType;
-  int municipality;
-  int subDistrict;
-  int village;
-  int subVillage;
-  String interviewerName;
+  int municipiu;
+  int subDistritu;
+  int suku;
+  int aldeia;
+  String naranIntervistador;
   String transTime;
   String deviceId;
-  String villageHeadName;
 
   factory SurveyTable.fromJson(Map<String, dynamic> json) => SurveyTable(
-        transId: json["transId"],
-        title: json["title"],
-        description: json["description"],
-        transDate: json["transDate"],
-        name: json["name"],
-        birthDate: json["birthDate"],
-        formType: json["formType"],
-        municipality: json["municipality"],
-        subDistrict: json["subDistrict"],
-        village: json["village"],
-        subVillage: json["subVillage"],
-        interviewerName: json["interviewerName"],
-        transTime: json["transTime"],
-        deviceId: json["deviceId"],
-        villageHeadName: json["villageHeadName"],
-      );
+    transId: json["trans_Id"],
+    title: json["title"],
+    description: json["description"],
+    transDate: json["trans_Date"],
+    dataMoris: json["data_Moris"],
+    formType: json["form_Type"],
+    municipiu: json["municipiu"],
+    subDistritu: json["sub_Distritu"],
+    suku: json["suku"],
+    aldeia: json["aldeia"],
+    naranIntervistador: json["naran_Intervistador"],
+    transTime: json["trans_Time"],
+    deviceId: json["device_Id"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "transId": transId,
-        "title": title,
-        "description": description,
-        "transDate": transDate,
-        "name": name,
-        "birthDate": birthDate,
-        "formType": formType,
-        "municipality": municipality,
-        "subDistrict": subDistrict,
-        "village": village,
-        "subVillage": subVillage,
-        "interviewerName": interviewerName,
-        "transTime": transTime,
-        "deviceId": deviceId,
-        "villageHeadName": villageHeadName,
-      };
+    "trans_Id": transId,
+    "title": title,
+    "description": description,
+    "trans_Date": transDate,
+    "data_Moris": dataMoris,
+    "form_Type": formType,
+    "municipiu": municipiu,
+    "sub_Distritu": subDistritu,
+    "suku": suku,
+    "aldeia": aldeia,
+    "naran_Intervistador": naranIntervistador,
+    "trans_Time": transTime,
+    "device_Id": deviceId,
+  };
 }

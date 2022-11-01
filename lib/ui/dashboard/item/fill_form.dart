@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/common/shared_code.dart';
+import 'package:form_app/common/string_extension.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/database/municipality.dart';
@@ -48,10 +49,7 @@ class _FillFormPageState extends State<FillFormPage> {
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
   DateTime _selectedDate = DateTime.now();
   String _selectDate = "";
-  final _nameController = TextEditingController();
-  final _questionsController = TextEditingController();
   final _interviewerController = TextEditingController();
-  final _headVillageController = TextEditingController();
   bool _isload = false;
   bool _isloading = false;
   bool _showsubDistrict = false;
@@ -198,16 +196,6 @@ class _FillFormPageState extends State<FillFormPage> {
         ContentDatabaseModel(
             formType: headers[0].formType.toString(),
             key: headers[2].key,
-            value: _nameController.text,
-            code: code,
-            status: 0,
-            dropdownId: null));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[3].key,
             value: _selectDate,
             code: code,
             status: 0,
@@ -217,7 +205,7 @@ class _FillFormPageState extends State<FillFormPage> {
         ContentFields.table,
         ContentDatabaseModel(
             formType: headers[0].formType.toString(),
-            key: headers[4].key,
+            key: headers[3].key,
             value: municipalityValue,
             code: code,
             status: 0,
@@ -227,7 +215,7 @@ class _FillFormPageState extends State<FillFormPage> {
         ContentFields.table,
         ContentDatabaseModel(
             formType: headers[0].formType.toString(),
-            key: headers[5].key,
+            key: headers[4].key,
             value: subDistrictValue,
             code: code,
             status: 0,
@@ -237,7 +225,7 @@ class _FillFormPageState extends State<FillFormPage> {
         ContentFields.table,
         ContentDatabaseModel(
             formType: headers[0].formType.toString(),
-            key: headers[6].key,
+            key: headers[5].key,
             value: villageValue,
             code: code,
             status: 0,
@@ -248,7 +236,7 @@ class _FillFormPageState extends State<FillFormPage> {
         ContentFields.table,
         ContentDatabaseModel(
             formType: headers[0].formType.toString(),
-            key: headers[7].key,
+            key: headers[6].key,
             value: subVillageValue,
             code: code,
             status: 0,
@@ -258,18 +246,8 @@ class _FillFormPageState extends State<FillFormPage> {
         ContentFields.table,
         ContentDatabaseModel(
             formType: headers[0].formType.toString(),
-            key: headers[8].key,
+            key: headers[7].key,
             value: _interviewerController.text,
-            code: code,
-            status: 0,
-            dropdownId: null));
-
-    await FormTableDatabase.instance.createContent(
-        ContentFields.table,
-        ContentDatabaseModel(
-            formType: headers[0].formType.toString(),
-            key: headers[9].key,
-            value: _headVillageController.text,
             code: code,
             status: 0,
             dropdownId: null));
@@ -413,7 +391,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[4].key.toString() + " : ",
+          child: Text(headers[3].key.toString().capitalize() + " : ",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -486,7 +464,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[5].key.toString() + " : ",
+          child: Text(headers[4].key.toString().capitalize().replaceAll("_", " ") + " : ",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -558,7 +536,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[6].key.toString() + " : ",
+          child: Text(headers[5].key.toString().capitalize() + " : ",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -629,7 +607,7 @@ class _FillFormPageState extends State<FillFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[7].key.toString() + " : ",
+          child: Text(headers[6].key.toString().capitalize() + " : ",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -686,27 +664,8 @@ class _FillFormPageState extends State<FillFormPage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[2].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: CustomTextField(
-            isEnable: true,
-            isreadOnly: false,
-            controller: _nameController,
-            inputType: TextInputType.text,
-            validator: (value) => SharedCode().emptyValidator(value),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[3].key.toString() + " :",
+          child: Text(
+              headers[2].key.toString().capitalize().replaceAll("_", " ") + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -716,7 +675,7 @@ class _FillFormPageState extends State<FillFormPage> {
         _buildDropdownMunicipality(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[8].key.toString() + " :",
+          child: Text(headers[7].key.toString().capitalize().replaceAll("_", " ") + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -725,26 +684,6 @@ class _FillFormPageState extends State<FillFormPage> {
             isEnable: true,
             isreadOnly: false,
             controller: _interviewerController,
-            inputType: TextInputType.text,
-            validator: (value) => SharedCode().emptyValidator(value),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[9].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: CustomTextField(
-            isEnable: true,
-            isreadOnly: false,
-            controller: _headVillageController,
             inputType: TextInputType.text,
             validator: (value) => SharedCode().emptyValidator(value),
             decoration: InputDecoration(

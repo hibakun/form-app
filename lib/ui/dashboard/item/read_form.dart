@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/common/shared_code.dart';
+import 'package:form_app/common/string_extension.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/database/question.dart';
@@ -113,7 +114,7 @@ class _ReadFormPageState extends State<ReadFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[4].key.toString() + " :",
+          child: Text(headers[3].key.toString().capitalize() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -146,7 +147,7 @@ class _ReadFormPageState extends State<ReadFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[5].key.toString() + " :",
+          child: Text(headers[4].key.toString().capitalize().replaceAll("_", " ") + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -179,7 +180,7 @@ class _ReadFormPageState extends State<ReadFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[6].key.toString() + " :",
+          child: Text(headers[5].key.toString().capitalize() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -212,7 +213,7 @@ class _ReadFormPageState extends State<ReadFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[7].key.toString() + " :",
+          child: Text(headers[6].key.toString().capitalize() + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -255,27 +256,7 @@ class _ReadFormPageState extends State<ReadFormPage> {
         SizedBox(height: 30.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[2].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: CustomTextField(
-            isEnable: false,
-            isreadOnly: true,
-            controller: _nameController,
-            inputType: TextInputType.text,
-            validator: (value) => SharedCode().emptyValidator(value),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[3].key.toString() + " :",
+          child: Text(headers[2].key.toString().capitalize().replaceAll("_", " ") + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -288,7 +269,7 @@ class _ReadFormPageState extends State<ReadFormPage> {
         _buildDropdownsubVillage(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[8].key.toString() + " :",
+          child: Text(headers[7].key.toString().capitalize().replaceAll("_", " ") + " :",
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -297,26 +278,6 @@ class _ReadFormPageState extends State<ReadFormPage> {
             isEnable: false,
             isreadOnly: true,
             controller: _interviewerController,
-            inputType: TextInputType.text,
-            validator: (value) => SharedCode().emptyValidator(value),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[9].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: CustomTextField(
-            isEnable: false,
-            isreadOnly: true,
-            controller: _headVillageController,
             inputType: TextInputType.text,
             validator: (value) => SharedCode().emptyValidator(value),
             decoration: InputDecoration(

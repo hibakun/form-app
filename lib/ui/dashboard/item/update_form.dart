@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_app/common/shared_code.dart';
+import 'package:form_app/common/string_extension.dart';
 import 'package:form_app/database/FormDb.dart';
 import 'package:form_app/model/database/header.dart';
 import 'package:form_app/model/database/municipality.dart';
@@ -9,16 +10,7 @@ import 'package:form_app/model/database/question.dart';
 import 'package:form_app/model/database/question_answer.dart';
 import 'package:form_app/model/database/subdistrict.dart';
 import 'package:form_app/model/database/village.dart';
-import 'package:form_app/model/municipality_model.dart';
-import 'package:form_app/model/subdisctrict_by_muni_model.dart';
-import 'package:form_app/model/subdisctrict_model.dart';
-import 'package:form_app/model/subvillage_by_vill_model.dart';
-import 'package:form_app/model/subvillage_model.dart';
 import 'package:form_app/model/surveyFormDownloadModel.dart';
-import 'package:form_app/model/village_by_sub_model.dart';
-import 'package:form_app/service/api_service.dart';
-import 'package:form_app/ui/dashboard/dashboard.dart';
-import 'package:form_app/ui/dashboard/item/add_form.dart';
 import 'package:form_app/ui/widget/custom_text_field.dart';
 import 'package:intl/intl.dart';
 
@@ -105,9 +97,8 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       print("form value : " + headers[i].value.toString());
       print("form dropdown id : " + headers[i].dropdownId.toString());
     }
-    _nameController.text = headers[2].value.toString();
-    _interviewerController.text = headers[8].value.toString();
-    _headVillageController.text = headers[9].value.toString();
+
+    _interviewerController.text = headers[7].value.toString();
 
     questions =
         await FormTableDatabase.instance.readQuestionAnswer(widget.code);
@@ -159,40 +150,36 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
   Future update() async {
     headerAnswer.add(headers[0].value);
     headerAnswer.add(headers[1].value);
-    headerAnswer.add(_nameController.text);
     headerAnswer.add(_selectDate);
     headerAnswerID.add(headers[0].dropdownId);
     headerAnswerID.add(headers[1].dropdownId);
     headerAnswerID.add(headers[2].dropdownId);
-    headerAnswerID.add(headers[3].dropdownId);
     municipalityValue == null
-        ? headerAnswer.add(headers[4].value.toString())
+        ? headerAnswer.add(headers[3].value.toString())
         : headerAnswer.add(municipalityValue);
     subDistrictValue == null
-        ? headerAnswer.add(headers[5].value.toString())
+        ? headerAnswer.add(headers[4].value.toString())
         : headerAnswer.add(subDistrictValue);
     villageValue == null
-        ? headerAnswer.add(headers[6].value.toString())
+        ? headerAnswer.add(headers[5].value.toString())
         : headerAnswer.add(villageValue);
     subVillageValue == null
-        ? headerAnswer.add(headers[7].value.toString())
+        ? headerAnswer.add(headers[6].value.toString())
         : headerAnswer.add(subVillageValue);
     municipalityId == null
-        ? headerAnswerID.add(headers[4].dropdownId)
+        ? headerAnswerID.add(headers[3].dropdownId)
         : headerAnswerID.add(municipalityId);
     subDistrictId == null
-        ? headerAnswerID.add(headers[5].dropdownId)
+        ? headerAnswerID.add(headers[4].dropdownId)
         : headerAnswerID.add(subDistrictId);
     villageId == null
-        ? headerAnswerID.add(headers[6].dropdownId)
+        ? headerAnswerID.add(headers[5].dropdownId)
         : headerAnswerID.add(villageId);
     subVillageId == null
-        ? headerAnswerID.add(headers[7].dropdownId)
+        ? headerAnswerID.add(headers[6].dropdownId)
         : headerAnswerID.add(subVillageId);
     headerAnswer.add(_interviewerController.text);
-    headerAnswer.add(_headVillageController.text);
-    headerAnswerID.add(headers[8].dropdownId);
-    headerAnswerID.add(headers[9].dropdownId);
+    headerAnswerID.add(headers[7].dropdownId);
 
     headerAnswerID.forEach((element) {
       print("HEADER ID: " + element.toString());
@@ -317,7 +304,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[4].key.toString() + " : " + headers[4].value.toString(),
+          child: Text(headers[3].key.toString().capitalize() + " : " + headers[4].value.toString(),
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -390,7 +377,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[5].key.toString() + " : " + headers[5].value.toString(),
+          child: Text(headers[4].key.toString().capitalize().replaceAll("_", " ") + " : " + headers[5].value.toString(),
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -462,7 +449,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[6].key.toString() + " : " + headers[6].value.toString(),
+          child: Text(headers[5].key.toString().capitalize() + " : " + headers[6].value.toString(),
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -533,7 +520,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[7].key.toString() + " : " + headers[7].value.toString(),
+          child: Text(headers[6].key.toString().capitalize() + " : " + headers[6].value.toString(),
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -590,28 +577,8 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Text(headers[2].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: CustomTextField(
-            isEnable: true,
-            isreadOnly: false,
-            controller: _nameController,
-            inputType: TextInputType.text,
-            validator: (value) => SharedCode().emptyValidator(value),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Text(
-              headers[3].key.toString() + " : " + headers[3].value.toString(),
+              headers[2].key.toString().capitalize().replaceAll("_", " ") + " : " + headers[2].value.toString(),
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
         ),
         Padding(
@@ -624,7 +591,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
         _buildDropdownsubVillage(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[8].key.toString() + " :",
+          child: Text(headers[7].key.toString().capitalize().replaceAll("_", " ") + " : " + headers[7].value.toString(),
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -633,26 +600,6 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
             isEnable: true,
             isreadOnly: false,
             controller: _interviewerController,
-            inputType: TextInputType.text,
-            validator: (value) => SharedCode().emptyValidator(value),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[9].key.toString() + " :",
-              style: TextStyle(fontSize: 15)),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: CustomTextField(
-            isEnable: true,
-            isreadOnly: false,
-            controller: _headVillageController,
             inputType: TextInputType.text,
             validator: (value) => SharedCode().emptyValidator(value),
             decoration: InputDecoration(

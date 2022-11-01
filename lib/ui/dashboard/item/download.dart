@@ -41,6 +41,7 @@ class _DownloadPageState extends State<DownloadPage> {
   var _subvillageData = [];
   var form;
 
+
   Future addDb() async {
     showWarningDialog("process",
         customMessage: "Sei Prosesu Foti Formulario\nHein Minutu Balun Nia Laran");
@@ -48,35 +49,35 @@ class _DownloadPageState extends State<DownloadPage> {
       FormtableModel result = await ApiService().formtableAPI();
       _data = result.data;
     } catch (error) {
-      print('no internet');
+      print('no internet '+ error.toString());
     }
 
     try {
       MunicipalityModel result = await ApiService().municipalityAPI();
       _municipalityData = result.data;
     } catch (error) {
-      print('no internet');
+      print('no internet Muni');
     }
 
     try {
       SubdisctrictModel result = await ApiService().subdisctrictAPI();
       _subdistrictData = result.data;
     } catch (error) {
-      print('no internet');
+      print('no internet sub');
     }
 
     try {
       VillageModel result = await ApiService().villageAPI();
       _villageData = result.data;
     } catch (error) {
-      print('no internet');
+      print('no internet village');
     }
 
     try {
       SubvillageModel result = await ApiService().subvillageAPI();
       _subvillageData = result.data;
     } catch (error) {
-      print('no internet');
+      print('no internet sub village');
     }
 
 
@@ -155,27 +156,42 @@ class _DownloadPageState extends State<DownloadPage> {
       SurveyFormDownloadModel model =
           await ApiService().surveyformdownload(type: type);
 
+      //0
       result.add(model.data.surveyTable.formType);
+      //1
       result.add('title');
+      //2
       result.add(model.data.surveyTable.title);
+      //3
       result.add('description');
+      //4
       result.add(model.data.surveyTable.description);
-      result.add('name');
-      result.add(model.data.surveyTable.name);
-      result.add('birthDate');
-      result.add(model.data.surveyTable.birthDate);
-      result.add('municipality');
-      result.add(model.data.surveyTable.municipality);
-      result.add('subDistrict');
-      result.add(model.data.surveyTable.subDistrict);
-      result.add('village');
-      result.add(model.data.surveyTable.village);
-      result.add('subVillage');
-      result.add(model.data.surveyTable.subVillage);
-      result.add('interviewerName');
-      result.add(model.data.surveyTable.interviewerName);
-      result.add('villageHeadName');
-      result.add(model.data.surveyTable.villageHeadName);
+      //5
+      result.add('data_Moris');
+      //6
+      result.add(model.data.surveyTable.dataMoris);
+      //7
+      result.add('municipiu');
+      //8
+      result.add(model.data.surveyTable.municipiu);
+      //9
+      result.add('sub_Distritu');
+      //10
+      result.add(model.data.surveyTable.subDistritu);
+      //11
+      result.add('suku');
+      //12
+      result.add(model.data.surveyTable.suku);
+      //13
+      result.add('aldeia');
+      //14
+      result.add(model.data.surveyTable.aldeia);
+      //15
+      result.add('naran_Intervistador');
+      //16
+      result.add(model.data.surveyTable.naranIntervistador);
+
+
       print("FORM TYPE" + result[0].toString());
 
       question = model.data.surveyLines;
@@ -210,7 +226,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[4],
           ));
 
-      //name
+      //birthDate
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -219,7 +235,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[6],
           ));
 
-      //birthDate
+      //municipality
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -228,7 +244,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[8].toString(),
           ));
 
-      //municipality
+      //subDistrict
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -237,7 +253,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[10].toString(),
           ));
 
-      //subDistrict
+      //village
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -246,7 +262,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[12].toString(),
           ));
 
-      //village
+      //subVillage
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -255,7 +271,7 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[14].toString(),
           ));
 
-      //subVillage
+      //interviewerName
       await FormTableDatabase.instance.create(
           HeaderFields.header,
           HeaderDatabaseModel(
@@ -264,27 +280,9 @@ class _DownloadPageState extends State<DownloadPage> {
             value: result[16].toString(),
           ));
 
-      //interviewerName
-      await FormTableDatabase.instance.create(
-          HeaderFields.header,
-          HeaderDatabaseModel(
-            formType: result[0],
-            key: result[17],
-            value: result[18].toString(),
-          ));
-
-      //headVillageName
-      await FormTableDatabase.instance.create(
-          HeaderFields.header,
-          HeaderDatabaseModel(
-            formType: result[0],
-            key: result[19],
-            value: result[20].toString(),
-          ));
-
       print("STATUS API: " + model.status);
     } catch (error) {
-      print('no internet');
+      print('no internet ' + error.toString());
     }
   }
 

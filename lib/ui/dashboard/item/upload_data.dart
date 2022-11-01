@@ -72,13 +72,13 @@ class _UploadDataPageState extends State<UploadDataPage> {
         if (readContent[p].dropdownId != null) continue;
         header[readContent[p].key.toString()] =
             utf8.decode(readContent[p].value.toString().runes.toList());
-        header['formType'] = (readContent[p].formType.toString());
+        header['form_Type'] = (readContent[p].formType.toString());
         print(header);
       }
       for (int p = 0; p < readContent.length; p++) {
         if (readContent[p].dropdownId == null) continue;
         header[readContent[p].key.toString()] = readContent[p].dropdownId;
-        header['formType'] = (readContent[p].formType.toString());
+        header['form_Type'] = (readContent[p].formType.toString());
         print(header);
       }
       readQuestion =
@@ -86,24 +86,25 @@ class _UploadDataPageState extends State<UploadDataPage> {
       readQuestion.forEach((element) {
         var question = Map<String, dynamic>();
         question["id"] = element.id_soal;
-        question["inputType"] = element.input_type;
-        question["question"] = element.question;
-        question["dropDown"] = element.dropdown;
+        question["inputType"] = utf8.decode(element.input_type!.runes.toList());
+        question["question"] = utf8.decode(element.question!.runes.toList());
+        question["dropDown"] = utf8.decode(element.dropdown!.runes.toList());
         var dtoForm = Map<String, dynamic>();
         dtoForm["dtoFormLine"] = question;
         dtoForm["userInput"] = element.answer.toString();
         dtoForm["transTime"] = tdata;
         listQuestion.add(dtoForm);
       });
-      header["transId"] = status[i].toString();
-      header["transTime"] = tdata;
-      header["transDate"] = cdate;
-      header["deviceId"] = deviceId.toString();
+      header["trans_Id"] = status[i].toString();
+      header["trans_Time"] = tdata;
+      header["trans_Date"] = cdate;
+      header["device_Id"] = deviceId.toString();
       surveyTable["surveyTable"] = header;
       surveyTable["surveyLines"] = listQuestion;
       await Clipboard.setData(
           ClipboardData(text: '${jsonEncode(surveyTable)}'));
       //post disini
+
       UploadModel _model =
           await ApiService().surveyformupload(jsonRaw: surveyTable);
       FormTableDatabase.instance.updateContentStatus(1, status[i]);

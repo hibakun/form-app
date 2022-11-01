@@ -43,7 +43,7 @@ class _DownloadPageState extends State<DownloadPage> {
 
   Future addDb() async {
     showWarningDialog("process",
-        customMessage: "Carregando os dados.\nPode demorar alguns segundos");
+        customMessage: "Sei Prosesu Foti Formulario\nHein Minutu Balun Nia Laran");
     try {
       FormtableModel result = await ApiService().formtableAPI();
       _data = result.data;
@@ -330,7 +330,7 @@ class _DownloadPageState extends State<DownloadPage> {
                 SizedBox(height: 30.h),
                 FittedBox(
                   fit: BoxFit.fitWidth,
-                  child: Text("Nenhum formulário\ndisponível",
+                  child: Text("Laiha Formulário\nDisponível",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 25)),
                 ),

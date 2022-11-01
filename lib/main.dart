@@ -6,11 +6,11 @@ import 'package:form_app/ui/login/login.dart';
 import 'package:form_app/ui/splashscreen/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return ScreenUtilInit(
-      designSize: const Size(360, 800),
+      designSize: Size(360, 800),
       minTextAdapt: true,
       splitScreenMode: false,
       builder: (_, child) {

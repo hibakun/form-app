@@ -45,7 +45,7 @@ class _UserPageState extends State<UserPage> {
                     child: Center(
                       child: Image.asset(
                         'assets/logo.png',
-                        width: 100.w,
+                        width: 90.w,
                       ),
                     ),
                   ),
@@ -67,7 +67,7 @@ class _UserPageState extends State<UserPage> {
                         FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(
-                              "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Reprodusaun",
+                              "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Rekolhamentu Dadus Emu ho Problema Social",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 17)),

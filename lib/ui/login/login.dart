@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     showWarningDialog("process",
-        customMessage: "Carregando os dados.\nPode demorar alguns segundos");
+        customMessage: "Sei Prosesu Foti Formulario\nHein Minutu Balun Nia Laran");
     if (_usernameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
       LoginModel result = await ApiService().loginAPI(
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Center(
               child: Text(
-                'Conecte-se',
+                'Hatama Uzuario',
                 style: theme.headline1,
               ),
             ),
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 50.h,
             ),
             Text(
-              'Conta',
+              'Uzuario',
               style: theme.bodyText1,
             ),
             SizedBox(
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 25.h,
             ),
             Text(
-              'Senha',
+              'Kodigo Segredo',
               style: theme.bodyText1,
             ),
             SizedBox(
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                       customMessage: "Usuário/senha não corresponde");
                 }
               },
-              child: const Text('Conecte-se'),
+              child: const Text('Konekto'),
             ),
           ],
         ),

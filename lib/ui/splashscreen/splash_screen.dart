@@ -66,22 +66,33 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
-            child: SvgPicture.asset(
-              'assets/splash.svg',
-              width: 200.w,
+            child: Image.asset(
+              'assets/logo.png',
+              width: 150.w,
             ),
           ),
-          SizedBox(height: 50.h),
-          Center(
-              child: Text("Formulário de Pesquisa",
-                  style: TextStyle(
-                      color: Colors.red[400],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30)))
+          SizedBox(height: 25.h),
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text("Republica Democratica De Timor-Leste",
+                style: TextStyle(
+                    color: Colors.blue[800],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25)),
+          ),
+          SizedBox(height: 10.h),
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+                "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Rekolhamentu Dadus Emu ho Problema Social",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 17)),
+          ),
         ],
       ),
     );

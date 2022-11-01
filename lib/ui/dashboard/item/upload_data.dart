@@ -53,7 +53,7 @@ class _UploadDataPageState extends State<UploadDataPage> {
       isLoading = true;
     });
     showWarningDialog("process",
-        customMessage: "Carregando os dados.\nPode demorar alguns segundos");
+        customMessage: "Sei Prosesu Foti Formulario\nHein Minutu Balun Nia Laran");
     String tdata = DateFormat("hh:mm:ss").format(DateTime.now());
     String cdate = DateFormat("yyyy-MM-dd").format(DateTime.now());
     var header = Map<String, dynamic>();
@@ -150,7 +150,7 @@ class _UploadDataPageState extends State<UploadDataPage> {
                       SizedBox(height: 30.h),
                       FittedBox(
                         fit: BoxFit.fitWidth,
-                        child: Text("Nenhum formulário\ndisponível",
+                        child: Text("Laiha Formulário\nDisponível",
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 25)),
                       ),

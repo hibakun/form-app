@@ -82,16 +82,15 @@ class _SplashState extends State<Splash> {
                 style: TextStyle(
                     color: Colors.blue[800],
                     fontWeight: FontWeight.bold,
-                    fontSize: 25)),
+                    fontSize: 20)),
           ),
           SizedBox(height: 10.h),
           FittedBox(
             fit: BoxFit.fitWidth,
             child: Text(
-                "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Rekolhamentu Dadus Emu ho Problema Social",
+                "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Rekolhamentu Dadus Ema ho Problema Bem Estar Social",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: 17)),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
           ),
         ],
       ),

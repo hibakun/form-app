@@ -304,7 +304,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[3].key.toString().capitalize() + " : " + headers[4].value.toString(),
+          child: Text(headers[3].key.toString().capitalize() + " : " + headers[3].value.toString(),
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -377,7 +377,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[4].key.toString().capitalize().replaceAll("_", " ") + " : " + headers[5].value.toString(),
+          child: Text(headers[4].key.toString().capitalize().replaceAll("_", " ") + " : " + headers[4].value.toString(),
               style: TextStyle(fontSize: 15)),
         ),
         Padding(
@@ -449,7 +449,7 @@ class _UpdateFormPageState extends State<UpdateFormPage> {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Text(headers[5].key.toString().capitalize() + " : " + headers[6].value.toString(),
+          child: Text(headers[5].key.toString().capitalize() + " : " + headers[5].value.toString(),
               style: TextStyle(fontSize: 15)),
         ),
         Padding(

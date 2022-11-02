@@ -41,15 +41,15 @@ class _DownloadPageState extends State<DownloadPage> {
   var _subvillageData = [];
   var form;
 
-
   Future addDb() async {
     showWarningDialog("process",
-        customMessage: "Sei Prosesu Foti Formulario\nHein Minutu Balun Nia Laran");
+        customMessage:
+            "Sei Prosesu Foti Formulario\nHein Minutu Balun Nia Laran");
     try {
       FormtableModel result = await ApiService().formtableAPI();
       _data = result.data;
     } catch (error) {
-      print('no internet '+ error.toString());
+      print('no internet ' + error.toString());
     }
 
     try {
@@ -80,31 +80,31 @@ class _DownloadPageState extends State<DownloadPage> {
       print('no internet sub village');
     }
 
-
-    for(int i = 0; i < _municipalityData.length; i++){
+    for (int i = 0; i < _municipalityData.length; i++) {
       _municipalityTable = _municipalityData[i];
-      await FormTableDatabase.instance.createMunicipality(MunicipalityFields.tableMunicipality,
+      await FormTableDatabase.instance.createMunicipality(
+          MunicipalityFields.tableMunicipality,
           MunicipalityDatabaseModel(
-            id_dropdown: _municipalityTable?.id,
-            name: _municipalityTable?.name,
-            kode_municipality: _municipalityTable?.code
-          ));
+              id_dropdown: _municipalityTable?.id,
+              name: _municipalityTable?.name,
+              kode_municipality: _municipalityTable?.code));
     }
 
-    for(int i = 0; i < _subdistrictData.length; i++){
+    for (int i = 0; i < _subdistrictData.length; i++) {
       _subdisctrictTable = _subdistrictData[i];
-      await FormTableDatabase.instance.createSubdistrict(SubdistrictFields.tableSubdistrict,
+      await FormTableDatabase.instance.createSubdistrict(
+          SubdistrictFields.tableSubdistrict,
           SubdistrictDatabaseModel(
-            id_dropdown: _subdisctrictTable?.id,
-            name: _subdisctrictTable?.name,
-            kode_subdistrict: _subdisctrictTable?.code,
-            kode_municipality: _subdisctrictTable?.municipality?.code
-          ));
+              id_dropdown: _subdisctrictTable?.id,
+              name: _subdisctrictTable?.name,
+              kode_subdistrict: _subdisctrictTable?.code,
+              kode_municipality: _subdisctrictTable?.municipality?.code));
     }
 
-    for(int i = 0; i < _villageData.length; i++){
-    _villageTable = _villageData[i];
-      await FormTableDatabase.instance.createVillage(VillageFields.tableVillage,
+    for (int i = 0; i < _villageData.length; i++) {
+      _villageTable = _villageData[i];
+      await FormTableDatabase.instance.createVillage(
+          VillageFields.tableVillage,
           VillageDatabaseModel(
             id_dropdown: _villageTable?.id,
             name: _villageTable?.name,
@@ -113,18 +113,16 @@ class _DownloadPageState extends State<DownloadPage> {
           ));
     }
 
-    for(int i = 0; i < _subvillageData.length; i++){
+    for (int i = 0; i < _subvillageData.length; i++) {
       _subvillageTable = _subvillageData[i];
-      await FormTableDatabase.instance.createSubvillage(SubvillageFields.tableSubvillage,
+      await FormTableDatabase.instance.createSubvillage(
+          SubvillageFields.tableSubvillage,
           SubVillageDatabaseModel(
-            id_dropdown: _subvillageTable?.id,
-            name: _subvillageTable?.name,
-            kode_subvillage: _subvillageTable?.code,
-            kode_village: _subvillageTable?.village?.code
-          ));
+              id_dropdown: _subvillageTable?.id,
+              name: _subvillageTable?.name,
+              kode_subvillage: _subvillageTable?.code,
+              kode_village: _subvillageTable?.village?.code));
     }
-
-
 
     for (int i = 0; i < _data.length; i++) {
       _dataTable = _data[i];
@@ -137,7 +135,6 @@ class _DownloadPageState extends State<DownloadPage> {
       await downloadForm(_dataTable!.formType);
       await FormTableDatabase.instance.createForm(form);
     }
-
 
     Navigator.pop(context);
     read();
@@ -175,9 +172,9 @@ class _DownloadPageState extends State<DownloadPage> {
       //8
       result.add(model.data.surveyTable.municipiu);
       //9
-      result.add('sub_Distritu');
+      result.add('postu_Administrativo');
       //10
-      result.add(model.data.surveyTable.subDistritu);
+      result.add(model.data.surveyTable.postuAdministrativo);
       //11
       result.add('suku');
       //12
@@ -190,7 +187,6 @@ class _DownloadPageState extends State<DownloadPage> {
       result.add('naran_Intervistador');
       //16
       result.add(model.data.surveyTable.naranIntervistador);
-
 
       print("FORM TYPE" + result[0].toString());
 

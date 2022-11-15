@@ -13,6 +13,9 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  TextEditingController _urlController = TextEditingController();
+  String codeDialog = "";
+  String urlText = "";
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
@@ -104,6 +107,21 @@ class _UserPageState extends State<UserPage> {
                 'admin@gmail.com',
                 style: theme.bodyText1,
               ),
+              SizedBox(
+                height: 150.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 100),
+                child: ElevatedButton(
+                    onPressed: () {
+                      _displayTextInputDialog(context);
+                    },
+                    child: Text("Alterar URL",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.red))),
+              )
             ],
           ),
         ),
@@ -145,5 +163,44 @@ class _UserPageState extends State<UserPage> {
         return alert;
       },
     );
+  }
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Alterar URL'),
+            content: TextField(
+              controller: _urlController,
+              decoration: InputDecoration(hintText: "Insira o novo URL"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('Cancelar'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Colors.blue,
+                textColor: Colors.white,
+                child: Text('Salve'),
+                onPressed: () {
+                  prefs.setString('baseURL', _urlController.text);
+                  setState(() {
+                    print("NEW URL: " + prefs.getString('baseURL').toString());
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 }

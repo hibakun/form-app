@@ -31,16 +31,17 @@ class _LoginPageState extends State<LoginPage> {
   bool _isVisible = true;
 
   Future<void> _login() async {
+    final prefs = await SharedPreferences.getInstance();
     showWarningDialog("process",
         customMessage: "Sei Prosesu Foti Formulario\nHein Minutu Balun Nia Laran");
     if (_usernameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
+      prefs.setString('baseURL', "http://36.92.50.82:77/reproducetl/api/");
       LoginModel result = await ApiService().loginAPI(
           username: _usernameController.text,
           password: _passwordController.text);
       if (result.accessToken.isNotEmpty) {
         Navigator.pop(context);
-        final prefs = await SharedPreferences.getInstance();
         prefs.setString('pass', _passwordController.text);
         prefs.setString('user', result.username);
         SharedCode.navigatorReplacement(context, Dashboard());

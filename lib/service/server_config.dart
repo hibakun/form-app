@@ -1,5 +1,5 @@
 class ServerConfig {
-  static String baseUrl = "http://36.92.50.82:77/reproducetl/api/";
+  // static String baseUrl = "http://36.92.50.82:77/reproducetl/api/";
   static String loginUrl = "auth/signin";
   static String municipality = "v1/municipality/finds";
   static String municipalityLike = "v1/municipality/findsLike";

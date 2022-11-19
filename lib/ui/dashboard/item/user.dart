@@ -70,10 +70,10 @@ class _UserPageState extends State<UserPage> {
                         FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(
-                              "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Rekolhamentu Dadus Emu ho Problema Social",
+                              "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Rekolhamentu Dadus Ema ho Problema Bem Estar Social",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17)),
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
                         ),
                       ],
                     ),
@@ -116,7 +116,7 @@ class _UserPageState extends State<UserPage> {
                     onPressed: () {
                       _displayTextInputDialog(context);
                     },
-                    child: Text("Alterar URL",
+                    child: Text("Change Link Server",
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     style: ButtonStyle(
                         backgroundColor:
@@ -171,16 +171,16 @@ class _UserPageState extends State<UserPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Alterar URL'),
+            title: Text('Change Link Server'),
             content: TextField(
               controller: _urlController,
-              decoration: InputDecoration(hintText: "Insira o novo URL"),
+              decoration: InputDecoration(hintText: "Input new link server"),
             ),
             actions: <Widget>[
               FlatButton(
                 color: Colors.red,
                 textColor: Colors.white,
-                child: Text('Cancelar'),
+                child: Text('Cancel'),
                 onPressed: () {
                   setState(() {
                     Navigator.pop(context);
@@ -190,7 +190,7 @@ class _UserPageState extends State<UserPage> {
               FlatButton(
                 color: Colors.blue,
                 textColor: Colors.white,
-                child: Text('Salve'),
+                child: Text('Save'),
                 onPressed: () {
                   prefs.setString('baseURL', _urlController.text);
                   setState(() {

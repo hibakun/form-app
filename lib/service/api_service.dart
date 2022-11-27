@@ -24,14 +24,18 @@ import 'dart:developer';
 class ApiService {
   Future<LoginModel> loginAPI(
       {required String username, required String password}) async {
+    final prefs = await SharedPreferences.getInstance();
     Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
     final body = {"username": username, "password": password};
     print("RAW LOGIN: " + body.toString());
-    print("URL LOGIN: " + ServerConfig.baseUrl + ServerConfig.loginUrl);
+    print("URL LOGIN: " +
+        prefs.getString('baseURL').toString() +
+        ServerConfig.loginUrl);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.loginUrl),
+        Uri.parse(
+            prefs.getString('baseURL').toString() + ServerConfig.loginUrl),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(LOGIN): " + res.statusCode.toString());
@@ -54,10 +58,11 @@ class ApiService {
     };
     print("HEADER MUNICIPALITY: " + headers.toString());
     print("URL MUNICIPALITY: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.municipality);
     final res = await http.get(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.municipality),
+        Uri.parse(
+            prefs.getString('baseURL').toString() + ServerConfig.municipality),
         headers: headers);
     print("STATUS CODE(MUNICIPALITY): " + res.statusCode.toString());
     print("RES MUNICIPALITY: " + res.body.toString());
@@ -82,10 +87,11 @@ class ApiService {
     print("HEADER MUNICIPALITY LIKE: " + headers.toString());
     print("RAW MUNICIPALITY LIKE: " + body.toString());
     print("URL MUNICIPALITY LIKE: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.municipalityLike);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.municipalityLike),
+        Uri.parse(prefs.getString('baseURL').toString() +
+            ServerConfig.municipalityLike),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(MUNICIPALITY LIKE): " + res.statusCode.toString());
@@ -108,10 +114,11 @@ class ApiService {
     };
     print("HEADER SUBDISCTRICT: " + headers.toString());
     print("URL SUBDISCTRICT: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.subdisctrict);
     final res = await http.get(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.subdisctrict),
+        Uri.parse(
+            prefs.getString('baseURL').toString() + ServerConfig.subdisctrict),
         headers: headers);
     print("STATUS CODE(SUBDISCTRICT): " + res.statusCode.toString());
     print("RES SUBDISCTRICT: " + res.body.toString());
@@ -136,10 +143,11 @@ class ApiService {
     print("HEADER SUBDISCTRICT LIKE: " + headers.toString());
     print("RAW SUBDISCTRICT LIKE: " + body.toString());
     print("URL SUBDISCTRICT LIKE: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.subdisctrictLike);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.subdisctrictLike),
+        Uri.parse(prefs.getString('baseURL').toString() +
+            ServerConfig.subdisctrictLike),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(SUBDISCTRICT LIKE): " + res.statusCode.toString());
@@ -169,10 +177,11 @@ class ApiService {
     print("HEADER SUBDISCTRICT BYMUNI: " + headers.toString());
     print("RAW SUBDISCTRICT BYMUNI: " + body.toString());
     print("URL SUBDISCTRICT BYMUNI: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.subdisctrictByMuni);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.subdisctrictByMuni),
+        Uri.parse(prefs.getString('baseURL').toString() +
+            ServerConfig.subdisctrictByMuni),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(SUBDISCTRICT BYMUNI): " + res.statusCode.toString());
@@ -194,9 +203,11 @@ class ApiService {
       'Authorization': "Bearer " + result.accessToken,
     };
     print("HEADER VILLAGE: " + headers.toString());
-    print("URL VILLAGE: " + ServerConfig.baseUrl + ServerConfig.village);
+    print("URL VILLAGE: " +
+        prefs.getString('baseURL').toString() +
+        ServerConfig.village);
     final res = await http.get(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.village),
+        Uri.parse(prefs.getString('baseURL').toString() + ServerConfig.village),
         headers: headers);
     print("STATUS CODE(VILLAGE): " + res.statusCode.toString());
     print("RES VILLAGE: " + res.body.toString());
@@ -220,10 +231,12 @@ class ApiService {
     final body = {"keyword": ""};
     print("HEADER VILLAGE LIKE: " + headers.toString());
     print("RAW VILLAGE LIKE: " + body.toString());
-    print(
-        "URL VILLAGE LIKE: " + ServerConfig.baseUrl + ServerConfig.villageLike);
+    print("URL VILLAGE LIKE: " +
+        prefs.getString('baseURL').toString() +
+        ServerConfig.villageLike);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.villageLike),
+        Uri.parse(
+            prefs.getString('baseURL').toString() + ServerConfig.villageLike),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(VILLAGE LIKE): " + res.statusCode.toString());
@@ -253,10 +266,11 @@ class ApiService {
     print("HEADER VILLAGE BYSUB: " + headers.toString());
     print("RAW VILLAGE BYSUB: " + body.toString());
     print("URL VILLAGE BYSUB: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.villageBySub);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.villageBySub),
+        Uri.parse(
+            prefs.getString('baseURL').toString() + ServerConfig.villageBySub),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(VILLAGE BYSUB): " + res.statusCode.toString());
@@ -278,9 +292,12 @@ class ApiService {
       'Authorization': "Bearer " + result.accessToken,
     };
     print("HEADER SUBVILLAGE: " + headers.toString());
-    print("URL SUBVILLAGE: " + ServerConfig.baseUrl + ServerConfig.subvillage);
+    print("URL SUBVILLAGE: " +
+        prefs.getString('baseURL').toString() +
+        ServerConfig.subvillage);
     final res = await http.get(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.subvillage),
+        Uri.parse(
+            prefs.getString('baseURL').toString() + ServerConfig.subvillage),
         headers: headers);
     print("STATUS CODE(SUBVILLAGE): " + res.statusCode.toString());
     print("RES SUBVILLAGE: " + res.body.toString());
@@ -305,10 +322,11 @@ class ApiService {
     print("HEADER SUB VILLAGE LIKE: " + headers.toString());
     print("RAW SUB VILLAGE LIKE: " + body.toString());
     print("URL SUB VILLAGE LIKE: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.subvillageLike);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.subvillageLike),
+        Uri.parse(prefs.getString('baseURL').toString() +
+            ServerConfig.subvillageLike),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(SUB VILLAGE LIKE): " + res.statusCode.toString());
@@ -338,10 +356,11 @@ class ApiService {
     print("HEADER SUBVILLAGE BYVILL: " + headers.toString());
     print("RAW SUBVILLAGE BYVILL: " + body.toString());
     print("URL SUBVILLAGE BYVILL: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.subvillageByVill);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.subvillageByVill),
+        Uri.parse(prefs.getString('baseURL').toString() +
+            ServerConfig.subvillageByVill),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(SUBVILLAGE BYVILL): " + res.statusCode.toString());
@@ -363,9 +382,12 @@ class ApiService {
       'Authorization': "Bearer " + result.accessToken,
     };
     print("HEADER FORMTABLE: " + headers.toString());
-    print("URL FORMTABLE: " + ServerConfig.baseUrl + ServerConfig.formtable);
+    print("URL FORMTABLE: " +
+        prefs.getString('baseURL').toString() +
+        ServerConfig.formtable);
     final res = await http.get(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.formtable),
+        Uri.parse(
+            prefs.getString('baseURL').toString() + ServerConfig.formtable),
         headers: headers);
     print("STATUS CODE(FORMTABLE): " + res.statusCode.toString());
     print("RES FORMTABLE: " + res.body.toString());
@@ -391,10 +413,11 @@ class ApiService {
     print("HEADER SURVEY FORM DOWNLOAD: " + headers.toString());
     print("RAW SURVEY FORM DOWNLOAD: " + body.toString());
     print("URL SURVEY FORM DOWNLOAD: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.surveyformdownload);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.surveyformdownload),
+        Uri.parse(prefs.getString('baseURL').toString() +
+            ServerConfig.surveyformdownload),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(SURVEY FORM DOWNLOAD): " + res.statusCode.toString());
@@ -420,10 +443,11 @@ class ApiService {
     print("HEADER SURVEY FORM UPLOAD: " + headers.toString());
     log("RAW SURVEY FORM UPLOAD: " + body.toString());
     print("URL SURVEY FORM UPLOAD: " +
-        ServerConfig.baseUrl +
+        prefs.getString('baseURL').toString() +
         ServerConfig.surveyformupload);
     final res = await http.post(
-        Uri.parse(ServerConfig.baseUrl + ServerConfig.surveyformupload),
+        Uri.parse(prefs.getString('baseURL').toString() +
+            ServerConfig.surveyformupload),
         headers: headers,
         body: jsonEncode(body));
     print("STATUS CODE(SURVEY FORM UPLOAD): " + res.statusCode.toString());

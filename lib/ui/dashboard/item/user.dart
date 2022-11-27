@@ -13,6 +13,9 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  TextEditingController _urlController = TextEditingController();
+  String codeDialog = "";
+  String urlText = "";
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
@@ -67,10 +70,10 @@ class _UserPageState extends State<UserPage> {
                         FittedBox(
                           fit: BoxFit.fitWidth,
                           child: Text(
-                              "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Rekolhamentu Dadus Emu ho Problema Social",
+                              "Ministério da Solidariedade Social e Inclusão (MSSI)\nSistema Rekolhamentu Dadus Ema ho Problema Bem Estar Social",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17)),
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
                         ),
                       ],
                     ),
@@ -104,6 +107,21 @@ class _UserPageState extends State<UserPage> {
                 'admin@gmail.com',
                 style: theme.bodyText1,
               ),
+              SizedBox(
+                height: 150.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 100),
+                child: ElevatedButton(
+                    onPressed: () {
+                      _displayTextInputDialog(context);
+                    },
+                    child: Text("Change Link Server",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.red))),
+              )
             ],
           ),
         ),
@@ -145,5 +163,44 @@ class _UserPageState extends State<UserPage> {
         return alert;
       },
     );
+  }
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Change Link Server'),
+            content: TextField(
+              controller: _urlController,
+              decoration: InputDecoration(hintText: "Input new link server"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('Cancel'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Colors.blue,
+                textColor: Colors.white,
+                child: Text('Save'),
+                onPressed: () {
+                  prefs.setString('baseURL', _urlController.text);
+                  setState(() {
+                    print("NEW URL: " + prefs.getString('baseURL').toString());
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 }
